@@ -15,5 +15,7 @@ GitHub    | Name                      | ID
 All documents are stored in our [Wiki](https://github.com/SSD2015/TeamGG/wiki)
 
 - [Vision statement](https://github.com/SSD2015/TeamGG/wiki/Vision-Statement)
+- [Use cases](https://github.com/SSD2015/TeamGG/wiki/SRS-System-Feature)
+- [Glossary](https://github.com/SSD2015/TeamGG/wiki/SRS-Glossary)
 - [Software requirements specifications](https://github.com/SSD2015/TeamGG/wiki/Software-Requirements-Specification)
 - [Framework review](https://github.com/SSD2015/TeamGG/wiki/Frameworks-review) 
