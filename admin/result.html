@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Voting result | Exceed Vote</title>
+	<meta name="viewport" content="initial-scale=1, width=device-width">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/css/bootstrap.css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="../admin.css">
+</head>
+<body>
+<header class="mainheader">
+	<div class="container">
+		<div class="row">
+			<h1 class="brand col-sm-8">Exceed Vote</h1>
+			<div class="col-sm-4 text-right">
+				Logged in as <strong>username</strong>.
+				<div>
+					<a class="btn btn-default" href="..">Logout</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<header class="pageheader">
+	<div class="container">		
+		<h2><a href="." class="btn btn-link btn-lg"><i class="glyphicon glyphicon-chevron-left"></i></a> Voting result</h2>
+	</div>
+</header>
+<div class="container">
+	<div class="row">
+		<div class="col-sm-4">
+			<img src="http://chart.googleapis.com/chart?cht=bvg&chs=360x150&chd=t:2.83,2.1,2.6&chds=0,3&chxt=x,y&chxr=1,0,3&chl=1|2|3&chtt=Foo" class="img-responsive thumbnail">
+		</div>
+		<div class="col-sm-4">
+			<img src="http://chart.googleapis.com/chart?cht=bvg&chs=360x150&chd=t:2.2,2.4,2.6&chds=0,3&chxt=x,y&chxr=1,0,3&chl=1|2|3&chtt=Bar" class="img-responsive thumbnail">
+		</div>
+		<div class="col-sm-4">
+			<img src="http://chart.googleapis.com/chart?cht=p&chs=360x150&chd=t:60,15,15&chxt=x,y&chl=1|2|3&chtt=Baz" class="img-responsive thumbnail">
+		</div>
+	</div>
+	<div class="table-responsive">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="col-xs-1">Group no.</th>
+					<th>Name</th>
+					<th>Foo</th>
+					<th>Bar</th>
+					<th>Baz</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>1</td>
+					<td><a href="../group/">Team GG</a></td>
+					<td><strong>2.83</strong>/3</td>
+					<td><strong>2.2</strong>/3</td>
+					<td><strong>60</strong>/90</td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td><a href="../group/">Team GG</a></td>
+					<td><strong>2.1</strong>/3</td>
+					<td><strong>2.4</strong>/3</td>
+					<td><strong>15</strong>/90</td>
+				</tr>
+				<tr>
+					<td>2</td>
+					<td><a href="../group/">Team GG</a></td>
+					<td><strong>2.6</strong>/3</td>
+					<td><strong>2.6</strong>/3</td>
+					<td><strong>15</strong>/90</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+</body>
+</html>

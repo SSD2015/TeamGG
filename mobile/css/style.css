@@ -1,0 +1,28 @@
+.applogo{
+	background: #20A337;
+	color: white;
+	text-align: center;
+	padding: 25px 0;
+}
+.applogo h1, .applogo h4{
+	color: white;
+}
+.item-note{
+	color: #20A337;
+}
+.bestof{
+	font-size: 80%;
+	margin-top: 5px;
+}
+.screenshot{
+	padding-bottom: 50px;
+	background: #f0f0f0;
+}
+.screenshot img{
+	max-height: 200px;
+	margin: auto;
+	display: block;
+}
+.description{
+	white-space: normal !important;
+}

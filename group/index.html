@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Team GG | Exceed Vote</title>
+	<meta name="viewport" content="initial-scale=1, width=device-width">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/css/bootstrap.css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/css/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="../admin.css">
+</head>
+<body>
+<header class="mainheader">
+	<div class="container">
+		<div class="row">
+			<h1 class="brand col-sm-8">Exceed Vote</h1>
+			<div class="col-sm-4 text-right">
+				Logged in as <strong>username</strong>.
+				<div>
+					<a class="btn btn-default" href="..">Logout</a>
+				</div>
+			</div>
+		</div>
+	</div>
+</header>
+<header class="pageheader">
+	<div class="container">
+		<h2>Team GG</h2>
+	</div>
+</header>
+<div class="container">
+	<div class="form-horizontal">
+		<div class="form-group">
+			<label for="group_name" class="col-sm-2 control-label">Group name</label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" id="group_name" name="group_name">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="name" class="col-sm-2 control-label">Project name</label>
+			<div class="col-sm-10">
+				<input type="text" class="form-control" id="name" name="name">
+			</div>
+		</div>
+		<div class="form-group">
+			<label for="logo" class="col-sm-2 control-label">Project logo</label>
+			<div class="col-sm-1 col-xs-offset-5 col-sm-offset-0">
+				<img src="http://placeskull.com/50/50/cccccc?1" class="thumbnail">
+			</div>
+			<div class="col-sm-4">
+				<button class="btn btn-block btn-default">Update logo</button>
+				<div class="help-block">50x50 png</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Project description</label>
+			<div class="col-md-5 col-sm-6">
+				<textarea name="description" class="form-control" rows="10">Bacon ipsum dolor amet shoulder hamburger capicola ground round turkey, short loin cupim sausage pastrami bresaola tri-tip tail corned beef ribeye. Picanha pig filet mignon chuck pork belly pork chop. Pork shank ribeye beef ribs sausage shoulder. T-bone beef chuck jowl meatloaf. Doner capicola tenderloin ball tip pork chop shank jowl brisket chicken ribeye. Turducken spare ribs picanha ribeye turkey.</textarea>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Screenshots</label>
+			<div class="col-sm-offset-2 screenshot">
+				<div class="scroll">
+					<div class="col-sm-4">
+						<div class="thumbnail"><img src="http://lorempixel.com/334/200/technics/?1"></div>
+					</div>
+					<div class="col-sm-4">
+						<div class="thumbnail"><img src="http://lorempixel.com/334/200/technics/?2"></div>
+					</div>
+					<div class="col-sm-4">
+						<div class="thumbnail"><img src="http://lorempixel.com/200/334/technics/?3"></div>
+					</div>
+					<div class="col-sm-4">
+						<div class="thumbnail"><img src="http://lorempixel.com/200/334/technics/?4"></div>
+					</div>
+					<div class="col-sm-4">
+						<a href="#" class="btn btn-default btn-block add"><i class="glyphicon glyphicon-plus"></i></a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Application</label>
+			<div class="col-sm-10">
+				<div class="col-sm-4">
+					<button class="btn btn-block btn-default">Upload APK (Android)</button>
+					<strong>Uploaded: </strong> <code>th.in.whs.ku.gg.apk</code>
+				</div>
+				<div class="col-sm-4">
+					<button class="btn btn-block btn-default">Upload IPK (iOS)</button>
+					No IPK has been uploaded
+				</div>
+				<div class="col-sm-4">
+					<button class="btn btn-block btn-default">Upload source code</button>
+					No source code has been uploaded
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Team Member</label>
+			<div class="col-sm-10">
+				<ul class="list-unstyled">
+					<li>Manatsawin Hanmongkolchai</li>
+					<li>Varis Kritpolchai</li>
+					<li>Pongsachon Pornsriniyom</li>
+				</ul>
+				<div class="help-block">
+					Contact the organizer for corrections.
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-sm-offset-2 col-sm-10">
+				<button class="btn btn-lg btn-success">Save</button>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</html>

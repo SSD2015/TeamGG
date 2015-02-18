@@ -1,0 +1,53 @@
+<ion-view view-title="Project lnw">
+	<ion-content has-bouncing="true">
+		<ion-slide-box class="screenshot">
+			<ion-slide>
+				<img src="http://lorempixel.com/334/200/technics/?1">
+			</ion-slide>
+			<ion-slide>
+				<img src="http://lorempixel.com/334/200/technics/?2">
+			</ion-slide>
+			<ion-slide>
+				<img src="http://lorempixel.com/480/640/technics/?1">
+			</ion-slide>
+			<ion-slide>
+				<img src="http://lorempixel.com/480/640/technics/?2">
+			</ion-slide>
+		</ion-slide-box>
+		<ion-list>
+			<ion-item>
+				<h2>Project lnw</h2>
+				<h4>by Team GG</h4>
+			</ion-item>
+			<ion-item>
+				<h3>Description</h3>
+				<p class="description">
+					Bacon ipsum dolor amet shank pork belly t-bone, ham tail doner kevin tri-tip venison. Chicken shankle ribeye rump hamburger brisket. Ground round turducken jowl filet mignon spare ribs meatball cow beef ball tip kielbasa prosciutto hamburger ham hock boudin chicken. Hamburger salami turducken pork belly tail. Sirloin biltong pig salami doner chuck, shankle pancetta pastrami frankfurter filet mignon meatloaf tri-tip picanha.
+				</p>
+			</ion-item>
+			<ion-item class="item-divider">
+				Voting
+			</ion-item>
+			<ion-item class="item-icon-right">
+				Category A
+				<div class="icon">
+					<i class="ion-ios7-star"></i>
+					<i class="ion-ios7-star"></i>
+					<i class="ion-ios7-star-outline"></i>
+				</div>
+			</ion-item>
+			<ion-item class="item-icon-right">
+				Category B
+				<div class="icon">
+					<i class="ion-ios7-star"></i>
+					<i class="ion-ios7-star"></i>
+					<i class="ion-ios7-star-outline"></i>
+				</div>
+			</ion-item>
+			<ion-item class="item-icon-right" ng-click="voted=!voted">
+				Category C
+				<i class="icon" ng-class="{'ion-ios7-circle-outline': !voted, 'ion-ios7-checkmark-outline': voted}"></i>
+			</ion-item>
+		</div>
+	</ion-content>
+</ion-view>
