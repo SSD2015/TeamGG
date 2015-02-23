@@ -1,7 +1,5 @@
 # --- !Ups
 
-START TRANSACTION;
-
 CREATE TABLE `config` (
   `k` varchar(255) NOT NULL,
   `value` text,
@@ -69,12 +67,10 @@ CREATE TABLE `vote` (
   CONSTRAINT `vote_ibfk_3` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-COMMIT;
 
 
 # --- !Downs
 
-START TRANSACTION;
 DROP TABLE `config`;
 DROP TABLE `token`;
 DROP TABLE `vote`;
@@ -82,4 +78,3 @@ DROP TABLE `vote_category`;
 DROP TABLE `user`;
 DROP TABLE `project`;
 DROP TABLE `group`;
-COMMIT;
