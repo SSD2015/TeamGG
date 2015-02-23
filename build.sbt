@@ -10,5 +10,6 @@ libraryDependencies ++= Seq(
   javaJdbc,
   javaEbean,
   cache,
-  javaWs
+  javaWs,
+  "org.mariadb.jdbc" % "mariadb-java-client" % "1.1.8"
 )
