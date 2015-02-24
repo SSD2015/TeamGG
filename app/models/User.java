@@ -18,7 +18,7 @@ public class User extends Model {
     public String password;
     public TYPES type;
 
-    public String name;
+    public String name = "";
     public String organization = "";
 
     @ManyToOne
