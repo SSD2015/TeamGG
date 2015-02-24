@@ -49,13 +49,8 @@ public class AuthController extends Controller {
         if(user == null){
             out.putNull("username");
         }else{
-            out.put("id", user.id);
-            out.put("username", user.username);
-            out.put("name", user.getName());
-            out.put("organization", user.organization);
-            out.put("type", user.type.name());
+            out = (ObjectNode) Json.toJson(user);
             out.put("type_code", user.type.ordinal());
-            out.putPOJO("group", user.group);
         }
 
         return out;

@@ -7,7 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 @Entity
-public class Group extends Model {
+public class Groups extends Model {
     @Id
     public Long id;
 

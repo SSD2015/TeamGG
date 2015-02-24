@@ -6,7 +6,7 @@ CREATE TABLE `config` (
   PRIMARY KEY (`k`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `group` (
+CREATE TABLE `groups` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) NOT NULL DEFAULT '',
   `number` tinyint(4) DEFAULT NULL,
@@ -21,7 +21,7 @@ CREATE TABLE `project` (
   `logo` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `group_id` (`group_id`),
-  CONSTRAINT `project_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `group` (`id`) ON DELETE CASCADE
+  CONSTRAINT `project_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `user` (
@@ -34,7 +34,7 @@ CREATE TABLE `user` (
   `group_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `group_id` (`group_id`),
-  CONSTRAINT `user_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `group` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
+  CONSTRAINT `user_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `token` (
@@ -77,4 +77,4 @@ DROP TABLE `vote`;
 DROP TABLE `vote_category`;
 DROP TABLE `user`;
 DROP TABLE `project`;
-DROP TABLE `group`;
+DROP TABLE `groups`;

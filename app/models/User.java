@@ -1,13 +1,15 @@
 package models;
-import com.avaje.ebean.annotation.EnumMapping;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 @Entity
+@JsonIgnoreProperties({"password"})
 public class User extends Model {
     @Id
     public Long id;
@@ -22,7 +24,8 @@ public class User extends Model {
     public String organization = "";
 
     @ManyToOne
-    public Group group;
+    @JoinColumn(name="group_id", referencedColumnName="id")
+    public Groups group;
 
     public String getName(){
         if(!name.isEmpty()){
