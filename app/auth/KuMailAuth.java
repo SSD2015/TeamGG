@@ -32,6 +32,7 @@ public class KuMailAuth implements Authenticator {
                     username,
                     password
             );
+            connection.close();
         } catch (AuthenticationFailedException e){
             return Authenticator.INVALID;
         } catch (MessagingException e) {

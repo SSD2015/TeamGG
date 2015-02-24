@@ -9,6 +9,7 @@ import models.User;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
+import utils.Auth;
 
 public class AuthController extends Controller {
     public static Result login(){
@@ -31,24 +32,18 @@ public class AuthController extends Controller {
             }
 
             session("user", String.valueOf(user.id));
+        }else{
+            return forbidden(buildUser(user));
         }
 
-        return buildUser(user);
+        return ok(buildUser(user));
     }
 
     public static Result check(){
-        String id = session("user");
-        User user;
-        try {
-            user = User.find.byId(Long.parseLong(id));
-        }catch(NumberFormatException e){
-            user = null;
-        }
-
-        return buildUser(user);
+        return ok(buildUser(Auth.getUser()));
     }
 
-    private static Result buildUser(User user){
+    private static ObjectNode buildUser(User user){
         ObjectNode out = Json.newObject();
 
         if(user == null){
@@ -63,6 +58,6 @@ public class AuthController extends Controller {
             out.putPOJO("group", user.group);
         }
 
-        return ok(out);
+        return out;
     }
 }
