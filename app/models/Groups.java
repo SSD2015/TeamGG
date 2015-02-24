@@ -15,4 +15,8 @@ public class Groups extends Model {
     public String name;
 
     public int number;
+
+    public static Finder<Long, Groups> find = new Finder<Long, Groups>(
+            Long.class, Groups.class
+    );
 }

@@ -1,80 +1,87 @@
+# --- Created by Ebean DDL
+# To stop Ebean DDL generation, remove this comment and start using Evolutions
+
 # --- !Ups
 
-CREATE TABLE `config` (
-  `k` varchar(255) NOT NULL,
-  `value` text,
-  PRIMARY KEY (`k`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+create table config (
+  k                         varchar(255) not null,
+  value                     varchar(255),
+  constraint pk_config primary key (k))
+;
 
-CREATE TABLE `groups` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `number` tinyint(4) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+create table groups (
+  id                        bigint auto_increment not null,
+  name                      varchar(255),
+  number                    integer,
+  constraint pk_groups primary key (id))
+;
 
-CREATE TABLE `project` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `group_id` int(11) NOT NULL,
-  `description` text NOT NULL,
-  `logo` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `group_id` (`group_id`),
-  CONSTRAINT `project_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+create table project (
+  id                        integer auto_increment not null,
+  name                      varchar(255),
+  group_id                  bigint,
+  description               varchar(255),
+  logo                      varchar(255),
+  constraint pk_project primary key (id))
+;
 
-CREATE TABLE `user` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `username` varchar(255) NOT NULL,
-  `password` varchar(100) DEFAULT NULL,
-  `type` tinyint(4) NOT NULL DEFAULT '0',
-  `name` varchar(255) NOT NULL DEFAULT '',
-  `organization` varchar(255) NOT NULL DEFAULT '',
-  `group_id` int(11) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `group_id` (`group_id`),
-  CONSTRAINT `user_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `groups` (`id`) ON DELETE SET NULL ON UPDATE SET NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+create table user (
+  id                        bigint auto_increment not null,
+  username                  varchar(255),
+  password                  varchar(255),
+  type                      integer,
+  name                      varchar(255),
+  organization              varchar(255),
+  group_id                  bigint,
+  constraint ck_user_type check (type in (0,1,2)),
+  constraint pk_user primary key (id))
+;
 
-CREATE TABLE `token` (
-  `id` varchar(255) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `token_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+create table vote (
+  id                        bigint auto_increment not null,
+  category_id               bigint,
+  user_id                   bigint,
+  project_id                integer,
+  score                     integer,
+  constraint pk_vote primary key (id))
+;
 
-CREATE TABLE `vote_category` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
-  `type` tinytext NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+create table vote_category (
+  id                        bigint auto_increment not null,
+  name                      varchar(255),
+  type                      integer,
+  constraint ck_vote_category_type check (type in (0,1)),
+  constraint pk_vote_category primary key (id))
+;
 
-CREATE TABLE `vote` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `category_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `project_id` int(11) NOT NULL,
-  `score` int(11) NOT NULL DEFAULT '1',
-  PRIMARY KEY (`id`),
-  KEY `category_id` (`category_id`),
-  KEY `user_id` (`user_id`),
-  KEY `project_id` (`project_id`),
-  CONSTRAINT `vote_ibfk_1` FOREIGN KEY (`category_id`) REFERENCES `vote_category` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `vote_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `vote_ibfk_3` FOREIGN KEY (`project_id`) REFERENCES `project` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+alter table project add constraint fk_project_group_1 foreign key (group_id) references groups (id) on delete restrict on update restrict;
+create index ix_project_group_1 on project (group_id);
+alter table user add constraint fk_user_group_2 foreign key (group_id) references groups (id) on delete restrict on update restrict;
+create index ix_user_group_2 on user (group_id);
+alter table vote add constraint fk_vote_category_3 foreign key (category_id) references vote_category (id) on delete restrict on update restrict;
+create index ix_vote_category_3 on vote (category_id);
+alter table vote add constraint fk_vote_user_4 foreign key (user_id) references user (id) on delete restrict on update restrict;
+create index ix_vote_user_4 on vote (user_id);
+alter table vote add constraint fk_vote_project_5 foreign key (project_id) references project (id) on delete restrict on update restrict;
+create index ix_vote_project_5 on vote (project_id);
 
 
 
 # --- !Downs
 
-DROP TABLE `config`;
-DROP TABLE `token`;
-DROP TABLE `vote`;
-DROP TABLE `vote_category`;
-DROP TABLE `user`;
-DROP TABLE `project`;
-DROP TABLE `groups`;
+SET FOREIGN_KEY_CHECKS=0;
+
+drop table config;
+
+drop table groups;
+
+drop table project;
+
+drop table user;
+
+drop table vote;
+
+drop table vote_category;
+
+SET FOREIGN_KEY_CHECKS=1;
+
