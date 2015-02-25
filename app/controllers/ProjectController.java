@@ -20,7 +20,7 @@ public class ProjectController {
 
         try
         {
-            project = Project.find.byId(Long.parseLong(id));
+            project = Project.find.byId(Integer.parseInt(id));
         }
         catch(NumberFormatException e)
         {

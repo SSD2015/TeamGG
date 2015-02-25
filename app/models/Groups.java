@@ -9,14 +9,14 @@ import javax.persistence.Id;
 @Entity
 public class Groups extends Model {
     @Id
-    public Long id;
+    public Integer id;
 
     @Constraints.Required
     public String name;
 
     public int number;
 
-    public static Finder<Long, Groups> find = new Finder<Long, Groups>(
-            Long.class, Groups.class
+    public static Finder<Integer, Groups> find = new Finder<Integer, Groups>(
+            Integer.class, Groups.class
     );
 }

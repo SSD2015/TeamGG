@@ -5,12 +5,12 @@
 
 create table config (
   k                         varchar(255) not null,
-  value                     varchar(255),
+  value                     longtext,
   constraint pk_config primary key (k))
 ;
 
 create table groups (
-  id                        bigint auto_increment not null,
+  id                        integer auto_increment not null,
   name                      varchar(255),
   number                    integer,
   constraint pk_groups primary key (id))
@@ -19,35 +19,36 @@ create table groups (
 create table project (
   id                        integer auto_increment not null,
   name                      varchar(255),
-  group_id                  bigint,
-  description               varchar(255),
+  group_id                  integer,
+  description               longtext,
   logo                      varchar(255),
   constraint pk_project primary key (id))
 ;
 
 create table user (
-  id                        bigint auto_increment not null,
+  id                        integer auto_increment not null,
   username                  varchar(255),
   password                  varchar(255),
   type                      integer,
   name                      varchar(255),
   organization              varchar(255),
-  group_id                  bigint,
+  group_id                  integer,
   constraint ck_user_type check (type in (0,1,2)),
   constraint pk_user primary key (id))
 ;
 
 create table vote (
-  id                        bigint auto_increment not null,
-  category_id               bigint,
-  user_id                   bigint,
+  id                        integer auto_increment not null,
+  category_id               integer,
+  user_id                   integer,
   project_id                integer,
   score                     integer,
+  date                      datetime,
   constraint pk_vote primary key (id))
 ;
 
 create table vote_category (
-  id                        bigint auto_increment not null,
+  id                        integer auto_increment not null,
   name                      varchar(255),
   type                      integer,
   constraint ck_vote_category_type check (type in (0,1)),

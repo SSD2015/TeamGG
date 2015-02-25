@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 @JsonIgnoreProperties({"password"})
 public class User extends Model {
     @Id
-    public Long id;
+    public Integer id;
 
     @Constraints.Required
     public String username;
@@ -39,7 +39,7 @@ public class User extends Model {
         VOTER, INSTRUCTOR, ORGANIZER
     }
 
-    public static Finder<Long, User> find = new Finder<Long, User>(
-            Long.class, User.class
+    public static Finder<Integer, User> find = new Finder<Integer, User>(
+            Integer.class, User.class
     );
 }

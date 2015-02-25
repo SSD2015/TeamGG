@@ -3,16 +3,13 @@ package models;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 public class Project extends Model {
 
     @Id
-    public int id;
+    public Integer id;
 
     @Constraints.Required
     public String name;
@@ -21,11 +18,12 @@ public class Project extends Model {
     @JoinColumn(name="group_id", referencedColumnName="id")
     public Groups group;
 
+    @Lob
     public String description;
     public String logo;
 
-    public static Finder<Long, Project> find = new Finder<Long, Project>(
-            Long.class, Project.class
+    public static Finder<Integer, Project> find = new Finder<Integer, Project>(
+            Integer.class, Project.class
     );
 
 }

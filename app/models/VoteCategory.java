@@ -11,7 +11,7 @@ import javax.persistence.Table;
 @Table(name = "vote_category")
 public class VoteCategory {
     @Id
-    public long id;
+    public Integer id;
 
     @Constraints.Required
     public String name;
@@ -23,8 +23,8 @@ public class VoteCategory {
         BEST_OF, NUMERIC
     }
 
-    public static Model.Finder<Long, VoteCategory> find = new Model.Finder<Long, VoteCategory>(
-            Long.class, VoteCategory.class
+    public static Model.Finder<Integer, VoteCategory> find = new Model.Finder<Integer, VoteCategory>(
+            Integer.class, VoteCategory.class
     );
 
 }

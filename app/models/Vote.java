@@ -1,17 +1,16 @@
 package models;
 
+import play.data.format.Formats;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 public class Vote {
     @Id
-    public Long id;
+    public Integer id;
 
     @ManyToOne
     @JoinColumn(name="category_id", referencedColumnName="id")
@@ -28,7 +27,9 @@ public class Vote {
     @Constraints.Required
     public int score = 1;
 
-    public static Model.Finder<Long, Vote> find = new Model.Finder<Long, Vote>(
-            Long.class, Vote.class
+    public Date date;
+
+    public static Model.Finder<Integer, Vote> find = new Model.Finder<Integer, Vote>(
+            Integer.class, Vote.class
     );
 }

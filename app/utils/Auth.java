@@ -13,7 +13,7 @@ public class Auth {
         String id = session("user");
         User user;
         try {
-            user = User.find.byId(Long.parseLong(id));
+            user = User.find.byId(Integer.parseInt(id));
         }catch(NumberFormatException e){
             user = null;
         }
