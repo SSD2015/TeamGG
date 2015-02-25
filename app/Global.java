@@ -25,7 +25,11 @@ public class Global extends GlobalSettings {
         public F.Promise<Result> call(Http.Context ctx) throws java.lang.Throwable {
             F.Promise<Result> result = this.delegate.call(ctx);
             Http.Response response = ctx.response();
-            response.setHeader("Access-Control-Allow-Origin", "*");
+            String origin = ctx.request().getHeader("Origin");
+            if(origin == null){
+                origin = "*";
+            }
+            response.setHeader("Access-Control-Allow-Origin", origin);
             return result;
         }
     }
@@ -39,9 +43,15 @@ public class Global extends GlobalSettings {
     private static class CORSResult implements Result {
         final private play.api.mvc.Result wrappedResult;
 
-        public CORSResult(Results.Status status) {
+        public CORSResult(Http.RequestHeader header, Results.Status status) {
             List<Tuple2<String, String>> list = new ArrayList<Tuple2<String, String>>();
-            Tuple2<String, String> t = new Tuple2<String, String>("Access-Control-Allow-Origin","*");
+
+            String origin = header.getHeader("Origin");
+            if(origin == null){
+                origin = "*";
+            }
+
+            Tuple2<String, String> t = new Tuple2<String, String>("Access-Control-Allow-Origin", origin);
             list.add(t);
             Seq<Tuple2<String, String>> seq = Scala.toSeq(list);
             wrappedResult = status.withHeaders(seq);
@@ -57,7 +67,7 @@ public class Global extends GlobalSettings {
     */
     @Override
     public F.Promise<Result> onBadRequest(Http.RequestHeader request, String error) {
-        return F.Promise.<Result>pure(new CORSResult(BadRequest()));
+        return F.Promise.<Result>pure(new CORSResult(request, BadRequest()));
     }
 
     /*
@@ -65,7 +75,7 @@ public class Global extends GlobalSettings {
     */
     @Override
     public F.Promise<Result> onError(Http.RequestHeader request, Throwable t) {
-        return F.Promise.<Result>pure(new CORSResult(InternalServerError()));
+        return F.Promise.<Result>pure(new CORSResult(request, InternalServerError()));
     }
 
     /*
@@ -73,6 +83,6 @@ public class Global extends GlobalSettings {
     */
     @Override
     public F.Promise<Result> onHandlerNotFound(Http.RequestHeader request) {
-        return F.Promise.<Result>pure(new CORSResult(NotFound()));
+        return F.Promise.<Result>pure(new CORSResult(request, NotFound()));
     }
 }
