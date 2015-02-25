@@ -1,15 +1,39 @@
-@(title: String)(content: Html)
-
+@(title: String, user: User = null)(content: Html)
 <!DOCTYPE html>
-
 <html>
     <head>
-        <title>@title</title>
-        <link rel="stylesheet" media="screen" href="@routes.Assets.at("stylesheets/main.css")">
-        <link rel="shortcut icon" type="image/png" href="@routes.Assets.at("images/favicon.png")">
-        <script src="@routes.Assets.at("javascripts/hello.js")" type="text/javascript"></script>
+        <meta charset="utf-8">
+        <title>@if(!title.isEmpty){@title | }Exceed Vote</title>
+        <meta name="viewport" content="initial-scale=1, width=device-width">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/css/bootstrap.css">
+        <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="http://gg.whs.in.th/mockup/admin.css">
     </head>
     <body>
-        @content
+        <header class="mainheader">
+            <div class="container">
+                <div class="row">
+                    <h1 class="brand col-sm-8">Exceed Vote</h1>
+                    @if(user != null) {
+                        <div class="col-sm-4 text-right">
+                            Logged in as <strong>username</strong>.
+                            <div>
+                                <a class="btn btn-default" href="..">Logout</a>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </header>
+        @if(!title.isEmpty) {
+            <header class="pageheader">
+                <div class="container">
+                    <h2>@title</h2>
+                </div>
+            </header>
+        }
+        <div class="container">
+           @content
+        </div>
     </body>
 </html>

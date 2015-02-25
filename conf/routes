@@ -2,12 +2,17 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
+# Admin
+GET            /                       controllers.AdminController.main()
+GET            /login                  controllers.LoginController.login()
+POST           /login                  controllers.LoginController.doLogin()
+
+# API
 POST           /api/auth/login         controllers.AuthController.login()
 GET            /api/auth/check         controllers.AuthController.check()
 POST           /api/auth/logout        controllers.AuthController.logout()
 
 GET            /api/project            controllers.ProjectController.list()
-
 GET            /api/project/*id        controllers.ProjectController.getInfo(id)
 
 # Map static resources from the /public folder to the /assets URL path

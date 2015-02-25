@@ -1,0 +1,25 @@
+@(login: Form[forms.LoginForm])
+@import helper._
+@implicitField = @{ FieldConstructor(bootstrapFieldTemplate.render) }
+
+@main("Login") {
+
+  @if(login.hasGlobalErrors) {
+    <div class="alert alert-danger">@login.globalError.message</div>
+  }
+
+  @helper.form(action = routes.LoginController.doLogin(), 'class -> "form-horizontal") {
+    @CSRF.formField
+    @helper.inputText(login("username"), 'class -> "form-control", '_label -> "Username")
+    @helper.inputPassword(login("password"), 'class -> "form-control", '_label -> "Password")
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <div class="help-block">
+          Use your KU account to sign in.
+        </div>
+        <button type="submit" class="btn btn-success">Login</button>
+      </div>
+    </div>
+  }
+
+}

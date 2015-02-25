@@ -8,12 +8,10 @@ import play.mvc.Result;
 import scala.Tuple2;
 import scala.collection.Seq;
 
-import static play.core.j.JavaResults.BadRequest;
-import static play.core.j.JavaResults.InternalServerError;
-import static play.core.j.JavaResults.NotFound;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import static play.core.j.JavaResults.*;
 
 public class Global extends GlobalSettings {
     private class ActionWrapper extends Action.Simple {

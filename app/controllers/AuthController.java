@@ -17,22 +17,9 @@ public class AuthController extends Controller {
         String username = body.findPath("username").textValue();
         String password = body.findPath("password").textValue();
 
-        Authenticator auth = new KuMailAuth();
-        Authenticator.AuthenticatorUser result = auth.auth(username, password);
+        User user = Auth.login(username, password);
 
-        User user = null;
-        if(result != Authenticator.INVALID){
-            user = User.find.where().eq("username", result.getUsername()).findUnique();
-            if(user == null){
-                // TODO: User shouldn't be created here. Remove this code when backoffice can create users in bulk
-                user = new User();
-                user.username = result.getUsername();
-                user.type = User.TYPES.VOTER;
-                Ebean.save(user);
-            }
-
-            session("user", String.valueOf(user.id));
-        }else{
+        if(user == null) {
             return forbidden(buildUser(user));
         }
 
