@@ -1,0 +1,260 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "Exceed Vote",
+        "description": "Exceed vote client-server API by Team GG",
+        "version": "1.0.0"
+    },
+    "host": "gg.whs.in.th",
+    "basePath": "/api",
+    "schemes": [
+        "http",
+        "https"
+    ],
+    "produces": [
+        "application/json"
+    ],
+    "paths": {
+        "/auth/login": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "description": "Attempt to log user in with app account or KU account",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Login has succeed. A user object is returned",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    },
+                    "403": {
+                        "description": "Login has failed. A empty user object is returned",
+                        "schema": {
+                            "$ref": "#/definitions/EmptyUser"
+                        }
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/Login"
+                        }
+                    }
+                ]
+            }
+        },
+        "/auth/check": {
+            "get": {
+                "tags": [
+                    "Authentication"
+                ],
+                "description": "Check whether there is active user session",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Return either valid user object is logged in or empty user object",
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/logout": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "description": "Logout",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success will be `true` if the user had logged in",
+                        "schema": {
+                            "$ref": "#/definitions/Success"
+                        }
+                    }
+                }
+            }
+        },
+        "/project": {
+            "get": {
+                "tags": [
+                    "Project"
+                ],
+                "description": "Get list of projects",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of project are returned",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Project"
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/project/{id}": {
+            "get": {
+                "tags": [
+                    "Project"
+                ],
+                "description": "Get a project information",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A project information is returned",
+                        "schema": {
+                            "$ref": "#/definitions/Project"
+                        }
+                    },
+                    "400": {
+                        "description": "The project ID cannot be parsed"
+                    },
+                    "404": {
+                        "description": "There is no project with given ID"
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "number",
+                        "required": true,
+                        "description": "Project ID as returned from GET /project"
+                    }
+                ]
+            }
+        }
+    },
+    "definitions": {
+        "User": {
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "username": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string",
+                    "description": "User's real name or username"
+                },
+                "organization": {
+                    "type": "string",
+                    "description": "User's associated organization or empty string"
+                },
+                "group": {
+                    "$ref": "#/definitions/Group"
+                },
+                "type_code": {
+                    "enum": [
+                        0,
+                        1,
+                        2
+                    ]
+                },
+                "type": {
+                    "enum": [
+                        "VOTER",
+                        "INSTRUCTOR",
+                        "ORGANIZER"
+                    ]
+                }
+            }
+        },
+        "Login": {
+            "required": [
+                "username",
+                "password"
+            ],
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "example": "b5610545757",
+                    "description": "Don't add @ku.ac.th"
+                },
+                "password": {
+                    "type": "string"
+                }
+            }
+        },
+        "EmptyUser": {
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "description": "Will be `null`"
+                }
+            }
+        },
+        "Project": {
+            "required": [
+                "id",
+                "name"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "group": {
+                    "$ref": "#/definitions/Group"
+                },
+                "description": {
+                    "type": "string"
+                },
+                "logo": {
+                    "type": "string"
+                }
+            }
+        },
+        "Group": {
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "number": {
+                    "type": "number",
+                    "description": "Group number (eg. Group no. 1)"
+                }
+            }
+        },
+        "Success": {
+            "required": [
+                "success"
+            ],
+            "properties": {
+                "success": {
+                    "type": "boolean",
+                    "description": "`true` if the request has been completed"
+                }
+            }
+        }
+    }
+}

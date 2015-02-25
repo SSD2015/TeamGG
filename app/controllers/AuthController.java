@@ -43,6 +43,19 @@ public class AuthController extends Controller {
         return ok(buildUser(Auth.getUser()));
     }
 
+    public static Result logout(){
+        ObjectNode out = Json.newObject();
+        if(!Auth.isLoggedIn()){
+            out.put("success", false);
+            return ok(out);
+        }
+
+        session().remove("user");
+        out.put("success", true);
+
+        return ok(out);
+    }
+
     private static ObjectNode buildUser(User user){
         ObjectNode out = Json.newObject();
 

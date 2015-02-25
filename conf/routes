@@ -2,14 +2,15 @@
 # This file defines all application routes (Higher priority routes first)
 # ~~~~
 
-POST        /api/auth/login         controllers.AuthController.login()
-GET         /api/auth/check         controllers.AuthController.check()
+POST           /api/auth/login         controllers.AuthController.login()
+GET            /api/auth/check         controllers.AuthController.check()
+POST           /api/auth/logout        controllers.AuthController.logout()
 
-GET         /api/project            controllers.ProjectController.list()
+GET            /api/project            controllers.ProjectController.list()
 
-GET         /api/project/*id        controllers.ProjectController.getInfo(id)
+GET            /api/project/*id        controllers.ProjectController.getInfo(id)
 
 # Map static resources from the /public folder to the /assets URL path
-GET         /assets/*file           controllers.Assets.at(path="/public", file)
+GET            /assets/*file           controllers.Assets.at(path="/public", file)
 
-OPTIONS     /*all                     controllers.Application.cors(all)
+OPTIONS        /*all                   controllers.Application.cors(all)
