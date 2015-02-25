@@ -30,6 +30,7 @@ public class Global extends GlobalSettings {
                 origin = "*";
             }
             response.setHeader("Access-Control-Allow-Origin", origin);
+            response.setHeader("Access-Control-Allow-Credentials", "true");
             return result;
         }
     }
@@ -52,6 +53,8 @@ public class Global extends GlobalSettings {
             }
 
             Tuple2<String, String> t = new Tuple2<String, String>("Access-Control-Allow-Origin", origin);
+            list.add(t);
+            t = new Tuple2<String, String>("Access-Control-Allow-Credentials", "true");
             list.add(t);
             Seq<Tuple2<String, String>> seq = Scala.toSeq(list);
             wrappedResult = status.withHeaders(seq);
