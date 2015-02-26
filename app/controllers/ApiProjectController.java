@@ -8,7 +8,7 @@ import java.util.List;
 
 import static play.mvc.Results.*;
 
-public class ProjectController {
+public class ApiProjectController {
 
     public static Result list() {
         List<Project> projects = Project.find.all();

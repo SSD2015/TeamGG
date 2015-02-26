@@ -11,7 +11,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import utils.Auth;
 
-public class AuthController extends Controller {
+public class ApiAuthController extends Controller {
     public static Result login(){
         JsonNode body = request().body().asJson();
         String username = body.findPath("username").textValue();
