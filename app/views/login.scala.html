@@ -1,6 +1,6 @@
 @(login: Form[forms.LoginForm])
 @import helper._
-@implicitField = @{ FieldConstructor(bootstrapFieldTemplate.render) }
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-sm-2", "col-sm-10") }
 
 @main("Login") {
 
@@ -8,18 +8,11 @@
     <div class="alert alert-danger">@login.globalError.message</div>
   }
 
-  @helper.form(action = routes.LoginController.doLogin(), 'class -> "form-horizontal") {
+  @b3.form(routes.LoginController.doLogin()) {
     @CSRF.formField
-    @helper.inputText(login("username"), 'class -> "form-control", '_label -> "Username")
-    @helper.inputPassword(login("password"), 'class -> "form-control", '_label -> "Password")
-    <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-10">
-        <div class="help-block">
-          Use your KU account to sign in.
-        </div>
-        <button type="submit" class="btn btn-success">Login</button>
-      </div>
-    </div>
+    @b3.text(login("username"), '_label -> "Username", '_help -> "Use your KU account to sign in")
+    @b3.password(login("password"), '_label -> "Password")
+	@b3.submit('class -> "btn btn-success"){ Login }
   }
 
 }
