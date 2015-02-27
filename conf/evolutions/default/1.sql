@@ -5,28 +5,28 @@
 
 create table config (
   k                         varchar(255) not null,
-  value                     longtext,
+  value                     clob,
   constraint pk_config primary key (k))
 ;
 
 create table groups (
-  id                        integer auto_increment not null,
+  id                        integer not null,
   name                      varchar(255),
   number                    integer,
   constraint pk_groups primary key (id))
 ;
 
 create table project (
-  id                        integer auto_increment not null,
+  id                        integer not null,
   name                      varchar(255),
   group_id                  integer,
-  description               longtext,
+  description               clob,
   logo                      varchar(255),
   constraint pk_project primary key (id))
 ;
 
 create table user (
-  id                        integer auto_increment not null,
+  id                        integer not null,
   username                  varchar(255),
   password                  varchar(255),
   type                      integer,
@@ -38,22 +38,34 @@ create table user (
 ;
 
 create table vote (
-  id                        integer auto_increment not null,
+  id                        integer not null,
   category_id               integer,
   user_id                   integer,
   project_id                integer,
   score                     integer,
-  date                      datetime,
+  date                      timestamp,
   constraint pk_vote primary key (id))
 ;
 
 create table vote_category (
-  id                        integer auto_increment not null,
+  id                        integer not null,
   name                      varchar(255),
   type                      integer,
   constraint ck_vote_category_type check (type in (0,1)),
   constraint pk_vote_category primary key (id))
 ;
+
+create sequence config_seq;
+
+create sequence groups_seq;
+
+create sequence project_seq;
+
+create sequence user_seq;
+
+create sequence vote_seq;
+
+create sequence vote_category_seq;
 
 alter table project add constraint fk_project_group_1 foreign key (group_id) references groups (id) on delete restrict on update restrict;
 create index ix_project_group_1 on project (group_id);
@@ -70,19 +82,31 @@ create index ix_vote_project_5 on vote (project_id);
 
 # --- !Downs
 
-SET FOREIGN_KEY_CHECKS=0;
+SET REFERENTIAL_INTEGRITY FALSE;
 
-drop table config;
+drop table if exists config;
 
-drop table groups;
+drop table if exists groups;
 
-drop table project;
+drop table if exists project;
 
-drop table user;
+drop table if exists user;
 
-drop table vote;
+drop table if exists vote;
 
-drop table vote_category;
+drop table if exists vote_category;
 
-SET FOREIGN_KEY_CHECKS=1;
+SET REFERENTIAL_INTEGRITY TRUE;
+
+drop sequence if exists config_seq;
+
+drop sequence if exists groups_seq;
+
+drop sequence if exists project_seq;
+
+drop sequence if exists user_seq;
+
+drop sequence if exists vote_seq;
+
+drop sequence if exists vote_category_seq;
 

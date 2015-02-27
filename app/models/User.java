@@ -18,7 +18,9 @@ public class User extends Model {
     public String username;
 
     public String password;
-    public TYPES type;
+
+    @Constraints.Required
+    public TYPES type = TYPES.VOTER;
 
     public String name = "";
     public String organization = "";

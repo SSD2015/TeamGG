@@ -24,23 +24,27 @@ public class Auth {
         return user;
     }
 
-    /**
-     * Check whether the user can access a resource
-     * @param aclType Type of resource
-     * @return true if accessible
-     */
-    public static boolean acl(ACL_TYPE aclType){
+    public static boolean acl(ACL_TYPE type){
         User user = getUser();
 
         if(user == null){
             return false;
         }
 
+        return acl(user, type);
+    }
+
+    /**
+     * Check whether the user can access a resource
+     * @param aclType Type of resource
+     * @return true if accessible
+     */
+    public static boolean acl(User user, ACL_TYPE aclType){
         switch(aclType){
             case ADMIN:
                 return user.group != null || user.type.ordinal() >= User.TYPES.INSTRUCTOR.ordinal();
             case GROUP_SETTINGS:
-                return user.group != null;
+                return user.group != null || Auth.acl(ACL_TYPE.GROUPS);
             case GROUPS: case USERS: case CONFIG:
                 return user.type == User.TYPES.ORGANIZER;
             case VOTE_RESULT:

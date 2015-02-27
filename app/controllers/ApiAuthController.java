@@ -48,6 +48,7 @@ public class ApiAuthController extends Controller {
 
         if(user == null){
             out.putNull("username");
+            out.putNull("id");
         }else{
             out = (ObjectNode) Json.toJson(user);
             out.put("type_code", user.type.ordinal());
