@@ -9,7 +9,9 @@ public class AdminController {
     public static Result main(){
         if(!Auth.acl(Auth.ACL_TYPE.ADMIN)){
             if(Auth.isLoggedIn()){
-                return unauthorized("User is not allowed to access the backoffice");
+                // user is not allowed to access the backoffice
+                // redirect to the mobile client
+                return redirect("/mobile");
             }
             return redirect(controllers.routes.LoginController.login());
         }
