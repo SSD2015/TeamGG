@@ -1,32 +1,29 @@
-# --- Created by Ebean DDL
-# To stop Ebean DDL generation, remove this comment and start using Evolutions
-
 # --- !Ups
 
 create table config (
   k                         varchar(255) not null,
-  value                     clob,
+  value                     longtext,
   constraint pk_config primary key (k))
 ;
 
 create table groups (
-  id                        integer not null,
+  id                        integer auto_increment not null,
   name                      varchar(255),
   number                    integer,
   constraint pk_groups primary key (id))
 ;
 
 create table project (
-  id                        integer not null,
+  id                        integer auto_increment not null,
   name                      varchar(255),
   group_id                  integer,
-  description               clob,
+  description               longtext,
   logo                      varchar(255),
   constraint pk_project primary key (id))
 ;
 
 create table user (
-  id                        integer not null,
+  id                        integer auto_increment not null,
   username                  varchar(255),
   password                  varchar(255),
   type                      integer,
@@ -38,34 +35,22 @@ create table user (
 ;
 
 create table vote (
-  id                        integer not null,
+  id                        integer auto_increment not null,
   category_id               integer,
   user_id                   integer,
   project_id                integer,
   score                     integer,
-  date                      timestamp,
+  date                      datetime,
   constraint pk_vote primary key (id))
 ;
 
 create table vote_category (
-  id                        integer not null,
+  id                        integer auto_increment not null,
   name                      varchar(255),
   type                      integer,
   constraint ck_vote_category_type check (type in (0,1)),
   constraint pk_vote_category primary key (id))
 ;
-
-create sequence config_seq;
-
-create sequence groups_seq;
-
-create sequence project_seq;
-
-create sequence user_seq;
-
-create sequence vote_seq;
-
-create sequence vote_category_seq;
 
 alter table project add constraint fk_project_group_1 foreign key (group_id) references groups (id) on delete restrict on update restrict;
 create index ix_project_group_1 on project (group_id);
@@ -82,31 +67,19 @@ create index ix_vote_project_5 on vote (project_id);
 
 # --- !Downs
 
-SET REFERENTIAL_INTEGRITY FALSE;
+SET FOREIGN_KEY_CHECKS=0;
 
-drop table if exists config;
+drop table config;
 
-drop table if exists groups;
+drop table groups;
 
-drop table if exists project;
+drop table project;
 
-drop table if exists user;
+drop table user;
 
-drop table if exists vote;
+drop table vote;
 
-drop table if exists vote_category;
+drop table vote_category;
 
-SET REFERENTIAL_INTEGRITY TRUE;
-
-drop sequence if exists config_seq;
-
-drop sequence if exists groups_seq;
-
-drop sequence if exists project_seq;
-
-drop sequence if exists user_seq;
-
-drop sequence if exists vote_seq;
-
-drop sequence if exists vote_category_seq;
+SET FOREIGN_KEY_CHECKS=1;
 
