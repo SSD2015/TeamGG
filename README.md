@@ -1,5 +1,7 @@
 # Team GG
 
+![Travis](https://travis-ci.org/SSD2015/TeamGG.svg)
+
 ## Who are Team GG
 
 Team GG - Great Goal! are:
