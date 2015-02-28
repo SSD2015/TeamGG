@@ -146,6 +146,67 @@
                     }
                 ]
             }
+        },
+        "/categories": {
+            "get": {
+                "tags": ["Voting"],
+                "description": "Get a list of available vote categories",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A list of vote categories are returned",
+                        "schema": {
+                            "$ref": "#/definitions/VoteCategory"
+                        }
+                    }
+                }
+            }
+        },
+        "/project/{id}/vote/{category}": {
+            "post": {
+                "tags": [
+                    "Voting"
+                ],
+                "description": "Perform voting",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Voting succeeded",
+                        "schema": {
+                            "$ref": "#/definitions/Vote"
+                        }
+                    },
+                    "400": {
+                        "description": "One or more of the given ID cannot be parsed"
+                    },
+                    "404": {
+                        "description": "One or more of the given ID aren't available"
+                    },
+                    "403": {
+                        "description": "User is not authenticated"
+                    }
+                },
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "type": "number",
+                        "required": true,
+                        "description": "Project ID as returned from GET /project"
+                    },
+                    {
+                        "in": "path",
+                        "name": "category",
+                        "type": "number",
+                        "required": true,
+                        "description": "Category ID as returned from GET /categories"
+                    }
+                ]
+            }
         }
     },
     "definitions": {
@@ -169,6 +230,7 @@
                     "$ref": "#/definitions/Group"
                 },
                 "type_code": {
+                    "type": "number",
                     "enum": [
                         0,
                         1,
@@ -176,6 +238,7 @@
                     ]
                 },
                 "type": {
+                    "type": "string",
                     "enum": [
                         "VOTER",
                         "INSTRUCTOR",
@@ -228,7 +291,10 @@
                 },
                 "logo": {
                     "type": "string"
-                }
+                },
+                "vote": {
+                    "$ref": "#/definitions/Vote"
+                },
             }
         },
         "Group": {
@@ -253,6 +319,42 @@
                 "success": {
                     "type": "boolean",
                     "description": "`true` if the request has been completed"
+                }
+            }
+        },
+        "Vote": {
+            "required": [
+                "category", "score"
+            ],
+            "properties": {
+                "category": {
+                    "type": "number",
+                    "description": "ID of voting category"
+                },
+                "score": {
+                    "type": "number",
+                    "description": "Score user has given. Always 1 in case of best of voting.",
+                    "example": 1
+                }
+            }
+        },
+        "VoteCategory": {
+            "required": [
+                "id", "name", "type"
+            ],
+            "properties": {
+                "id": {
+                    "type": "number"
+                },
+                "name": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "BEST_OF",
+                        "NUMERIC"
+                    ]
                 }
             }
         }
