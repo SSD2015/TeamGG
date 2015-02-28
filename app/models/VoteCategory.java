@@ -9,7 +9,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "vote_category")
-public class VoteCategory {
+public class VoteCategory extends Model {
     @Id
     public Integer id;
 

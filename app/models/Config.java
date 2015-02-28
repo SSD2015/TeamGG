@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Entity
-public class Config {
+public class Config extends Model {
     @Id
     public String k;
 

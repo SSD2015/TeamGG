@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-public class Vote {
+public class Vote extends Model {
     @Id
     public Integer id;
 

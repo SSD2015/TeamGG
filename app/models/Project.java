@@ -4,6 +4,7 @@ import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 public class Project extends Model {
@@ -25,5 +26,12 @@ public class Project extends Model {
     public static Finder<Integer, Project> find = new Finder<Integer, Project>(
             Integer.class, Project.class
     );
+
+    public List<Vote> getVotes(User user){
+        return Vote.find.where()
+                .eq("project_id", id)
+                .eq("user_id", user.id)
+                .findList();
+    }
 
 }
