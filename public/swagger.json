@@ -294,7 +294,7 @@
                 },
                 "vote": {
                     "$ref": "#/definitions/Vote"
-                },
+                }
             }
         },
         "Group": {
