@@ -11,7 +11,7 @@ public class AdminController {
             if(Auth.isLoggedIn()){
                 // user is not allowed to access the backoffice
                 // redirect to the mobile client
-                return redirect("/mobile");
+                return redirect("/mobile/");
             }
             return redirect(controllers.routes.LoginController.login());
         }

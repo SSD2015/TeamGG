@@ -28,17 +28,7 @@ public class ApiProjectController {
             ObjectNode node = (ObjectNode) Json.toJson(project);
             if(user != null) {
                 List<Vote> voteList = project.getVotes(user);
-                List<JsonNode> votes = new ArrayList<JsonNode>(voteList.size());
-
-                for (Vote vote : voteList) {
-                    ObjectNode voteObj = Json.newObject();
-                    voteObj.put("category", vote.category.id);
-                    voteObj.put("score", vote.score);
-                    votes.add(voteObj);
-                }
-
-
-                node.put("vote", Json.toJson(votes));
+                node.put("vote", Json.toJson(voteList));
             }
             out.add(node);
         }
@@ -51,7 +41,11 @@ public class ApiProjectController {
         Project project = Project.find.byId(id);
         if (project != null)
         {
-            return ok(Json.toJson(project));
+            ObjectNode out = (ObjectNode) Json.toJson(project);
+            if(Auth.isLoggedIn()) {
+                out.put("vote", Json.toJson(project.getVotes(Auth.getUser())));
+            }
+            return ok(out);
         }
         else
         {
