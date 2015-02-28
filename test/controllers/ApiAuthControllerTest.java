@@ -2,13 +2,11 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import org.junit.After;
+import helper.Assert;
 import org.junit.Assume;
 import org.junit.Test;
 import play.libs.Json;
-import play.mvc.Http;
 import play.mvc.Result;
-import play.test.WithApplication;
 
 import static org.junit.Assert.*;
 import static play.test.Helpers.*;
@@ -27,8 +25,7 @@ public class ApiAuthControllerTest extends helper.WithApplicationInMemoryDB {
         Result result = routeAndCall(
                 fakeRequest(POST, controllers.routes.ApiAuthController.login().toString()).withJsonBody(req)
                 , 5);
-        assertEquals(200, status(result));
-        assertEquals("application/json", contentType(result));
+        Assert.assertJson(result);
 
         JsonNode body = Json.parse(contentAsString(result));
         assertNotNull("id is not null", body.findPath("id").intValue());
@@ -52,8 +49,7 @@ public class ApiAuthControllerTest extends helper.WithApplicationInMemoryDB {
     @Test
     public void testCheckSuccess() throws Exception {
         Result result = routeAndCall(fakeRequest(GET, controllers.routes.ApiAuthController.check().toString()).withSession("user", "1"), 5);
-        assertEquals(200, status(result));
-        assertEquals("application/json", contentType(result));
+        Assert.assertJson(result);
 
         JsonNode body = Json.parse(contentAsString(result));
         assertEquals("id is 1", 1, body.findPath("id").intValue());
@@ -63,8 +59,7 @@ public class ApiAuthControllerTest extends helper.WithApplicationInMemoryDB {
     @Test
     public void testCheckFail() throws Exception {
         Result result = routeAndCall(fakeRequest(GET, controllers.routes.ApiAuthController.check().toString()), 5);
-        assertEquals(200, status(result));
-        assertEquals("application/json", contentType(result));
+        Assert.assertJson(result);
 
         JsonNode body = Json.parse(contentAsString(result));
         assertTrue("id is null", body.findPath("id").isNull());

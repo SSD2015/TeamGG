@@ -49,7 +49,7 @@ public class ApiVoteController {
                 vote.user = user;
                 vote.project = project;
                 vote.date = new Date();
-                vote.update();
+                vote.save();
             }
             else
             {

@@ -11,6 +11,7 @@ import utils.Auth;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import static play.mvc.Results.notFound;
 import static play.mvc.Results.ok;
@@ -27,7 +28,7 @@ public class ApiProjectController {
         {
             ObjectNode node = (ObjectNode) Json.toJson(project);
             if(user != null) {
-                List<Vote> voteList = project.getVotes(user);
+                Map<Integer, Vote> voteList = project.getVoteMap(user);
                 node.put("vote", Json.toJson(voteList));
             }
             out.add(node);
@@ -43,7 +44,7 @@ public class ApiProjectController {
         {
             ObjectNode out = (ObjectNode) Json.toJson(project);
             if(Auth.isLoggedIn()) {
-                out.put("vote", Json.toJson(project.getVotes(Auth.getUser())));
+                out.put("vote", Json.toJson(project.getVoteMap(Auth.getUser())));
             }
             return ok(out);
         }

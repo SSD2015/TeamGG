@@ -46,8 +46,7 @@ public class AuthTest extends helper.WithApplicationInMemoryDB {
 
     @Test
     public void testAcl() throws Exception {
-        // TODO: Check for user of type 1 but does have group/does not have group
-        for(int i = 0; i <= 3; i++) {
+        for(int i = 0; i <= 4; i++) {
             // try logging in as various roles
             if(i > 0){
                 session("user", String.valueOf(i));
@@ -67,6 +66,11 @@ public class AuthTest extends helper.WithApplicationInMemoryDB {
                             Auth.ACL_TYPE.USERS,
                             Auth.ACL_TYPE.CONFIG,
                             Auth.ACL_TYPE.VOTE_RESULT
+                    );
+                }else if(i == 4){
+                    allowed = Collections.list(
+                            Auth.ACL_TYPE.ADMIN,
+                            Auth.ACL_TYPE.GROUP_SETTINGS
                     );
                 }
                 assertEquals(
