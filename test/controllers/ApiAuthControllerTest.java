@@ -25,7 +25,7 @@ public class ApiAuthControllerTest extends helper.WithApplicationInMemoryDB {
         req.put("password", play.Play.application().configuration().getString("test.kupassword"));
 
         Result result = routeAndCall(
-                fakeRequest(POST, "/api/auth/login").withJsonBody(req)
+                fakeRequest(POST, controllers.routes.ApiAuthController.login().toString()).withJsonBody(req)
                 , 5);
         assertEquals(200, status(result));
         assertEquals("application/json", contentType(result));
@@ -38,7 +38,7 @@ public class ApiAuthControllerTest extends helper.WithApplicationInMemoryDB {
     @Test
     public void testLoginFail() throws Exception {
         Result result = routeAndCall(
-                fakeRequest(POST, "/api/auth/login")
+                fakeRequest(POST, controllers.routes.ApiAuthController.login().toString())
                         .withJsonBody(Json.parse("{\"username\": \"invalid-test\", \"password\": \"invalid-test\"}"))
                 , 5);
         assertEquals(403, status(result));
@@ -51,7 +51,7 @@ public class ApiAuthControllerTest extends helper.WithApplicationInMemoryDB {
 
     @Test
     public void testCheckSuccess() throws Exception {
-        Result result = routeAndCall(fakeRequest(GET, "/api/auth/check").withSession("user", "1"), 5);
+        Result result = routeAndCall(fakeRequest(GET, controllers.routes.ApiAuthController.check().toString()).withSession("user", "1"), 5);
         assertEquals(200, status(result));
         assertEquals("application/json", contentType(result));
 
@@ -62,7 +62,7 @@ public class ApiAuthControllerTest extends helper.WithApplicationInMemoryDB {
 
     @Test
     public void testCheckFail() throws Exception {
-        Result result = routeAndCall(fakeRequest(GET, "/api/auth/check"), 5);
+        Result result = routeAndCall(fakeRequest(GET, controllers.routes.ApiAuthController.check().toString()), 5);
         assertEquals(200, status(result));
         assertEquals("application/json", contentType(result));
 
