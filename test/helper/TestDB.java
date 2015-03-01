@@ -91,6 +91,11 @@ public class TestDB {
         project.description = "Dummy project";
         project.save();
 
+        Project project2 = new Project();
+        project2.name = "Hello world 2";
+        project2.description = "Dummy project 2";
+        project2.save();
+
         VoteCategory bestVote = new VoteCategory();
         bestVote.name = "Best Dummy";
         bestVote.type = VoteCategory.VOTE_TYPE.BEST_OF;

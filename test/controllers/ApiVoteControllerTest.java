@@ -2,6 +2,7 @@ package controllers;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import helper.Assert;
 import helper.WithApplicationInMemoryDB;
 import models.Vote;
@@ -41,11 +42,36 @@ public class ApiVoteControllerTest extends WithApplicationInMemoryDB {
 
     @Test
     public void testVoteError() throws Exception {
+        // unauthorized
         Result result = routeAndCall(
                 fakeRequest(POST, controllers.routes.ApiVoteController.vote(1, 1).toString()),
                 5
         );
         assertEquals(401, status(result));
+
+        // no category id
+        result = routeAndCall(
+                fakeRequest(POST, controllers.routes.ApiVoteController.vote(1, 5555555).toString())
+                    .withSession("user", "1"),
+                5
+        );
+        assertEquals(404, status(result));
+
+        // no project id
+        result = routeAndCall(
+                fakeRequest(POST, controllers.routes.ApiVoteController.vote(555555, 1).toString())
+                        .withSession("user", "1"),
+                5
+        );
+        assertEquals(404, status(result));
+
+        // no both id
+        result = routeAndCall(
+                fakeRequest(POST, controllers.routes.ApiVoteController.vote(55555, 5555555).toString())
+                        .withSession("user", "1"),
+                5
+        );
+        assertEquals(404, status(result));
     }
 
     @Test
@@ -64,6 +90,44 @@ public class ApiVoteControllerTest extends WithApplicationInMemoryDB {
                         .withSession("user", userId),
                 5
         );
+        testHasVoteResult(result);
+
+        // change vote
+        result = routeAndCall(
+                fakeRequest(POST, controllers.routes.ApiVoteController.vote(2, 1).toString())
+                        .withSession("user", userId),
+                5
+        );
+        Assert.assertJson(result);
+
+        result = routeAndCall(
+                fakeRequest(GET, controllers.routes.ApiProjectController.getInfo(2).toString())
+                        .withSession("user", userId),
+                5
+        );
+        testHasVoteResult(result);
+
+        // check that old project has no more vote
+        result = routeAndCall(
+                fakeRequest(GET, controllers.routes.ApiProjectController.getInfo(1).toString())
+                        .withSession("user", userId),
+                5
+        );
+        Assert.assertJson(result);
+
+        JsonNode body = Json.parse(contentAsString(result));
+        JsonNode details = body.findPath("vote");
+        assertTrue("have vote attribute", details.isObject());
+        ObjectNode detailsNode = (ObjectNode) details;
+        assertEquals("old project has no more vote", 0, detailsNode.size());
+    }
+
+    @Test
+    public void testNumericVote(){
+        // TODO
+    }
+
+    private void testHasVoteResult(Result result){
         Assert.assertJson(result);
 
         JsonNode body = Json.parse(contentAsString(result));
@@ -74,10 +138,5 @@ public class ApiVoteControllerTest extends WithApplicationInMemoryDB {
         assertTrue("has vote in category 1", firstVote.isObject());
         assertEquals("has vote's category field", 1, firstVote.findPath("category").intValue());
         assertEquals("has vote's score field", 1, firstVote.findPath("score").intValue());
-    }
-
-    @Test
-    public void testNumericVote(){
-        // TODO
     }
 }
