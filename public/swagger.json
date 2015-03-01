@@ -293,7 +293,10 @@
                     "type": "string"
                 },
                 "vote": {
-                    "$ref": "#/definitions/Vote"
+                    "type": "object",
+                    "additionalProperties":{
+                        "$ref": "#/definitions/Vote"
+                    }
                 }
             }
         },
