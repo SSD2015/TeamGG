@@ -9,18 +9,26 @@ import models.Vote;
 import org.junit.Test;
 import play.libs.Json;
 import play.mvc.Result;
+import play.test.FakeRequest;
 
 import static org.junit.Assert.*;
 import static play.test.Helpers.*;
 
 public class ApiVoteControllerTest extends WithApplicationInMemoryDB {
 
+    public static final String LIST = "/api/categories";
+    public static final String VOTE = "/api/project/%d/vote/%d";
+
+    /**
+     * User to test vote with
+     * Must has no existing votes
+     */
+    public static final String userId = "1";
+
     @Test
     public void testList() throws Exception {
-        Result result = routeAndCall(
-                fakeRequest(GET, controllers.routes.ApiVoteController.list().toString()),
-                5
-        );
+        FakeRequest request = fakeRequest(GET, LIST);
+        Result result = routeAndCall(request, 5);
         Assert.assertJson(result);
 
         JsonNode body = Json.parse(contentAsString(result));
@@ -43,76 +51,51 @@ public class ApiVoteControllerTest extends WithApplicationInMemoryDB {
     @Test
     public void testVoteError() throws Exception {
         // unauthorized
-        Result result = routeAndCall(
-                fakeRequest(POST, controllers.routes.ApiVoteController.vote(1, 1).toString()),
-                5
-        );
+        FakeRequest request = fakeRequest(POST, String.format(VOTE, 1, 1));
+        Result result = routeAndCall(request, 5);
         assertEquals(401, status(result));
 
         // no category id
-        result = routeAndCall(
-                fakeRequest(POST, controllers.routes.ApiVoteController.vote(1, 5555555).toString())
-                    .withSession("user", "1"),
-                5
-        );
+        request = fakeRequest(POST, String.format(VOTE, 1, 5555)).withSession("user", "1");
+        result = routeAndCall(request, 5);
         assertEquals(404, status(result));
 
         // no project id
-        result = routeAndCall(
-                fakeRequest(POST, controllers.routes.ApiVoteController.vote(555555, 1).toString())
-                        .withSession("user", "1"),
-                5
-        );
+        request = fakeRequest(POST, String.format(VOTE, 5555, 1)).withSession("user", "1");
+        result = routeAndCall(request, 5);
         assertEquals(404, status(result));
 
         // no both id
-        result = routeAndCall(
-                fakeRequest(POST, controllers.routes.ApiVoteController.vote(55555, 5555555).toString())
-                        .withSession("user", "1"),
-                5
-        );
+        request = fakeRequest(POST, String.format(VOTE, 5555, 5555)).withSession("user", "1");
+        result = routeAndCall(request, 5);
         assertEquals(404, status(result));
     }
 
     @Test
     public void testBestVote(){
-        String userId = "1";
-
-        Result result = routeAndCall(
-                fakeRequest(POST, controllers.routes.ApiVoteController.vote(1, 1).toString())
-                    .withSession("user", userId),
-                5
-        );
+        // place vote
+        FakeRequest request = fakeRequest(POST, String.format(VOTE, 1, 1)).withSession("user", userId);
+        Result result = routeAndCall(request, 5);
         Assert.assertJson(result);
 
-        result = routeAndCall(
-                fakeRequest(GET, controllers.routes.ApiProjectController.getInfo(1).toString())
-                        .withSession("user", userId),
-                5
-        );
+        // check
+        request = fakeRequest(GET, String.format(ApiProjectControllerTest.INFO, 1)).withSession("user", userId);
+        result = routeAndCall(request, 5);
         testHasVoteResult(result);
 
         // change vote
-        result = routeAndCall(
-                fakeRequest(POST, controllers.routes.ApiVoteController.vote(2, 1).toString())
-                        .withSession("user", userId),
-                5
-        );
+        request = fakeRequest(POST, String.format(VOTE, 2, 1)).withSession("user", userId);
+        result = routeAndCall(request, 5);
         Assert.assertJson(result);
 
-        result = routeAndCall(
-                fakeRequest(GET, controllers.routes.ApiProjectController.getInfo(2).toString())
-                        .withSession("user", userId),
-                5
-        );
+        // check
+        request = fakeRequest(GET, String.format(ApiProjectControllerTest.INFO, 2)).withSession("user", userId);
+        result = routeAndCall(request, 5);
         testHasVoteResult(result);
 
         // check that old project has no more vote
-        result = routeAndCall(
-                fakeRequest(GET, controllers.routes.ApiProjectController.getInfo(1).toString())
-                        .withSession("user", userId),
-                5
-        );
+        request = fakeRequest(GET, String.format(ApiProjectControllerTest.INFO, 1)).withSession("user", userId);
+        result = routeAndCall(request, 5);
         Assert.assertJson(result);
 
         JsonNode body = Json.parse(contentAsString(result));

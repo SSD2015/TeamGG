@@ -7,24 +7,33 @@ import helper.WithApplicationInMemoryDB;
 import org.junit.Test;
 import play.libs.Json;
 import play.mvc.Result;
+import play.test.FakeRequest;
 
 import static org.junit.Assert.*;
 import static play.test.Helpers.*;
 
 public class ApiProjectControllerTest extends WithApplicationInMemoryDB {
+    public static final String LIST = "/api/project";
+    public static final String INFO = "/api/project/%d";
+
+    /**
+     * User to test get project vote with
+     * Must have existing votes
+     */
+    public static final String userId = "4";
+
     @Test
     public void testListGuest(){
-        Result result = routeAndCall(
-                fakeRequest(GET, controllers.routes.ApiProjectController.list().toString()),
-                5
-        );
+        FakeRequest request = fakeRequest(GET, LIST);
+        Result result = routeAndCall(request, 5);
+
         Assert.assertJson(result);
 
         JsonNode body = Json.parse(contentAsString(result));
         assertTrue("body must be array", body instanceof ArrayNode);
 
         ArrayNode arr = (ArrayNode) body;
-        assertEquals("has one content", 1, arr.size());
+        assertEquals("has two content", 2, arr.size());
 
         JsonNode project = arr.get(0);
         validateProject(project);
@@ -32,18 +41,15 @@ public class ApiProjectControllerTest extends WithApplicationInMemoryDB {
 
     @Test
     public void testListUser(){
-        Result result = routeAndCall(
-                fakeRequest(GET, controllers.routes.ApiProjectController.list().toString())
-                    .withSession("user", "4"),
-                5
-        );
+        FakeRequest request = fakeRequest(GET, LIST).withSession("user", userId);
+        Result result = routeAndCall(request, 5);
         Assert.assertJson(result);
 
         JsonNode body = Json.parse(contentAsString(result));
         assertTrue("body must be array", body instanceof ArrayNode);
 
         ArrayNode arr = (ArrayNode) body;
-        assertEquals("has one content", 1, arr.size());
+        assertEquals("has two content", 2, arr.size());
 
         JsonNode project = arr.get(0);
         validateProject(project);
@@ -52,10 +58,8 @@ public class ApiProjectControllerTest extends WithApplicationInMemoryDB {
 
     @Test
     public void testGetInfoGuest(){
-        Result result = routeAndCall(
-                fakeRequest(GET, controllers.routes.ApiProjectController.getInfo(1).toString()),
-                5
-        );
+        FakeRequest request = fakeRequest(GET, String.format(INFO, 1));
+        Result result = routeAndCall(request, 5);
         Assert.assertJson(result);
 
         JsonNode body = Json.parse(contentAsString(result));
@@ -64,11 +68,8 @@ public class ApiProjectControllerTest extends WithApplicationInMemoryDB {
 
     @Test
     public void testGetInfoUser(){
-        Result result = routeAndCall(
-                fakeRequest(GET, controllers.routes.ApiProjectController.getInfo(1).toString())
-                    .withSession("user", "4"),
-                5
-        );
+        FakeRequest request = fakeRequest(GET, String.format(INFO, 1)).withSession("user", userId);
+        Result result = routeAndCall(request, 5);
         Assert.assertJson(result);
 
         JsonNode body = Json.parse(contentAsString(result));
@@ -78,10 +79,8 @@ public class ApiProjectControllerTest extends WithApplicationInMemoryDB {
 
     @Test
     public void testGetInfoError(){
-        Result result = routeAndCall(
-                fakeRequest(GET, controllers.routes.ApiProjectController.getInfo(999999).toString()),
-                5
-        );
+        FakeRequest request = fakeRequest(GET, String.format(INFO, 9999));
+        Result result = routeAndCall(request, 5);
         assertEquals(404, status(result));
     }
 
