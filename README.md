@@ -1,4 +1,4 @@
-![Exceed Vote logo](public/images/logo.svg)
+![Exceed Vote logo](logo.png)
 
 [![Travis](https://travis-ci.org/SSD2015/TeamGG.svg)](https://travis-ci.org/SSD2015/TeamGG)
 
