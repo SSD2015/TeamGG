@@ -11,9 +11,10 @@
     </head>
     <body>
         <header class="mainheader">
+            <div id="bareffect"></div>
             <div class="container">
                 <div class="row">
-                    <h1 class="brand col-sm-8">Exceed Vote</h1>
+                    <h1 class="brand col-sm-8"><img src="@routes.Assets.versioned("images/logo.svg")"></h1>
                     @if(user != null) {
                         <div class="col-sm-4 text-right">
                             Logged in as <strong>username</strong>.

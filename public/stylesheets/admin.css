@@ -1,7 +1,9 @@
 .mainheader{
-	background: #20A337;
+	background: #a6e4a3;
 	color: white;
-	padding: 20px 10px;
+	padding: 5px 10px;
+	text-shadow: black 0 3px 5px;
+	position: relative;
 }
 .mainheader h1{
 	margin: 0;
@@ -11,6 +13,11 @@
 .mainheader .btn{
 	margin-top: 5px;
 }
+.brand img{
+	height: 80px;
+	width: 232px;
+}
+
 .pageheader{
 	border-bottom: 1px solid #dedede;
 	padding-bottom: 10px;

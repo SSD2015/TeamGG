@@ -1,4 +1,6 @@
-# Team GG's Exceed Vote ![Travis](https://travis-ci.org/SSD2015/TeamGG.svg)
+![Exceed Vote logo](public/images/logo.svg)
+
+[![Travis](https://travis-ci.org/SSD2015/TeamGG.svg)](https://travis-ci.org/SSD2015/TeamGG)
 
 Exceed Vote is a voting application for Exceed Camp, a software development camp at Kasetsart University. Flexibility is the main focus of this application while ease of use is also considered.
 
