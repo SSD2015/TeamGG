@@ -1,0 +1,42 @@
+.mainheader{
+	background: #20A337;
+	color: white;
+	padding: 20px 10px;
+}
+.mainheader h1{
+	margin: 0;
+	margin-bottom: 10px;
+	font-weight: bold;
+}
+.mainheader .btn{
+	margin-top: 5px;
+}
+.pageheader{
+	border-bottom: 1px solid #dedede;
+	padding-bottom: 10px;
+	margin-bottom: 20px;
+}
+.screenshot img{
+	max-height: 200px;
+}
+.screenshot .add{
+	text-align: center;
+	height: 210px;
+	line-height: 200px;
+	font-size: 30pt;
+}
+
+@media (max-width: 767px){
+	.mainheader .text-right{
+		text-align: left;
+	}
+	.screenshot{
+		height: 250px;
+		overflow-y: auto;
+	}
+	.screenshot .add{
+		height: 100px;
+		line-height: 90px;
+		font-size: 20pt;
+	}
+}

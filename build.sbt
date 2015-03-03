@@ -2,7 +2,8 @@ name := """exceedvote"""
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayJava)
+lazy val root = (project in file("."))
+  .enablePlugins(PlayJava)
 
 scalaVersion := "2.11.1"
 
@@ -16,3 +17,5 @@ libraryDependencies ++= Seq(
   "com.sun.mail" % "javax.mail" % "1.5.2",
   "com.adrianhurt" %% "play-bootstrap3" % "0.4"
 )
+
+pipelineStages in Assets := Seq(cssCompress, digest, gzip)
