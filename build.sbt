@@ -19,3 +19,10 @@ libraryDependencies ++= Seq(
 )
 
 pipelineStages in Assets := Seq(cssCompress, digest, gzip)
+
+// exclude web module
+excludeFilter in cssCompress := new SimpleFileFilter({
+  f =>
+    def fileStartsWith(dir: File): Boolean = f.getPath.startsWith(dir.getPath)
+    fileStartsWith((WebKeys.webModuleDirectory in Assets).value)
+})
