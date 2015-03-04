@@ -4,7 +4,7 @@
 
 Exceed Vote is a voting application for Exceed Camp, a software development camp at Kasetsart University. Flexibility is the main focus of this application while ease of use is also considered.
 
-This software is developed as a part of 01219244 Software Development and Specifications at Kasetsart University.
+This software is developed as a part of 01219244 Software Specification and Design Laboratory at Kasetsart University.
 
 ## Production
 
