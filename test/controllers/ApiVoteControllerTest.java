@@ -43,9 +43,9 @@ public class ApiVoteControllerTest extends WithApplicationInMemoryDB {
         assertEquals("best vote type", "BEST_OF", voteOne.findPath("type").textValue());
 
         JsonNode voteTwo = arr.get(1);
-        assertEquals("score vote id", 2, voteTwo.findPath("id").intValue());
-        assertNotNull("score vote name", voteTwo.findPath("name").textValue());
-        assertEquals("score vote type", "NUMERIC", voteTwo.findPath("type").textValue());
+        assertEquals("star vote id", 2, voteTwo.findPath("id").intValue());
+        assertNotNull("star vote name", voteTwo.findPath("name").textValue());
+        assertEquals("star vote type", "STAR", voteTwo.findPath("type").textValue());
     }
 
     @Test

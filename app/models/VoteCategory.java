@@ -20,7 +20,7 @@ public class VoteCategory extends Model {
     public VOTE_TYPE type;
 
     public enum VOTE_TYPE {
-        BEST_OF, NUMERIC
+        BEST_OF, STAR
     }
 
     public static Model.Finder<Integer, VoteCategory> find = new Model.Finder<Integer, VoteCategory>(

@@ -103,7 +103,7 @@ public class TestDB {
 
         VoteCategory scoreVote = new VoteCategory();
         scoreVote.name = "Score";
-        scoreVote.type = VoteCategory.VOTE_TYPE.NUMERIC;
+        scoreVote.type = VoteCategory.VOTE_TYPE.STAR;
         scoreVote.save();
 
         Vote vote = new Vote();
