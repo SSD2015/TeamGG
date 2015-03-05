@@ -26,4 +26,6 @@ Voting UI                                                | 2
 
 ## Unplanned Work
 
-
+- Logo creation
+- SSL certificate request
+- Logout
