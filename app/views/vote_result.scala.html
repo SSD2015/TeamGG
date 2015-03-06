@@ -1,5 +1,5 @@
 @(projects: java.util.List[Project], categories: java.util.List[VoteCategory], summary: org.apache.commons.collections.map.MultiKeyMap)
-@main("Voting result", routes.AdminController.main().toString()) {
+@main("Voting result", routes.AdminController.main().url) {
 
 	<div class="row">
 		@for(category <- categories){

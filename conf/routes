@@ -10,6 +10,9 @@ POST           /logout                           controllers.LoginController.log
 
 GET            /vote_result                      controllers.VotingResultController.result()
 
+GET            /users                            controllers.UserController.list()
+POST           /users                            controllers.UserController.save()
+
 # API
 POST           /api/auth/login                   controllers.ApiAuthController.login()
 GET            /api/auth/check                   controllers.ApiAuthController.check()

@@ -1,0 +1,86 @@
+@(users: java.util.List[User], pager: utils.Pagination, addForm: Form[forms.AddUserForm])
+@import collection.JavaConverters._
+@import helper._
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-sm-2", "col-sm-10") }
+
+@main("Users", routes.AdminController.main().url){
+	<div class="row">
+		<div class="col-sm-8">
+			<div class="table-responsive">
+				<table class="table table-bordered">
+					<thead>
+						<tr>
+							<th>Username</th>
+							<th>Name</th>
+							<th>Organization</th>
+							<th>Role</th>
+							<th>Has password?</th>
+							<th>Edit</th>
+						</tr>
+					</thead>
+					<tbody>
+					@for(user <- users){
+						<tr>
+							<td>@user.username</td>
+							<td>@user.name</td>
+							<td>@user.organization</td>
+							<td>@{user.`type`}</td>
+							<td>@if(user.password == null || user.password.isEmpty){
+								<i class="glyphicon glyphicon-remove"></i>
+							}else{
+								<i class="glyphicon glyphicon-ok"></i>
+							}</td>
+							<td>
+								<a class="btn btn-link btn-sm" href="#">
+									<i class="glyphicon glyphicon-pencil"></i>
+								</a>
+							</td>
+						</tr>
+					}
+					</tbody>
+				</table>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			Edit form
+		</div>
+	</div>
+	<nav>
+		<ul class="pagination">
+			@if(pager.hasPreviousPage) {
+				<li>
+					<a href="@routes.UserController.list()?page=@{pager.getPreviousPage}" aria-label="Previous">
+						<span aria-hidden="true">&laquo;</span>
+					</a>
+				</li>
+			}else{
+				<li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+			}
+			@for(i <- 1 to pager.getPageCount){
+				<li><a href="@routes.UserController.list()?page=@{i-1}">@{i}</a></li>
+			}
+			@if(pager.hasNextPage) {
+				<li>
+					<a href="@routes.UserController.list()?page=@{pager.getNextPage}" aria-label="Next">
+						<span aria-hidden="true">&raquo;</span>
+					</a>
+				</li>
+			}else{
+				<li class="disabled"><a href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a></li>
+			}
+		</ul>
+	</nav>
+	<h3>Create new user</h3>
+	@if(addForm.hasGlobalErrors) {
+		<div class="alert alert-danger">@addForm.globalError.message</div>
+	}
+	@b3.form(routes.UserController.save()) {
+		@CSRF.formField
+		@b3.text(addForm("username"), '_label -> "Username")
+		@b3.password(addForm("password"), '_label -> "Password", '_help -> "Optional, user who does not have a password can login by KU account that has the same username")
+		@b3.text(addForm("name"), '_label -> "Real name")
+		@b3.text(addForm("organization"), '_label -> "Organization")
+		@b3.select(addForm("type"), options=for (c <- User.TYPES.values()) yield c.name() -> c.name(), '_label -> "Role")
+		@b3.submit('class -> "btn btn-success"){ Add }
+	}
+}
