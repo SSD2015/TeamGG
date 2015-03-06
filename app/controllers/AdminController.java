@@ -15,6 +15,6 @@ public class AdminController {
             }
             return redirect(controllers.routes.LoginController.login());
         }
-        return ok();
+        return ok(views.html.admin.render());
     }
 }

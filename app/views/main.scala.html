@@ -17,7 +17,7 @@
                     <h1 class="brand col-sm-8"><img src="@routes.Assets.versioned("images/logo.svg")"></h1>
                     @if(utils.Auth.isLoggedIn) {
                         <div class="col-sm-4 text-right">
-                            Logged in as <strong>@utils.Auth.getUser.getName</strong>.
+                            Logged in as <strong>@utils.Auth.getUser.getName</strong>
                             <div>
                                 <a class="btn btn-default" href="..">Logout</a>
                             </div>
@@ -33,7 +33,7 @@
                 </div>
             </header>
         }
-        <div class="container">
+        <div class="container maincontainer">
            @content
         </div>
     </body>
