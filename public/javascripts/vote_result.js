@@ -15,10 +15,26 @@
                     .x(function(d) { return d.label })
                     .y(function(d) { return d.value })
                     .showLabels(true);
-                console.log(datapoints);
 
                 d3.select($('svg', self).get(0))
                     .datum(datapoints)
+                    .transition().duration(350)
+                    .call(chart);
+
+                return chart;
+            });
+        }else{
+            nv.addGraph(function() {
+                var chart = nv.models.discreteBarChart()
+                    .x(function(d) { return d.label })
+                    .y(function(d) { return d.value })
+                    .staggerLabels(true)
+                    .showValues(true);
+
+                d3.select($('svg', self).get(0))
+                    .datum([
+                        {'key': 'Score', 'values': datapoints}
+                    ])
                     .transition().duration(350)
                     .call(chart);
 
