@@ -6,6 +6,7 @@
 GET            /                                 controllers.AdminController.main()
 GET            /login                            controllers.LoginController.login()
 POST           /login                            controllers.LoginController.doLogin()
+POST           /logout                           controllers.LoginController.logout()
 
 GET            /vote_result                      controllers.VotingResultController.result()
 

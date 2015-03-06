@@ -8,6 +8,7 @@ import play.filters.csrf.RequireCSRFCheck;
 import play.mvc.Result;
 import utils.Auth;
 
+import static play.mvc.Http.Context.Implicit.session;
 import static play.mvc.Results.badRequest;
 import static play.mvc.Results.ok;
 import static play.mvc.Results.redirect;
@@ -38,5 +39,11 @@ public class LoginController {
             loginForm.reject("Authentication failed");
             return badRequest(views.html.login.render(loginForm));
         }
+    }
+
+    @RequireCSRFCheck
+    public static Result logout() {
+        session().remove("user");
+        return redirect(controllers.routes.LoginController.login());
     }
 }

@@ -1,4 +1,5 @@
 @(title: String, back: String = null)(content: Html)
+@import views.html.helper.CSRF
 <!DOCTYPE html>
 <html>
     <head>
@@ -18,9 +19,10 @@
                     @if(utils.Auth.isLoggedIn) {
                         <div class="col-sm-4 text-right">
                             Logged in as <strong>@utils.Auth.getUser.getName</strong>
-                            <div>
-                                <a class="btn btn-default" href="..">Logout</a>
-                            </div>
+                            <form action="@routes.LoginController.logout()" method="POST">
+	                            @CSRF.formField
+								<input type="submit" class="btn btn-default" value="Logout">
+                            </form>
                         </div>
                     }
                 </div>
