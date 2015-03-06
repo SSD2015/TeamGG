@@ -48,7 +48,10 @@ public class Vote extends Model {
 
     public static MultiKeyMap summarize(){
         String sql = "SELECT project.id, project.name, category_id, SUM(vote.score) AS score," +
-                "(SELECT COUNT(*) FROM vote v WHERE v.category_id = vote.category_id) AS voters" +
+                "(SELECT COUNT(*) FROM vote v" +
+                " INNER JOIN vote_category ON vote_category.id = v.category_id" +
+                " WHERE v.category_id = vote.category_id AND (vote.project_id=v.project_id OR vote_category.type=0))" +
+                " AS voters" +
                 " FROM project" +
                 " JOIN vote ON vote.project_id = project.id" +
                 " GROUP BY project.id, vote.project_id, vote.category_id";
