@@ -27,7 +27,11 @@ public class UserController {
         addForm = addForm.bindFromRequest();
 
         if(addForm.data().containsKey("username")){
-            if(User.find.where().eq("username", addForm.data().getOrDefault("username", "")).findUnique() != null){
+            String username = addForm.data().get("username");
+            if(username == null){
+                username = "";
+            }
+            if(User.find.where().eq("username", username).findUnique() != null){
                 addForm.reject("username", "User with this username already exists");
             }
         }
