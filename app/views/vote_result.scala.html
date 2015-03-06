@@ -3,11 +3,14 @@
 
 	<div class="row">
 		@for(category <- categories){
-			<div class="col-sm-4 chart" data-category="@category.name" data-type="@{category.`type`}">
+			<div class="col-sm-4 chart" data-type="@{category.`type`}">
+				<h4 class="text-center">@category.name</h4>
 				<svg></svg>
 			@for(project <- projects) {
 				@defining(summary.get(project.id, category.id).asInstanceOf[Vote.VoteAggregate]) { item =>
-					<div class="data" data-data="@item.asJson.toString"></div>
+					@if(item != null) {
+						<div class="data" data-data="@item.asJson.toString"></div>
+					}
 				}
 			}
 			</div>
@@ -33,7 +36,7 @@
 						@for(category <- categories){
 							@defining(summary.get(project.id, category.id).asInstanceOf[Vote.VoteAggregate]){ item =>
 								@if(item == null){
-									<td></td>
+									<td>No vote</td>
 								}else{
 									<td>@item.score / @item.voters</td>
 								}
