@@ -31,6 +31,7 @@
                     .x(function(d) { return d.label })
                     .y(function(d) { return d.value })
                     .staggerLabels(true)
+                    .tooltips(false)
                     .showValues(true);
 
                 d3.select($('svg', self).get(0))
