@@ -1,4 +1,4 @@
-@(title: String)(content: Html)
+@(title: String, back: String = null)(content: Html)
 <!DOCTYPE html>
 <html>
     <head>
@@ -29,7 +29,12 @@
         @if(!title.isEmpty) {
             <header class="pageheader">
                 <div class="container">
-                    <h2>@title</h2>
+                    <h2>
+	                    @if(back != null){
+		                    <a href="@back" class="btn btn-link btn-lg"><i class="glyphicon glyphicon-chevron-left"></i></a>
+	                    }
+                        @title
+                    </h2>
                 </div>
             </header>
         }

@@ -7,6 +7,8 @@ GET            /                                 controllers.AdminController.mai
 GET            /login                            controllers.LoginController.login()
 POST           /login                            controllers.LoginController.doLogin()
 
+GET            /vote_result                      controllers.VotingResultController.result()
+
 # API
 POST           /api/auth/login                   controllers.ApiAuthController.login()
 GET            /api/auth/check                   controllers.ApiAuthController.check()

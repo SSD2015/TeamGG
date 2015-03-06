@@ -15,7 +15,8 @@ libraryDependencies ++= Seq(
   filters,
   "org.mariadb.jdbc" % "mariadb-java-client" % "1.1.8",
   "com.sun.mail" % "javax.mail" % "1.5.2",
-  "com.adrianhurt" %% "play-bootstrap3" % "0.4"
+  "com.adrianhurt" %% "play-bootstrap3" % "0.4",
+  "commons-collections" % "commons-collections" % "3.2.1"
 )
 
 pipelineStages in Assets := Seq(cssCompress, digest, gzip)

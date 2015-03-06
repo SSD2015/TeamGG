@@ -1,0 +1,50 @@
+@(projects: java.util.List[Project], categories: java.util.List[VoteCategory], summary: org.apache.commons.collections.map.MultiKeyMap)
+@main("Voting result", routes.AdminController.main().toString()) {
+
+	<div class="row">
+		@for(category <- categories){
+			<div class="col-sm-4 chart" data-category="@category.name" data-type="@{category.`type`}">
+				<svg></svg>
+			@for(project <- projects) {
+				@defining(summary.get(project.id, category.id).asInstanceOf[Vote.VoteAggregate]) { item =>
+					<div class="data" data-data="@item.asJson.toString"></div>
+				}
+			}
+			</div>
+		}
+	</div>
+
+	<div class="table-responsive">
+		<table class="table table-bordered">
+			<thead>
+				<tr>
+					<th class="col-xs-1">Group no.</th>
+					<th>Name</th>
+					@for(category <- categories){
+						<th>@category.name <small>(@{category.`type`})</small></th>
+					}
+				</tr>
+			</thead>
+			<tbody>
+				@for(project <- projects){
+					<tr>
+						<td>@project.group.number</td>
+						<td>@project.name</td>
+						@for(category <- categories){
+							@defining(summary.get(project.id, category.id).asInstanceOf[Vote.VoteAggregate]){ item =>
+								<td>@item.score / @item.voters</td>
+							}
+						}
+					</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/nvd3/1.7.0/nv.d3.min.css">
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
+	<script src="//cdnjs.cloudflare.com/ajax/libs/nvd3/1.7.0/nv.d3.min.js"></script>
+	<script src="@routes.Assets.versioned("javascripts/vote_result.js")"></script>
+
+}

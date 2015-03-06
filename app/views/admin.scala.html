@@ -1,4 +1,4 @@
-@item(name: String, description: String, link: String = "#", icon: String = "settings.svg") = {
+@item(name: String, description: String, link: String, icon: String = "settings.svg") = {
 	<a href="@link">
 		<div class="row adminrow">
 			<img src="@routes.Assets.versioned("images/"+icon)" class="img-responsive col-xs-1 icon">
@@ -15,6 +15,6 @@
 	@item("Groups", "Create groups, assign users to group.", "#", "group.svg")
 	@item("Projects", "Manage list of projects and their descriptions.", "#", "projects.svg")
 	@item("Users", "Manage list of users and their permission.", "#", "users.svg")
-	@item("Voting result", "View real time voting result", "#", "poll.svg")
+	@item("Voting result", "View real time voting result", routes.VotingResultController.result().url, "poll.svg")
 
 }
