@@ -1,10 +1,10 @@
 package controllers;
 
 import forms.AddUserForm;
-import forms.LoginForm;
 import models.User;
 import play.data.Form;
 import play.mvc.Result;
+import play.twirl.api.Html;
 import utils.Pagination;
 
 import java.util.List;
@@ -18,23 +18,34 @@ public class UserController {
 
     public static Result list(){
         Form<AddUserForm> addForm = Form.form(AddUserForm.class);
-        return list(addForm);
+        return ok(list(addForm));
     }
 
     public static Result save(){
         Form<AddUserForm> addForm = Form.form(AddUserForm.class);
 
         addForm = addForm.bindFromRequest();
+
+        if(addForm.data().containsKey("username")){
+            if(User.find.where().eq("username", addForm.data().getOrDefault("username", "")).findUnique() != null){
+                addForm.reject("username", "User with this username already exists");
+            }
+        }
+
         if(addForm.hasErrors()){
-            return list(addForm);
+            return badRequest(list(addForm));
         }
 
         AddUserForm data = addForm.get();
 
-        return list(addForm);
+        User user = new User();
+        user.fromForm(data);
+        user.save();
+
+        return ok(list(addForm));
     }
 
-    private static Result list(Form<AddUserForm> addForm){
+    private static Html list(Form<AddUserForm> addForm){
         int start = 0;
         try {
             start = Integer.parseInt(request().getQueryString("start"));
@@ -49,6 +60,6 @@ public class UserController {
                 .setMaxRows(ROW_PER_PAGE)
                 .findList();
 
-        return ok(views.html.user_list.render(users, pager, addForm));
+        return views.html.user_list.render(users, pager, addForm);
     }
 }

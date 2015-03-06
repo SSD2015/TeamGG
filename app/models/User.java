@@ -1,12 +1,14 @@
 package models;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import forms.AddUserForm;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
+import utils.Auth;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
 @Entity
 @JsonIgnoreProperties({"password"})
@@ -15,6 +17,7 @@ public class User extends Model {
     public Integer id;
 
     @Constraints.Required
+    @Column(unique = true)
     public String username;
 
     public String password;
@@ -35,6 +38,22 @@ public class User extends Model {
         }else{
             return username;
         }
+    }
+
+    public void setPassword(String password){
+        this.password = Auth.getHasher().encode(password);
+    }
+
+    public boolean checkPassword(String password){
+        return Auth.getHasher().matches(password, this.password);
+    }
+
+    public void fromForm(AddUserForm data) {
+        username = data.username;
+        setPassword(data.password);
+        name = data.name;
+        organization = data.organization;
+        type = data.type;
     }
 
     public enum TYPES {

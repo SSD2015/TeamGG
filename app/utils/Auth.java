@@ -4,6 +4,8 @@ import auth.Authenticator;
 import auth.KuMailAuth;
 import com.avaje.ebean.Ebean;
 import models.User;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static play.mvc.Controller.session;
 
@@ -83,5 +85,9 @@ public class Auth {
         session("user", String.valueOf(user.id));
 
         return user;
+    }
+
+    public static PasswordEncoder getHasher(){
+        return new BCryptPasswordEncoder();
     }
 }
