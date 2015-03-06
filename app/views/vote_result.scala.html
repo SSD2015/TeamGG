@@ -32,7 +32,11 @@
 						<td>@project.name</td>
 						@for(category <- categories){
 							@defining(summary.get(project.id, category.id).asInstanceOf[Vote.VoteAggregate]){ item =>
-								<td>@item.score / @item.voters</td>
+								@if(item == null){
+									<td></td>
+								}else{
+									<td>@item.score / @item.voters</td>
+								}
 							}
 						}
 					</tr>
