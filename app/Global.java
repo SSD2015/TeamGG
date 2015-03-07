@@ -1,5 +1,7 @@
 import play.GlobalSettings;
+import play.api.mvc.EssentialFilter;
 import play.api.mvc.Results;
+import play.filters.csrf.CSRFFilter;
 import play.libs.F;
 import play.libs.Scala;
 import play.mvc.Action;

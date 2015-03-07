@@ -1,4 +1,4 @@
-@(title: String, back: String = null)(content: Html)
+@(title: String, back: String = null)(content: Html)(css: Html)(js: Html)
 @import views.html.helper.CSRF
 <!DOCTYPE html>
 <html>
@@ -9,6 +9,7 @@
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/css/bootstrap.css">
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.2/css/bootstrap-theme.min.css">
         <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/admin.css")">
+	    @css
     </head>
     <body>
         <header class="mainheader">
@@ -43,5 +44,7 @@
         <div class="container maincontainer">
            @content
         </div>
+	    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+	    @js
     </body>
 </html>

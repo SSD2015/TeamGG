@@ -1,11 +1,14 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import forms.AddUserForm;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
+import play.libs.Json;
 import utils.Auth;
 
 import javax.persistence.*;
@@ -40,8 +43,20 @@ public class User extends Model {
         }
     }
 
+    public JsonNode toAdminJson(){
+        ObjectNode out = (ObjectNode) Json.toJson(this);
+        out.put("has_password", password != null && !password.isEmpty());
+        out.put("name", name);
+        out.remove("group");
+        return out;
+    }
+
     public void setPassword(String password){
-        this.password = Auth.getHasher().encode(password);
+        if(password.isEmpty()){
+            this.password = "";
+        }else {
+            this.password = Auth.getHasher().encode(password);
+        }
     }
 
     public boolean checkPassword(String password){
@@ -49,8 +64,14 @@ public class User extends Model {
     }
 
     public void fromForm(AddUserForm data) {
+        fromForm(data, true);
+    }
+
+    public void fromForm(AddUserForm data, boolean usePassword){
         username = data.username;
-        setPassword(data.password);
+        if(usePassword) {
+            setPassword(data.password);
+        }
         name = data.name;
         organization = data.organization;
         type = data.type;

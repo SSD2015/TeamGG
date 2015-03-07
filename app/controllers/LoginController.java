@@ -5,6 +5,7 @@ import models.User;
 import play.data.Form;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
+import play.mvc.Controller;
 import play.mvc.Result;
 import utils.Auth;
 
@@ -13,7 +14,7 @@ import static play.mvc.Results.badRequest;
 import static play.mvc.Results.ok;
 import static play.mvc.Results.redirect;
 
-public class LoginController {
+public class LoginController extends Controller {
     @AddCSRFToken
     public static Result login(){
         Form<LoginForm> loginForm = Form.form(LoginForm.class);

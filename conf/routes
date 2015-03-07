@@ -12,6 +12,7 @@ GET            /vote_result                      controllers.VotingResultControl
 
 GET            /users                            controllers.UserController.list()
 POST           /users                            controllers.UserController.save()
+POST           /users/edit                       controllers.UserController.edit()
 
 # API
 POST           /api/auth/login                   controllers.ApiAuthController.login()

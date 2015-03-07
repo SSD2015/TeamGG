@@ -7,20 +7,20 @@
 	<div class="row">
 		<div class="col-sm-8">
 			<div class="table-responsive">
-				<table class="table table-bordered">
+				<table class="table table-bordered" id="datatable">
 					<thead>
 						<tr>
 							<th>Username</th>
 							<th>Name</th>
 							<th>Organization</th>
 							<th>Role</th>
-							<th class="col-xs-1">Has PW?</th>
+							<th class="col-xs-2">Has PW?</th>
 							<th>Edit</th>
 						</tr>
 					</thead>
 					<tbody>
 					@for(user <- users){
-						<tr>
+						<tr data-data="@user.toAdminJson">
 							<td>@user.username</td>
 							<td>@user.name</td>
 							<td>@user.organization</td>
@@ -31,7 +31,7 @@
 								<i class="glyphicon glyphicon-ok"></i>
 							}</td>
 							<td>
-								<a class="btn btn-link btn-sm" href="#">
+								<a class="btn btn-link btn-sm editbtn" href="#">
 									<i class="glyphicon glyphicon-pencil"></i>
 								</a>
 							</td>
@@ -42,7 +42,43 @@
 			</div>
 		</div>
 		<div class="col-sm-4">
-			Edit form
+			<form action="@routes.UserController.edit()" method="POST" id="editpanel">
+				<h4>Edit</h4>
+				<div id="error"></div>
+				@CSRF.formField
+				<input name="id" type="hidden">
+				<div class="form-group">
+					<label>Username</label>
+					<input class="form-control" type="text" name="username">
+				</div>
+				<div class="form-group">
+					<label>Password</label>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<input name="changepw" type="checkbox">
+						</span>
+						<input class="form-control" type="password" name="password" placeholder="Unchanged">
+					</div>
+				</div>
+				<div class="form-group">
+					<label>Real name</label>
+					<input class="form-control" type="text" name="name">
+				</div>
+				<div class="form-group">
+					<label>Organization</label>
+					<input class="form-control" type="text" name="organization">
+				</div>
+				<div class="form-group">
+					<label>Role</label>
+					<select name="type" class="form-control">
+						@for(types <- User.TYPES.values()){
+							<option value="@types">@types</option>
+						}
+					</select>
+				</div>
+				<input class="btn btn-success" type="submit" value="Edit">
+				<input class="btn btn-link" type="button" value="Delete">
+			</form>
 		</div>
 	</div>
 	<nav>
@@ -76,11 +112,14 @@
 	}
 	@b3.form(routes.UserController.save()) {
 		@CSRF.formField
-		@b3.text(addForm("username"), '_label -> "Username")
+		@b3.text(addForm("username"), '_label -> "Username", 'autofocus -> true)
 		@b3.password(addForm("password"), '_label -> "Password", '_help -> "Optional, user who does not have a password can login by KU account that has the same username")
 		@b3.text(addForm("name"), '_label -> "Real name")
 		@b3.text(addForm("organization"), '_label -> "Organization")
 		@b3.select(addForm("type"), options=for (c <- User.TYPES.values()) yield c.name() -> c.name(), '_label -> "Role")
 		@b3.submit('class -> "btn btn-success"){ Add }
 	}
+} {
+} {
+	<script src="@routes.Assets.versioned("javascripts/edit_user.js")"></script>
 }

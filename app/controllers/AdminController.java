@@ -1,12 +1,11 @@
 package controllers;
 
 import play.filters.csrf.AddCSRFToken;
+import play.mvc.Controller;
 import play.mvc.Result;
 import utils.Auth;
 
-import static play.mvc.Results.*;
-
-public class AdminController {
+public class AdminController extends Controller {
     @AddCSRFToken
     public static Result main(){
         if(!Auth.acl(Auth.ACL_TYPE.ADMIN)){
