@@ -9,9 +9,14 @@ public class Pagination {
         this.itemPerPage = itemPerPage;
     }
 
-    public Pagination(int itemPerPage, int currentPage) {
+    public Pagination(int itemPerPage, int itemCount, int currentPage) {
         this.itemPerPage = itemPerPage;
-        this.currentPage = currentPage;
+        this.itemCount = itemCount;
+        this.currentPage = Math.min(currentPage, getLastPage());
+    }
+
+    public int getCurrentPage() {
+        return currentPage;
     }
 
     public int getItemPerPage() {
@@ -20,10 +25,6 @@ public class Pagination {
 
     public int getItemCount() {
         return itemCount;
-    }
-
-    public void setItemCount(int itemCount) {
-        this.itemCount = itemCount;
     }
 
     public boolean hasPreviousPage(){
@@ -45,6 +46,10 @@ public class Pagination {
 
     public boolean hasNextPage(){
         return (currentPage+1) * itemPerPage < itemCount;
+    }
+
+    public int getLastPage(){
+        return Math.max(0, getPageCount() - 1);
     }
 
     public int getPageCount(){

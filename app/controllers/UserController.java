@@ -130,8 +130,7 @@ public class UserController extends Controller {
         }catch(NumberFormatException e){
         }
 
-        Pagination pager = new Pagination(ROW_PER_PAGE, start);
-        pager.setItemCount(User.find.findRowCount());
+        Pagination pager = new Pagination(ROW_PER_PAGE, User.find.findRowCount(), start);
 
         List<User> users = User.find.where()
                 .setFirstRow(start * ROW_PER_PAGE)
