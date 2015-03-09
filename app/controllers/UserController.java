@@ -10,6 +10,7 @@ import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
 import play.twirl.api.Html;
+import utils.Auth;
 import utils.Pagination;
 
 import java.util.List;
@@ -20,12 +21,19 @@ public class UserController extends Controller {
 
     @AddCSRFToken
     public static Result list(){
+        if(!Auth.acl(Auth.ACL_TYPE.USERS)){
+            return forbidden();
+        }
         Form<AddUserForm> addForm = Form.form(AddUserForm.class);
         return ok(list(addForm));
     }
 
     @RequireCSRFCheck
     public static Result save(){
+        if(!Auth.acl(Auth.ACL_TYPE.USERS)){
+            return forbidden();
+        }
+
         Form<AddUserForm> addForm = Form.form(AddUserForm.class);
 
         addForm = addForm.bindFromRequest();
@@ -55,14 +63,15 @@ public class UserController extends Controller {
 
     @RequireCSRFCheck
     public static Result edit(){
-        Form<AddUserForm> addForm = Form.form(AddUserForm.class);
-
-        addForm = addForm.bindFromRequest();
+        if(!Auth.acl(Auth.ACL_TYPE.USERS)){
+            return forbidden();
+        }
 
         Map<String, String[]> body = request().body().asFormUrlEncoded();
         if(!body.containsKey("id")){
             return badRequest(errorJson("id is not given"));
         }
+
         int id;
         try{
             id = Integer.parseInt(body.get("id")[0]);
@@ -72,15 +81,24 @@ public class UserController extends Controller {
             return internalServerError(errorJson("id has zero length"));
         }
 
-        boolean changePassword = false;
-        if(body.containsKey("changepw")){
-            changePassword = body.get("changepw")[0].equals("on");
-        }
-
         User user = User.find.byId(id);
 
         if(user == null){
             return badRequest(errorJson("User not found"));
+        }
+
+        if(body.containsKey("delete")){
+            user.delete();
+            return noContent();
+        }
+
+        Form<AddUserForm> addForm = Form.form(AddUserForm.class);
+
+        addForm = addForm.bindFromRequest();
+
+        boolean changePassword = false;
+        if(body.containsKey("changepw")){
+            changePassword = body.get("changepw")[0].equals("on");
         }
 
         if(addForm.data().containsKey("username")){

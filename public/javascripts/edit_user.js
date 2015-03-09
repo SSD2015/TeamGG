@@ -46,4 +46,31 @@
                 submit.attr('disabled', false);
             });
     });
+    $('#deleteuser').on('click', function(){
+        if(!confirm('Delete selected user?')){
+            return;
+        }
+        var self = this;
+        var error = $('#error').empty();
+        var form = $(this).closest('form');
+        this.disabled = true;
+        $.post(form.attr('action'), {
+            id: form.find('input[name=id]').val(),
+            csrfToken: form.find('input[name=csrfToken]').val(),
+            'delete': true
+        })
+            .done(function(){
+                window.location.reload();
+            })
+            .fail(function(data){
+                data = data.responseJSON;
+                $.each(data, function(k, v){
+                    $('<div class="alert alert-sm alert-danger" />')
+                        .text(k + ': ' + v)
+                        .appendTo(error);
+                });
+            }).always(function(){
+                self.disabled = false;
+            });
+    });
 })();
