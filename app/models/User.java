@@ -77,6 +77,10 @@ public class User extends Model {
         type = data.type;
     }
 
+    public boolean hasPassword(){
+        return password != null && !password.isEmpty();
+    }
+
     public enum TYPES {
         VOTER, INSTRUCTOR, ORGANIZER
     }

@@ -47,18 +47,20 @@ public class Vote extends Model {
     );
 
     public static MultiKeyMap summarize(){
-        String sql = "SELECT project.id, project.name, category_id, SUM(vote.score) AS score," +
+        String sql = "SELECT project.id, project.name, category_id, vote_category.type, SUM(vote.score) AS score," +
                 "(SELECT COUNT(*) FROM vote v" +
                 " INNER JOIN vote_category ON vote_category.id = v.category_id" +
                 " WHERE v.category_id = vote.category_id AND (vote.project_id=v.project_id OR vote_category.type=0))" +
                 " AS voters" +
                 " FROM project" +
                 " JOIN vote ON vote.project_id = project.id" +
+                " INNER JOIN vote_category ON vote_category.id = category_id" +
                 " GROUP BY project.id, vote.project_id, vote.category_id";
         RawSql rawSql = RawSqlBuilder.parse(sql)
                 .columnMapping("project.id", "project.id")
                 .columnMapping("project.name", "project.name")
                 .columnMapping("category_id", "category.id")
+                .columnMapping("vote_category.type", "category.type")
                 .create();
         Query<VoteAggregate> query = Ebean.find(VoteAggregate.class);
         query.setRawSql(rawSql);
@@ -67,6 +69,9 @@ public class Vote extends Model {
         MultiKeyMap out = new MultiKeyMap();
 
         for(VoteAggregate item : result){
+            if(item.category.type == VoteCategory.VOTE_TYPE.STAR){
+                item.score /= (double) item.voters;
+            }
             out.put(item.project.id, item.category.id, item);
         }
 
@@ -83,7 +88,7 @@ public class Vote extends Model {
         @ManyToOne
         public VoteCategory category;
 
-        public int score;
+        public double score;
         public int voters;
 
         public ObjectNode asJson(){

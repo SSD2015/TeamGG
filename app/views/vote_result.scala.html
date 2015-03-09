@@ -31,7 +31,7 @@
 			<tbody>
 				@for(project <- projects){
 					<tr>
-						<td>@project.group.number</td>
+						<td>@if(project.group != null){@project.group.number}</td>
 						<td>@project.name</td>
 						@for(category <- categories){
 							@defining(summary.get(project.id, category.id).asInstanceOf[Vote.VoteAggregate]){ item =>

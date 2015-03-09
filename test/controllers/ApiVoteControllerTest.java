@@ -4,8 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import helper.Assert;
-import helper.WithApplicationInMemoryDB;
-import models.Vote;
+import helper.WithApplicationDB;
 import org.junit.Test;
 import play.libs.Json;
 import play.mvc.Result;
@@ -14,7 +13,7 @@ import play.test.FakeRequest;
 import static org.junit.Assert.*;
 import static play.test.Helpers.*;
 
-public class ApiVoteControllerTest extends WithApplicationInMemoryDB {
+public class ApiVoteControllerTest extends WithApplicationDB {
 
     public static final String LIST = "/api/categories";
     public static final String VOTE = "/api/project/%d/vote/%d";

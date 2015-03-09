@@ -1,13 +1,14 @@
 package auth;
 
-import controllers.ApiAuthControllerTest;
+import helper.WithApplicationDB;
+import org.junit.Assume;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static play.test.Helpers.fakeApplication;
 import static play.test.Helpers.running;
 
-public class KuMailAuthTest extends helper.WithApplicationInMemoryDB {
+public class KuMailAuthTest extends WithApplicationDB {
 
     @Test
     public void testAuthInvalid() throws Exception {
@@ -17,7 +18,7 @@ public class KuMailAuthTest extends helper.WithApplicationInMemoryDB {
 
     @Test
     public void testAuthValid() throws Exception {
-        ApiAuthControllerTest.requireKuTest();
+        requireKuTest();
 
         KuMailAuth auth = new KuMailAuth();
         assertEquals(
@@ -26,6 +27,13 @@ public class KuMailAuthTest extends helper.WithApplicationInMemoryDB {
                         play.Play.application().configuration().getString("test.kuuser"),
                         play.Play.application().configuration().getString("test.kupassword")
                 ).getUsername()
+        );
+    }
+
+    public static void requireKuTest(){
+        Assume.assumeNotNull(
+                play.Play.application().configuration().getString("test.kuuser"),
+                play.Play.application().configuration().getString("test.kupassword")
         );
     }
 }

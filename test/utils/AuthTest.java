@@ -1,7 +1,7 @@
 package utils;
 
-import controllers.ApiAuthControllerTest;
 import helper.Mock;
+import helper.WithApplicationDB;
 import models.User;
 import org.fest.util.Collections;
 import org.junit.After;
@@ -14,7 +14,7 @@ import java.util.Collection;
 import static org.junit.Assert.*;
 import static play.mvc.Controller.session;
 
-public class AuthTest extends helper.WithApplicationInMemoryDB {
+public class AuthTest extends WithApplicationDB {
 
     @Before
     public void setUp(){

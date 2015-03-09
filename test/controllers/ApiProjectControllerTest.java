@@ -3,7 +3,7 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import helper.Assert;
-import helper.WithApplicationInMemoryDB;
+import helper.WithApplicationDB;
 import org.junit.Test;
 import play.libs.Json;
 import play.mvc.Result;
@@ -12,7 +12,7 @@ import play.test.FakeRequest;
 import static org.junit.Assert.*;
 import static play.test.Helpers.*;
 
-public class ApiProjectControllerTest extends WithApplicationInMemoryDB {
+public class ApiProjectControllerTest extends WithApplicationDB {
     public static final String LIST = "/api/project";
     public static final String INFO = "/api/project/%d";
 
@@ -33,10 +33,11 @@ public class ApiProjectControllerTest extends WithApplicationInMemoryDB {
         assertTrue("body must be array", body instanceof ArrayNode);
 
         ArrayNode arr = (ArrayNode) body;
-        assertEquals("has two content", 2, arr.size());
+        assertEquals("has three content", 3, arr.size());
 
         JsonNode project = arr.get(0);
         validateProject(project);
+        assertFalse(project.findPath("vote").isObject());
     }
 
     @Test
@@ -49,7 +50,7 @@ public class ApiProjectControllerTest extends WithApplicationInMemoryDB {
         assertTrue("body must be array", body instanceof ArrayNode);
 
         ArrayNode arr = (ArrayNode) body;
-        assertEquals("has two content", 2, arr.size());
+        assertEquals("has three content", 3, arr.size());
 
         JsonNode project = arr.get(0);
         validateProject(project);

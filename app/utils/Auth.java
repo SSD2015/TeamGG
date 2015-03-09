@@ -69,19 +69,19 @@ public class Auth {
         User user = User.find.where().eq("username", username).findUnique();
         boolean success = false;
 
-        if(user != null && user.password != null && !user.password.isEmpty()){
+        if(user != null && user.hasPassword()){
             success = user.checkPassword(password);
         }
 
-        if(!success && (user != null && user.password.isEmpty())) {
+        if(!success && (user != null && !user.hasPassword())) {
             Authenticator auth = new KuMailAuth();
             Authenticator.AuthenticatorUser result = auth.auth(username, password);
 
             if(result == Authenticator.INVALID){
                 return null;
             }
-            if(user != null && !result.getUsername().equals(user.username)){
-                return null;
+            if(user != null){
+                success = result.getUsername().equals(user.username);
             }
         }
 

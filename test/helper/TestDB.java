@@ -116,6 +116,11 @@ public class TestDB {
         project2.description = "Dummy project 2";
         project2.save();
 
+        Project project3 = new Project();
+        project3.name = "Hello world 3";
+        project3.description = "Dummy project 3";
+        project3.save();
+
         VoteCategory bestVote = new VoteCategory();
         bestVote.name = "Best Dummy";
         bestVote.type = VoteCategory.VOTE_TYPE.BEST_OF;
@@ -126,11 +131,63 @@ public class TestDB {
         scoreVote.type = VoteCategory.VOTE_TYPE.STAR;
         scoreVote.save();
 
+        // best vote: 2 for project 1
+
         Vote vote = new Vote();
         vote.category = bestVote;
         vote.project = project;
         vote.date = new Date();
         vote.user = voter;
+        vote.save();
+
+        vote = new Vote();
+        vote.category = bestVote;
+        vote.project = project;
+        vote.date = new Date();
+        vote.user = instructor;
+        vote.save();
+
+        vote = new Vote();
+        vote.category = bestVote;
+        vote.project = project2;
+        vote.date = new Date();
+        vote.user = org;
+        vote.save();
+
+        // star vote: 5.0 for project 2
+
+        vote = new Vote();
+        vote.category = scoreVote;
+        vote.project = project2;
+        vote.date = new Date();
+        vote.user = voter;
+        vote.score = 5;
+        vote.save();
+
+        vote = new Vote();
+        vote.category = scoreVote;
+        vote.project = project2;
+        vote.date = new Date();
+        vote.user = org;
+        vote.score = 5;
+        vote.save();
+
+        // star vote: 3.5 for project 1
+
+        vote = new Vote();
+        vote.category = scoreVote;
+        vote.project = project;
+        vote.date = new Date();
+        vote.user = voter;
+        vote.score = 5;
+        vote.save();
+
+        vote = new Vote();
+        vote.category = scoreVote;
+        vote.project = project;
+        vote.date = new Date();
+        vote.user = instructor;
+        vote.score = 2;
         vote.save();
     }
 }

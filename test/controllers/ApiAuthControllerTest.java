@@ -3,7 +3,7 @@ package controllers;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import helper.Assert;
-import org.junit.Assume;
+import helper.WithApplicationDB;
 import org.junit.Test;
 import play.libs.Json;
 import play.mvc.Result;
@@ -13,17 +13,15 @@ import static org.junit.Assert.*;
 import static play.test.Helpers.*;
 import static play.test.Helpers.cookie;
 
-public class ApiAuthControllerTest extends helper.WithApplicationInMemoryDB {
+public class ApiAuthControllerTest extends WithApplicationDB {
     public static final String LOGIN = "/api/auth/login";
     public static final String CHECK = "/api/auth/check";
 
     @Test
     public void testLoginSuccess() throws Exception {
-        requireKuTest();
-
         ObjectNode req = Json.newObject();
-        req.put("username", play.Play.application().configuration().getString("test.kuuser"));
-        req.put("password", play.Play.application().configuration().getString("test.kupassword"));
+        req.put("username", "dummy");
+        req.put("password", "dummy");
 
         FakeRequest request = fakeRequest(POST, LOGIN).withJsonBody(req);
         Result result = routeAndCall(request, 5);
@@ -31,7 +29,7 @@ public class ApiAuthControllerTest extends helper.WithApplicationInMemoryDB {
 
         JsonNode body = Json.parse(contentAsString(result));
         assertNotNull("id is not null", body.findPath("id").intValue());
-        assertEquals("username is the given username", play.Play.application().configuration().getString("test.kuuser"), body.findPath("username").textValue());
+        assertEquals("username is the given username", "dummy", body.findPath("username").textValue());
     }
 
     @Test
@@ -69,10 +67,5 @@ public class ApiAuthControllerTest extends helper.WithApplicationInMemoryDB {
         assertTrue("body is null", body.findPath("username").isNull());
     }
 
-    public static void requireKuTest(){
-        Assume.assumeNotNull(
-                play.Play.application().configuration().getString("test.kuuser"),
-                play.Play.application().configuration().getString("test.kupassword")
-        );
-    }
+
 }

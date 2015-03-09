@@ -8,7 +8,7 @@ import play.test.WithApplication;
 import java.io.File;
 import java.util.Map;
 
-public class WithApplicationInMemoryDB extends WithApplication {
+public class WithApplicationDB extends WithApplication {
     private TestDB db;
 
     @Override
