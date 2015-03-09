@@ -75,6 +75,7 @@ public class TestDB {
         // don't specify the id otherwise h2 id generation will break
         User voter = new User();
         voter.username = "dummy";
+        voter.setPassword("dummy");
         voter.name = "Dummy voter";
         voter.type = User.TYPES.VOTER;
         voter.save();
@@ -87,6 +88,7 @@ public class TestDB {
 
         User org = new User();
         org.username = "organizer";
+        org.setPassword("organizer");
         org.name = "Dummy organizer";
         org.type = User.TYPES.ORGANIZER;
         org.save();

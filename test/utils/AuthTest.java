@@ -85,13 +85,11 @@ public class AuthTest extends helper.WithApplicationInMemoryDB {
     public void testLogin() throws Exception {
         assertNull(Auth.login("invalid", "invalid"));
 
-        ApiAuthControllerTest.requireKuTest();
-        String username = play.Play.application().configuration().getString("test.kuuser");
-        String password = play.Play.application().configuration().getString("test.kupassword");
-
-        User user = Auth.login(username, password);
+        User user = Auth.login("dummy", "dummy");
         assertNotNull(user);
-        assertEquals(username, user.username);
+        assertEquals("dummy", user.username);
+
+        // TODO: Test KU account (need to create account in TestDB)
     }
 
     private void login(){

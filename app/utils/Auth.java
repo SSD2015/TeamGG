@@ -66,25 +66,30 @@ public class Auth {
     }
 
     public static User login(String username, String password){
-        Authenticator auth = new KuMailAuth();
-        Authenticator.AuthenticatorUser result = auth.auth(username, password);
+        User user = User.find.where().eq("username", username).findUnique();
+        boolean success = false;
 
-        if(result == Authenticator.INVALID){
-            return null;
+        if(user != null && user.password != null && !user.password.isEmpty()){
+            success = user.checkPassword(password);
         }
 
-        User user = User.find.where().eq("username", result.getUsername()).findUnique();
-        if(user == null){
-            // TODO: User shouldn't be created here. Remove this code when backoffice can create users in bulk
-            user = new User();
-            user.username = result.getUsername();
-            user.type = User.TYPES.VOTER;
-            Ebean.save(user);
+        if(!success && (user != null && user.password.isEmpty())) {
+            Authenticator auth = new KuMailAuth();
+            Authenticator.AuthenticatorUser result = auth.auth(username, password);
+
+            if(result == Authenticator.INVALID){
+                return null;
+            }
+            if(user != null && !result.getUsername().equals(user.username)){
+                return null;
+            }
         }
 
-        session("user", String.valueOf(user.id));
-
-        return user;
+        if(success){
+            session("user", String.valueOf(user.id));
+            return user;
+        }
+        return null;
     }
 
     public static PasswordEncoder getHasher(){
