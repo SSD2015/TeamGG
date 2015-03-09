@@ -1,6 +1,7 @@
 package controllers;
 
 import helper.WithBrowserDB;
+import models.User;
 import org.fluentlenium.adapter.util.SharedDriver;
 import org.junit.Test;
 
@@ -25,6 +26,15 @@ public class LoginControllerTest extends WithBrowserDB {
         login();
 
         assertEquals("/", browser.url());
-        assertTrue("username must be shown in page", browser.pageSource().contains("organizer"));
+    }
+
+    @Test
+    public void testLogout() throws Exception {
+        login();
+
+        browser.submit("#logoutfrm");
+        assertEquals("/login", browser.url());
+
+        assertFalse("must not be logged in", browser.pageSource().contains("Logged in as"));
     }
 }

@@ -76,7 +76,6 @@ public class TestDB {
         User voter = new User();
         voter.username = "dummy";
         voter.setPassword("dummy");
-        voter.name = "Dummy voter";
         voter.type = User.TYPES.VOTER;
         voter.save();
 

@@ -19,8 +19,8 @@
                     <h1 class="brand col-sm-8"><a href="@routes.AdminController.main()"><img src="@routes.Assets.versioned("images/logo.svg")"></a></h1>
                     @if(utils.Auth.isLoggedIn) {
                         <div class="col-sm-4 text-right">
-                            Logged in as <strong>@utils.Auth.getUser.getName</strong>
-                            <form action="@routes.LoginController.logout()" method="POST">
+                            <span id="loggedas">Logged in as <strong>@utils.Auth.getUser.getName</strong></span>
+                            <form action="@routes.LoginController.logout()" method="POST" id="logoutfrm">
 	                            @CSRF.formField
 								<input type="submit" class="btn btn-default" value="Logout">
                             </form>

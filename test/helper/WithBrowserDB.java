@@ -1,6 +1,7 @@
 package helper;
 
 import com.typesafe.config.ConfigFactory;
+import models.User;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import play.test.FakeApplication;
@@ -11,6 +12,7 @@ import play.test.WithBrowser;
 import java.io.File;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class WithBrowserDB extends WithBrowser {
@@ -52,6 +54,9 @@ public class WithBrowserDB extends WithBrowser {
         browser.fill("input[name=username]").with(username);
         browser.fill("input[name=password]").with(username);
         browser.submit("form");
-        assertTrue("must be logged in", browser.pageSource().contains("Logged in as"));
+
+        User user = User.find.where().eq("username", username).findUnique();
+
+        assertEquals("username must be shown in page", "Logged in as " + user.getName(), browser.$("#loggedas").getText());
     }
 }
