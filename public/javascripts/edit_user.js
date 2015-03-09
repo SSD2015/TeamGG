@@ -32,7 +32,7 @@
         var submit = $this.find('input[type=submit]').attr('disabled', true);
         $.post(this.getAttribute('action'), data)
             .done(function(){
-                window.location.reload();
+                window.location = window.location;
             })
             .fail(function(data){
                 data = data.responseJSON;
@@ -60,7 +60,7 @@
             'delete': true
         })
             .done(function(){
-                window.location.reload();
+                window.location = window.location;
             })
             .fail(function(data){
                 data = data.responseJSON;
