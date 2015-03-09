@@ -25,15 +25,15 @@ public class Vote extends Model {
     @Id
     public Integer id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="category_id", referencedColumnName="id")
     public VoteCategory category;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="user_id", referencedColumnName="id")
     public User user;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="project_id", referencedColumnName="id")
     public Project project;
 

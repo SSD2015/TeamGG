@@ -1,26 +1,20 @@
 package helper;
 
-import com.avaje.ebean.Ebean;
-import com.avaje.ebean.EbeanServer;
-import com.avaje.ebean.config.ServerConfig;
-import com.avaje.ebean.config.dbplatform.H2Platform;
-import com.avaje.ebeaninternal.api.SpiEbeanServer;
-import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
-import models.*;
-import org.junit.AfterClass;
-import org.junit.Before;
+import com.typesafe.config.ConfigFactory;
 import play.test.FakeApplication;
 import play.test.Helpers;
 import play.test.WithApplication;
 
-import java.util.Date;
+import java.io.File;
+import java.util.Map;
 
 public class WithApplicationInMemoryDB extends WithApplication {
     private TestDB db;
 
     @Override
     protected FakeApplication provideFakeApplication() {
-        return Helpers.fakeApplication(Helpers.inMemoryDatabase());
+        Map<String, Object> root = ConfigFactory.parseFile(new File("conf/test.conf")).root().unwrapped();
+        return Helpers.fakeApplication(root);
     }
 
     @Override

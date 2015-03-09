@@ -17,7 +17,7 @@ public class Project extends Model {
     @Constraints.Required
     public String name;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="group_id", referencedColumnName="id")
     public Groups group;
 

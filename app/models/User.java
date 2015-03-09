@@ -31,7 +31,7 @@ public class User extends Model {
     public String name = "";
     public String organization = "";
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="group_id", referencedColumnName="id")
     public Groups group;
 

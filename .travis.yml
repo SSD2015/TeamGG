@@ -1,4 +1,8 @@
 language: java
+services:
+- mysql
+before_script:
+- mysql -e 'CREATE DATABASE exceedvote_test;'
 script:
 - "./activator test"
 - find $HOME/.sbt -name "*.lock" | xargs rm

@@ -2,14 +2,19 @@ package helper;
 
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.EbeanServer;
+import com.avaje.ebean.Transaction;
 import com.avaje.ebean.config.ServerConfig;
 import com.avaje.ebean.config.dbplatform.H2Platform;
+import com.avaje.ebean.config.dbplatform.MySqlPlatform;
 import com.avaje.ebeaninternal.api.SpiEbeanServer;
 import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 import models.*;
+import play.Logger;
 import play.api.test.FakeApplication;
 import play.test.Helpers;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Date;
 
 public class TestDB {
@@ -26,12 +31,12 @@ public class TestDB {
     private void setupDdl(){
         server = Ebean.getServer("default");
         ddl = new DdlGenerator();
-        ddl.setup((SpiEbeanServer) server, new H2Platform(), new ServerConfig());
+        ddl.setup((SpiEbeanServer) server, new MySqlPlatform(), new ServerConfig());
     }
 
     private void createTable(){
         String createScript = ddl.generateCreateDdl();
-        Ebean.execute(Ebean.createCallableSql(createScript));
+        executeSql(createScript);
     }
 
     /**
@@ -39,7 +44,7 @@ public class TestDB {
      */
     public void dropTable(){
         String dropScript = ddl.generateDropDdl();
-        Ebean.execute(Ebean.createCallableSql(dropScript));
+        executeSql(dropScript);
     }
 
     /**
@@ -50,6 +55,19 @@ public class TestDB {
         dropTable();
         createTable();
         installFixation();
+    }
+
+    private void executeSql(String sql) {
+        Transaction tx = server.createTransaction();
+        try {
+            PreparedStatement stmt = tx.getConnection().prepareStatement(sql);
+            stmt.execute();
+            stmt.close();
+        }catch(SQLException e){
+            Logger.error("Cannot prepare SQL statement", e);
+        }finally{
+            tx.end();
+        }
     }
 
     protected void installFixation(){
