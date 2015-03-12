@@ -4,14 +4,11 @@ import com.avaje.ebean.Ebean;
 import com.avaje.ebean.EbeanServer;
 import com.avaje.ebean.Transaction;
 import com.avaje.ebean.config.ServerConfig;
-import com.avaje.ebean.config.dbplatform.H2Platform;
 import com.avaje.ebean.config.dbplatform.MySqlPlatform;
 import com.avaje.ebeaninternal.api.SpiEbeanServer;
 import com.avaje.ebeaninternal.server.ddl.DdlGenerator;
 import models.*;
 import play.Logger;
-import play.api.test.FakeApplication;
-import play.test.Helpers;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -82,6 +79,7 @@ public class TestDB {
         User instructor = new User();
         instructor.username = "instructor";
         instructor.name = "Dummy instructor";
+        instructor.setPassword("instructor");
         instructor.type = User.TYPES.INSTRUCTOR;
         instructor.save();
 
@@ -89,6 +87,7 @@ public class TestDB {
         org.username = "organizer";
         org.setPassword("organizer");
         org.name = "Dummy organizer";
+        org.organization = "Testing ltd.";
         org.type = User.TYPES.ORGANIZER;
         org.save();
 

@@ -12,6 +12,7 @@ import play.libs.Json;
 import utils.Auth;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @JsonIgnoreProperties({"password"})
@@ -31,9 +32,12 @@ public class User extends Model {
     public String name = "";
     public String organization = "";
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name="group_id", referencedColumnName="id")
     public Groups group;
+
+    @OneToMany(cascade=CascadeType.REMOVE, mappedBy = "user")
+    public List<Vote> votes;
 
     public String getName(){
         if(!name.isEmpty()){

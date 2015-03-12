@@ -1,5 +1,6 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
@@ -9,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @Entity
+@JsonIgnoreProperties({"votes"})
 public class Project extends Model {
 
     @Id
@@ -17,13 +19,16 @@ public class Project extends Model {
     @Constraints.Required
     public String name;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne()
     @JoinColumn(name="group_id", referencedColumnName="id")
     public Groups group;
 
     @Lob
     public String description;
     public String logo;
+
+    @OneToMany(cascade=CascadeType.REMOVE, mappedBy="project")
+    public List<Vote> votes;
 
     public static Finder<Integer, Project> find = new Finder<Integer, Project>(
             Integer.class, Project.class

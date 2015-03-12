@@ -1,14 +1,16 @@
 package models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "vote_category")
+@JsonIgnoreProperties({"votes"})
 public class VoteCategory extends Model {
     @Id
     public Integer id;
@@ -18,6 +20,9 @@ public class VoteCategory extends Model {
 
     @Constraints.Required
     public VOTE_TYPE type;
+
+    @OneToMany(cascade=CascadeType.REMOVE, mappedBy = "category")
+    public List<Vote> votes;
 
     public enum VOTE_TYPE {
         BEST_OF, STAR

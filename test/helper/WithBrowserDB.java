@@ -2,7 +2,10 @@ package helper;
 
 import com.typesafe.config.ConfigFactory;
 import models.User;
+import org.fluentlenium.adapter.util.SharedDriver;
+import org.junit.Before;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.phantomjs.PhantomJSDriver;
 import play.test.FakeApplication;
 import play.test.Helpers;
@@ -16,7 +19,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class WithBrowserDB extends WithBrowser {
-    private TestDB db;
+    protected TestDB db;
     private Class<? extends WebDriver> driver = PhantomJSDriver.class;
 
     @Override
@@ -46,17 +49,22 @@ public class WithBrowserDB extends WithBrowser {
     }
 
     public void login(){
-        login("organizer");
+        login("organizer", "organizer");
     }
 
-    public void login(String username){
+    public void login(String username, String password){
         browser.goTo("/login");
         browser.fill("input[name=username]").with(username);
-        browser.fill("input[name=password]").with(username);
+        browser.fill("input[name=password]").with(password);
         browser.submit("form");
 
         User user = User.find.where().eq("username", username).findUnique();
 
         assertEquals("username must be shown in page", "Logged in as " + user.getName(), browser.$("#loggedas").getText());
+    }
+
+    public void logout(){
+        browser.goTo("/");
+        browser.submit("#logoutfrm");
     }
 }

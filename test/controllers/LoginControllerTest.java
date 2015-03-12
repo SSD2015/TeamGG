@@ -7,7 +7,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.*;
 
-@SharedDriver(type = SharedDriver.SharedType.PER_METHOD)
+@SharedDriver(type = SharedDriver.SharedType.ONCE)
 public class LoginControllerTest extends WithBrowserDB {
 
     @Test
