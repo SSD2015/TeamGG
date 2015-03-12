@@ -20,16 +20,16 @@ public class UserControllerTest extends WithBrowserDB {
         assertEquals(4, browser.$("#datatable tbody tr").size());
 
         FluentWebElement row = browser.$("#datatable tbody tr").get(2);
-        assertEquals("username", row.find("td", 0).getText(), "organizer");
-        assertEquals("name", row.find("td", 1).getText(), "Dummy organizer");
-        assertEquals("organization", row.find("td", 2).getText(), "Testing ltd.");
-        assertEquals("type", row.find("td", 3).getText(), "ORGANIZER");
+        assertEquals("username", "organizer", row.find("td", 0).getText());
+        assertEquals("name", "Dummy organizer", row.find("td", 1).getText());
+        assertEquals("organization", "Testing ltd.", row.find("td", 2).getText());
+        assertEquals("type", "ORGANIZER", row.find("td", 3).getText());
         assertTrue("has password", row.find("td", 4).findFirst("i").getAttribute("class").contains("ok"));
 
         row = browser.$("#datatable tbody tr").get(3);
-        assertEquals("username", row.find("td", 0).getText(), "dummygroup");
-        assertEquals("name", row.find("td", 1).getText(), "Dummy voter with group");
-        assertEquals("type", row.find("td", 3).getText(), "VOTER");
+        assertEquals("username", "dummygroup", row.find("td", 0).getText());
+        assertEquals("name", "Dummy voter with group", row.find("td", 1).getText());
+        assertEquals("type", "VOTER", row.find("td", 3).getText());
         assertTrue("has no password", row.find("td", 4).findFirst("i").getAttribute("class").contains("remove"));
     }
 
@@ -49,15 +49,15 @@ public class UserControllerTest extends WithBrowserDB {
         browser.submit("[action=\"/users\"]");
 
         FluentWebElement row = browser.$("#datatable tbody tr").get(4);
-        assertEquals("username", row.find("td", 0).getText(), username);
-        assertEquals("name", row.find("td", 1).getText(), name);
-        assertEquals("type", row.find("td", 3).getText(), "ORGANIZER");
+        assertEquals("username", username, row.find("td", 0).getText());
+        assertEquals("name", name, row.find("td", 1).getText());
+        assertEquals("type", "ORGANIZER", row.find("td", 3).getText());
 
         // logout
         logout();
 
         login(username, password);
-        assertTrue(browser.pageSource().contains(name));
+        assertTrue("can be logged in", browser.pageSource().contains(name));
     }
 
     @Test
@@ -77,7 +77,7 @@ public class UserControllerTest extends WithBrowserDB {
         browser.goTo("/users");
 
         FluentWebElement row = browser.$("#datatable tbody tr").get(2);
-        assertEquals("username", row.find("td", 0).getText(), "organizer");
+        assertEquals("username", "organizer", row.find("td", 0).getText());
         row.find(".editbtn").click();
         browser.await().atMost(1, TimeUnit.SECONDS).until("#editpanel").areDisplayed();
 
@@ -99,7 +99,7 @@ public class UserControllerTest extends WithBrowserDB {
         browser.goTo("/users");
 
         FluentWebElement row = browser.$("#datatable tbody tr").get(2);
-        assertEquals("username", row.find("td", 0).getText(), "organizer");
+        assertEquals("username", "organizer", row.find("td", 0).getText());
         row.find(".editbtn").click();
         browser.await().atMost(1, TimeUnit.SECONDS).until("#editpanel").areDisplayed();
 
@@ -109,7 +109,7 @@ public class UserControllerTest extends WithBrowserDB {
         browser.await().untilPage().isLoaded();
         browser.goTo("/users");
         row = browser.$("#datatable tbody tr").get(2);
-        assertEquals("username", row.find("td", 0).getText(), "organizer");
+        assertEquals("username", "organizer", row.find("td", 0).getText());
     }
 
     @Test
@@ -118,7 +118,7 @@ public class UserControllerTest extends WithBrowserDB {
         browser.goTo("/users");
 
         FluentWebElement row = browser.$("#datatable tbody tr").get(2);
-        assertEquals("username", row.find("td", 0).getText(), "organizer");
+        assertEquals("username", "organizer", row.find("td", 0).getText());
         row.find(".editbtn").click();
         browser.await().atMost(1, TimeUnit.SECONDS).until("#editpanel").areDisplayed();
 
@@ -143,7 +143,7 @@ public class UserControllerTest extends WithBrowserDB {
         browser.goTo("/users");
 
         FluentWebElement row = browser.$("#datatable tbody tr").get(0);
-        assertEquals("username", row.find("td", 0).getText(), "dummy");
+        assertEquals("username", "dummy", row.find("td", 0).getText());
         row.find(".editbtn").click();
         browser.await().atMost(1, TimeUnit.SECONDS).until("#editpanel").areDisplayed();
 
@@ -160,8 +160,8 @@ public class UserControllerTest extends WithBrowserDB {
         login();
         browser.goTo("/users");
 
-        FluentWebElement row = browser.$("#datatable tbody tr").get(0);
-        assertEquals("username", row.find("td", 2).getText(), "organizer");
+        FluentWebElement row = browser.$("#datatable tbody tr").get(2);
+        assertEquals("username", "organizer", row.find("td", 0).getText());
         row.find(".editbtn").click();
         browser.await().atMost(1, TimeUnit.SECONDS).until("#editpanel").areDisplayed();
 
@@ -173,8 +173,8 @@ public class UserControllerTest extends WithBrowserDB {
         browser.goTo("/");
         browser.goTo("/users");
 
-        row = browser.$("#datatable tbody tr").get(0);
-        assertEquals("username", row.find("td", 3).getText(), "ORGANIZER");
+        row = browser.$("#datatable tbody tr").get(2);
+        assertEquals("type", "ORGANIZER", row.find("td", 3).getText());
     }
 
 
@@ -185,7 +185,7 @@ public class UserControllerTest extends WithBrowserDB {
         browser.goTo("/users");
 
         FluentWebElement row = browser.$("#datatable tbody tr").get(3);
-        assertEquals("username", row.find("td", 0).getText(), "dummygroup");
+        assertEquals("username", "dummygroup", row.find("td", 0).getText());
         row.find(".editbtn").click();
         browser.await().atMost(1, TimeUnit.SECONDS).until("#editpanel").areDisplayed();
 
@@ -212,11 +212,11 @@ public class UserControllerTest extends WithBrowserDB {
         browser.goTo("/users");
 
         FluentWebElement row = browser.$("#datatable tbody tr").get(2);
-        assertEquals("username", row.find("td", 0).getText(), "organizer");
+        assertEquals("username", "organizer", row.find("td", 0).getText());
         row.find(".editbtn").click();
         browser.await().atMost(1, TimeUnit.SECONDS).until("#editpanel").areDisplayed();
 
-        browser.executeScript("window.confirm = function(msg){return true;};");
+        browser.executeScript("window.confirm = function(msg){return true;}; window.alert = function(){};");
         browser.$("#deleteuser").click();
 
         browser.await().untilPage().isLoaded();

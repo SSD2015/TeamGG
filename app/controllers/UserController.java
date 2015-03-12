@@ -88,6 +88,9 @@ public class UserController extends Controller {
         }
 
         if(body.containsKey("delete")){
+            if(id == Auth.getUser().id){
+                return badRequest(errorJson("You may not delete yourself"));
+            }
             user.delete();
             return noContent();
         }
@@ -108,6 +111,15 @@ public class UserController extends Controller {
             }
             if(User.find.where().eq("username", username).ne("id", user.id).findUnique() != null){
                 addForm.reject("username", "User with this username already exists");
+            }
+        }
+
+        if(user.id == Auth.getUser().id){
+            if(addForm.data().containsKey("type")){
+                String type = addForm.data().get("type");
+                if(!type.equals(user.type.toString())){
+                    addForm.reject("type", "You may not demote yourself");
+                }
             }
         }
 

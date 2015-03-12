@@ -47,15 +47,23 @@
             });
     });
     $('#deleteuser').on('click', function(){
+        var form = $(this).closest('form');
+        var id = form.find('input[name=id]').val();
+
+        if(id == window.myId){
+            alert('You may not delete yourself');
+            return;
+        }
+
         if(!confirm('Delete selected user?')){
             return;
         }
+
         var self = this;
         var error = $('#error').empty();
-        var form = $(this).closest('form');
         this.disabled = true;
         $.post(form.attr('action'), {
-            id: form.find('input[name=id]').val(),
+            id: id,
             csrfToken: form.find('input[name=csrfToken]').val(),
             'delete': true
         })
