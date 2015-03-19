@@ -18,8 +18,8 @@ public class VotingResultControllerTest extends WithBrowserDB {
         FluentWebElement tr = browser.find("table tbody tr", 0);
         assertEquals("project 2 group number", "", tr.find("td", 0).getText());
         assertEquals("project 2 project name", "Hello world 2", tr.find("td", 1).getText());
-        assertEquals("project 2 score in best vote", "1.0 (3 voters)", tr.find("td", 2).getText());
-        assertEquals("project 2 score in star vote", "5.0 (2 voters)", tr.find("td", 3).getText());
+        assertEquals("project 2 score in best vote", "1", tr.find("td", 2).getText());
+        assertEquals("project 2 score in star vote", "5.00 (2 voters)", tr.find("td", 3).getText());
 
         tr = browser.find("table tbody tr", 1);
         assertEquals("project 3 group number", "", tr.find("td", 0).getText());
@@ -30,8 +30,8 @@ public class VotingResultControllerTest extends WithBrowserDB {
         tr = browser.find("table tbody tr", 2);
         assertEquals("project 1 group number", "1", tr.find("td", 0).getText());
         assertEquals("project 1 project name", "Hello world", tr.find("td", 1).getText());
-        assertEquals("project 1 score in best vote", "2.0 (3 voters)", tr.find("td", 2).getText());
-        assertEquals("project 1 score in star vote", "3.5 (2 voters)", tr.find("td", 3).getText());
+        assertEquals("project 1 score in best vote", "2", tr.find("td", 2).getText());
+        assertEquals("project 1 score in star vote", "3.50 (2 voters)", tr.find("td", 3).getText());
     }
 
     @Test

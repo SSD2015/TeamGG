@@ -94,5 +94,12 @@ public class Vote extends Model {
         public ObjectNode asJson(){
             return (ObjectNode) Json.toJson(this);
         }
+        public String getScoreString(){
+            if(category.type == VoteCategory.VOTE_TYPE.BEST_OF){
+                return String.format("%.0f", score);
+            }else{
+                return String.format("%.2f", score);
+            }
+        }
     }
 }

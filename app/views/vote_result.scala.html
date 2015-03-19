@@ -38,7 +38,12 @@
 								@if(item == null){
 									<td>No vote</td>
 								}else{
-									<td>@item.score <small>(@item.voters voters)</small></td>
+									<td>
+										@item.getScoreString
+										@if(item.category.`type` == VoteCategory.VOTE_TYPE.STAR) {
+											<small>(@item.voters voters)</small>
+										}
+									</td>
 								}
 							}
 						}
@@ -47,6 +52,10 @@
 			</tbody>
 		</table>
 	</div>
+	<ul>
+		<li><strong>Best of</strong> voting shows the number of votes</li>
+		<li><strong>Star</strong> voting shows the average voting score. The maximum score is 5.</li>
+	</ul>
 } {
 	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/nvd3/1.7.0/nv.d3.min.css">
 } {
