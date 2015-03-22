@@ -105,8 +105,28 @@ public class ApiVoteControllerTest extends WithApplicationDB {
     }
 
     @Test
-    public void testNumericVote(){
-        // TODO
+    public void testStarVote(){
+        // place vote
+        FakeRequest request = fakeRequest(POST, String.format(VOTE, 1, 2)).withSession("user", userId)
+                .withJsonBody(Json.parse("{\"score\": 5}"));
+        Result result = routeAndCall(request, 5);
+        Assert.assertJson(result);
+
+        // check
+        request = fakeRequest(GET, String.format(ApiProjectControllerTest.INFO, 1)).withSession("user", userId);
+        result = routeAndCall(request, 5);
+        checkScoreIs(result, 5);
+
+        // change vote
+        request = fakeRequest(POST, String.format(VOTE, 1, 2)).withSession("user", userId)
+                .withJsonBody(Json.parse("{\"score\": 3}"));
+        result = routeAndCall(request, 5);
+        Assert.assertJson(result);
+
+        // check
+        request = fakeRequest(GET, String.format(ApiProjectControllerTest.INFO, 1)).withSession("user", userId);
+        result = routeAndCall(request, 5);
+        checkScoreIs(result, 3);
     }
 
     private void testHasVoteResult(Result result){
@@ -120,5 +140,18 @@ public class ApiVoteControllerTest extends WithApplicationDB {
         assertTrue("has vote in category 1", firstVote.isObject());
         assertEquals("has vote's category field", 1, firstVote.findPath("category").intValue());
         assertEquals("has vote's score field", 1, firstVote.findPath("score").intValue());
+    }
+
+    private void checkScoreIs(Result result, int score){
+        Assert.assertJson(result);
+
+        JsonNode body = Json.parse(contentAsString(result));
+        JsonNode details = body.findPath("vote");
+        assertTrue("have vote attribute", details.isObject());
+
+        JsonNode vote = details.findPath("2");
+        assertTrue("has vote in category 2", vote.isObject());
+        assertEquals("has vote's category field", 2, vote.findPath("category").intValue());
+        assertEquals("has vote's score field", score, vote.findPath("score").intValue());
     }
 }

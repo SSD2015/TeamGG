@@ -1,10 +1,12 @@
 package controllers;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import models.Project;
 import models.User;
 import models.Vote;
 import models.VoteCategory;
 import play.libs.Json;
+import play.mvc.Controller;
 import play.mvc.Result;
 import utils.Auth;
 
@@ -13,7 +15,7 @@ import java.util.List;
 
 import static play.mvc.Results.*;
 
-public class ApiVoteController {
+public class ApiVoteController extends Controller {
 
     public static Result list() {
         List<VoteCategory> voteCategories = VoteCategory.find.all();
@@ -33,6 +35,16 @@ public class ApiVoteController {
             return notFound("Nothing in there asshole");
         }
 
+        JsonNode body = null;
+        int score = 0;
+        try {
+            body = request().body().asJson();
+        } catch(NullPointerException e) {
+        }
+        if(body != null) {
+            score = body.findPath("score").intValue();
+        }
+
         // check whether the user has made a vote already
         User user = Auth.getUser();
         Vote vote = Vote.find.where()
@@ -40,23 +52,43 @@ public class ApiVoteController {
                 .eq("category_id", categoryId)
                 .findUnique();
         // vote is null if never vote, a vote object otherwise
-        if (voteCat.type == VoteCategory.VOTE_TYPE.BEST_OF) {
-            if (vote == null)
-            {
-                //allow to vote
-                vote = new Vote();
-                vote.category = voteCat;
-                vote.user = user;
-                vote.project = project;
-                vote.date = new Date();
-                vote.save();
-            }
-            else
-            {
-                vote.project = project;
-                vote.date = new Date();
-                vote.update();
-            }
+        switch (voteCat.type) {
+            case BEST_OF:
+                if (vote == null) {
+                    //allow to vote
+                    vote = new Vote();
+                    vote.category = voteCat;
+                    vote.user = user;
+                    vote.project = project;
+                    vote.date = new Date();
+                    vote.save();
+                } else {
+                    vote.project = project;
+                    vote.date = new Date();
+                    vote.update();
+                }
+                break;
+            case STAR:
+                if (score < 1 || score > 5) {
+                    return badRequest("FUCK YOU, INPUT 1-5");
+                }
+                if (vote == null)
+                {
+                    vote = new Vote();
+                    vote.category = voteCat;
+                    vote.user = user;
+                    vote.score = score;
+                    vote.project = project;
+                    vote.date = new Date();
+                    vote.save();
+                }
+                else
+                {
+                    vote.score = score;
+                    vote.date = new Date();
+                    vote.update();
+                }
+                break;
         }
         // return the result
         return ok(Json.toJson(vote));
