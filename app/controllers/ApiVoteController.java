@@ -1,5 +1,6 @@
 package controllers;
 
+import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.databind.JsonNode;
 import models.Project;
 import models.User;
@@ -47,10 +48,16 @@ public class ApiVoteController extends Controller {
 
         // check whether the user has made a vote already
         User user = Auth.getUser();
-        Vote vote = Vote.find.where()
+
+        ExpressionList<Vote> q = Vote.find.where()
                 .eq("user_id", user.id)
-                .eq("category_id", categoryId)
-                .findUnique();
+                .eq("category_id", categoryId);
+
+        if(voteCat.type == VoteCategory.VOTE_TYPE.STAR){
+            q = q.eq("project_id", projectId);
+        }
+
+        Vote vote = q.findUnique();
         // vote is null if never vote, a vote object otherwise
         switch (voteCat.type) {
             case BEST_OF:
