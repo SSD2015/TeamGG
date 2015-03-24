@@ -21,10 +21,17 @@ libraryDependencies ++= Seq(
   "com.github.detro" % "phantomjsdriver" % "1.2.0"
 )
 
-pipelineStages in Assets := Seq(cssCompress, digest, gzip)
+pipelineStages in Assets := Seq(uglify, cssCompress, digest, gzip)
 
 // exclude web module
 excludeFilter in cssCompress := new SimpleFileFilter({
+  f =>
+    def fileStartsWith(dir: File): Boolean = f.getPath.startsWith(dir.getPath)
+    fileStartsWith((WebKeys.webModuleDirectory in Assets).value)
+})
+
+// by default uglify exclude public folder, this reinclude it back and exclude web assets
+excludeFilter in uglify := new SimpleFileFilter({
   f =>
     def fileStartsWith(dir: File): Boolean = f.getPath.startsWith(dir.getPath)
     fileStartsWith((WebKeys.webModuleDirectory in Assets).value)
