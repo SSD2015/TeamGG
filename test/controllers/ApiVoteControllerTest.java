@@ -127,6 +127,17 @@ public class ApiVoteControllerTest extends WithApplicationDB {
         request = fakeRequest(GET, String.format(ApiProjectControllerTest.INFO, 1)).withSession("user", userId);
         result = routeAndCall(request, 5);
         checkScoreIs(result, 3);
+
+        // vote for another project
+        request = fakeRequest(POST, String.format(VOTE, 2, 2)).withSession("user", userId)
+                .withJsonBody(Json.parse("{\"score\": 5}"));
+        result = routeAndCall(request, 5);
+        Assert.assertJson(result);
+
+        // check
+        request = fakeRequest(GET, String.format(ApiProjectControllerTest.INFO, 2)).withSession("user", userId);
+        result = routeAndCall(request, 5);
+        checkScoreIs(result, 5);
     }
 
     private void testHasVoteResult(Result result){
