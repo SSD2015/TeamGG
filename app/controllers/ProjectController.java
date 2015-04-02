@@ -43,7 +43,7 @@ public class ProjectController extends Controller {
 
     private static Html renderList(Form<AddProjectForm> form){
         return views.html.project_list.render(
-                Project.find.order("group.number").findList(),
+                Project.find.orderBy("group.number ASC, id ASC").findList(),
                 form
         );
     }

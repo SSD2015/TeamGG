@@ -55,7 +55,9 @@ public class Vote extends Model {
                 " FROM project" +
                 " JOIN vote ON vote.project_id = project.id" +
                 " INNER JOIN vote_category ON vote_category.id = category_id" +
-                " GROUP BY project.id, vote.project_id, vote.category_id";
+                " LEFT JOIN groups ON groups.id = group_id" +
+                " GROUP BY project.id, vote.project_id, vote.category_id" +
+                " ORDER BY groups.number ASC";
         RawSql rawSql = RawSqlBuilder.parse(sql)
                 .columnMapping("project.id", "project.id")
                 .columnMapping("project.name", "project.name")
