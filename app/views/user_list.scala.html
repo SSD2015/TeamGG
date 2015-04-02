@@ -113,7 +113,7 @@
 	@b3.form(routes.UserController.save()) {
 		@CSRF.formField
 		@b3.text(addForm("username"), '_label -> "Username", 'autofocus -> true)
-		@b3.password(addForm("password"), '_label -> "Password", '_help -> "Optional, user who does not have a password can login by KU account that has the same username")
+		@b3.password(addForm("password"), '_label -> "Password", '_help -> "Optional for user who has a KU account with the same username")
 		@b3.text(addForm("name"), '_label -> "Real name")
 		@b3.text(addForm("organization"), '_label -> "Organization")
 		@b3.select(addForm("type"), options=for (c <- User.TYPES.values()) yield c.name() -> c.name(), '_label -> "Role")
