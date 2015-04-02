@@ -2,6 +2,7 @@ package controllers;
 
 import forms.AddProjectForm;
 import models.Project;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
@@ -38,6 +39,29 @@ public class ProjectController extends Controller {
         Project project = data.asProject();
         project.save();
 
+        return redirect(controllers.routes.ProjectController.list());
+    }
+
+    @RequireCSRFCheck
+    public static Result delete(){
+        if(!Auth.acl(Auth.ACL_TYPE.PROJECT_LIST)){
+            return forbidden();
+        }
+
+        DynamicForm form = Form.form().bindFromRequest();
+        int id;
+        try {
+            id = Integer.valueOf(form.get("id"));
+        }catch(NumberFormatException e){
+            return badRequest();
+        }
+
+        Project project = Project.find.byId(id);
+        if(project == null){
+            return notFound();
+        }
+
+        project.delete();
         return redirect(controllers.routes.ProjectController.list());
     }
 

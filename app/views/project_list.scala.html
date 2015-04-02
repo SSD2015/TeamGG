@@ -26,9 +26,13 @@
 							@project.group.name
 						}</td>
 						<td>
-							<a class="btn btn-link btn-sm removelink" href="#">
-								<i class="glyphicon glyphicon-remove"></i>
-							</a>
+							<form action="@routes.ProjectController.delete()" method="POST" class="removeform">
+								@CSRF.formField
+								<input type="hidden" name="id" value="@project.id">
+								<button type="submit" class="btn btn-link btn-sm">
+									<i class="glyphicon glyphicon-remove"></i>
+								</button>
+							</form>
 						</td>
 					</tr>
 				}
@@ -49,7 +53,7 @@
 } {
 } {
 	<script>
-		$("table").on("click", ".removelink", function(e){
+		$("table").on("submit", ".removeform", function(e){
 			var name = $(e.target).closest("tr" ).find("td:first").text();
 			return confirm("Removing " + name + " cannot be undone.\nAll votes for this project will be lost forever.\n\nContinue with removal?");
 		});

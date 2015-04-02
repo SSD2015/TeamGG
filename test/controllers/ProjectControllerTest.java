@@ -42,4 +42,21 @@ public class ProjectControllerTest extends WithBrowserDB {
         assertEquals("group number", "1", row.find("td", 1).getText());
         assertEquals("group name", groupName, row.find("td", 2).getText());
     }
+
+    @Test
+    public void testDelete() throws Exception {
+        login();
+        browser.goTo("/projects");
+
+        assertEquals("original", 3, browser.$("#datatable tbody tr").size());
+
+        // phantomjsdriver does not handle alert
+        browser.executeScript("window.confirm = function(msg){return false;};");
+        browser.findFirst(".removeform").submit();
+        assertEquals("cancel remove", 3, browser.$("#datatable tbody tr").size());
+
+        browser.executeScript("window.confirm = function(msg){return true;};");
+        browser.findFirst(".removeform").submit();
+        assertEquals("confirm remove", 2, browser.$("#datatable tbody tr").size());
+    }
 }
