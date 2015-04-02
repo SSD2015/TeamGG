@@ -30,7 +30,7 @@ public class Project extends Model {
     @OneToMany(cascade=CascadeType.REMOVE, mappedBy="project")
     public List<Vote> votes;
 
-    public static Finder<Integer, Project> find = new Finder<Integer, Project>(
+    public static Model.Finder<Integer, Project> find = new Model.Finder<Integer, Project>(
             Integer.class, Project.class
     );
 

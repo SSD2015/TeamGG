@@ -89,7 +89,7 @@ public class User extends Model {
         VOTER, INSTRUCTOR, ORGANIZER
     }
 
-    public static Finder<Integer, User> find = new Finder<Integer, User>(
+    public static Model.Finder<Integer, User> find = new Model.Finder<Integer, User>(
             Integer.class, User.class
     );
 }

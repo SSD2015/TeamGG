@@ -21,7 +21,7 @@ public class Groups extends Model {
     @OneToMany(cascade=CascadeType.REMOVE, mappedBy = "group")
     public List<Project> projects;
 
-    public static Finder<Integer, Groups> find = new Finder<Integer, Groups>(
+    public static Model.Finder<Integer, Groups> find = new Model.Finder<Integer, Groups>(
             Integer.class, Groups.class
     );
 }
