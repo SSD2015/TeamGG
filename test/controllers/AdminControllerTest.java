@@ -11,6 +11,10 @@ public class AdminControllerTest extends WithBrowserDB {
         login();
 
         browser.goTo("/");
+        browser.$(".adminrow").get(2).click();
+        assertEquals("third link must be project list", browser.url(), "/projects");
+
+        browser.goTo("/");
         browser.$(".adminrow").get(3).click();
         assertEquals("forth link must be user", browser.url(), "/users");
 

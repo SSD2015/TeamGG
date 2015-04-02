@@ -51,6 +51,10 @@ public class Auth {
                 return user.type == User.TYPES.ORGANIZER;
             case VOTE_RESULT:
                 return user.type == User.TYPES.ORGANIZER || user.type == User.TYPES.INSTRUCTOR;
+            case PROJECT_LIST:
+                return user.type == User.TYPES.ORGANIZER;
+            case PROJECT_EDIT:
+                return user.type == User.TYPES.ORGANIZER || user.group != null;
             default:
                 throw new IllegalArgumentException("Unknown ACL type");
         }
@@ -62,7 +66,9 @@ public class Auth {
         GROUPS, // can edit any group
         USERS, // can add/view users
         CONFIG, // can config the application
-        VOTE_RESULT // can see voting result
+        VOTE_RESULT, // can see voting result
+        PROJECT_LIST,
+        PROJECT_EDIT
     }
 
     public static User login(String username, String password){

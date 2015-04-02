@@ -65,12 +65,15 @@ public class AuthTest extends WithApplicationDB {
                             Auth.ACL_TYPE.GROUPS,
                             Auth.ACL_TYPE.USERS,
                             Auth.ACL_TYPE.CONFIG,
-                            Auth.ACL_TYPE.VOTE_RESULT
+                            Auth.ACL_TYPE.VOTE_RESULT,
+                            Auth.ACL_TYPE.PROJECT_LIST,
+                            Auth.ACL_TYPE.PROJECT_EDIT
                     );
                 }else if(i == 4){
                     allowed = Collections.list(
                             Auth.ACL_TYPE.ADMIN,
-                            Auth.ACL_TYPE.GROUP_SETTINGS
+                            Auth.ACL_TYPE.GROUP_SETTINGS,
+                            Auth.ACL_TYPE.PROJECT_EDIT
                     );
                 }
                 assertEquals(
