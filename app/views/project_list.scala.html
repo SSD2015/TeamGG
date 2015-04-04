@@ -3,7 +3,7 @@
 @import helper._
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-sm-2", "col-sm-10") }
 
-@main("Projects", routes.AdminController.main().url){
+@main("Projects", if(utils.Auth.acl(utils.Auth.ACL_TYPE.PROJECT_EDIT_ALL)) {routes.AdminController.main().url;}else{null;}){
 	<div class="row">
 		<div class="table-responsive">
 			<table class="table table-bordered" id="datatable">
@@ -12,43 +12,49 @@
 						<th>Name</th>
 						<th>Group number</th>
 						<th>Group name</th>
-						<th>Remove</th>
+						@if(utils.Auth.acl(utils.Auth.ACL_TYPE.PROJECT_EDIT_ALL)) {
+							<th>Remove</th>
+						}
 					</tr>
 				</thead>
 				<tbody>
 				@for(project <- projects){
 					<tr>
-						<td>@project.name</td>
+						<td><a href="@routes.ProjectController.show(project.id)">@project.name</a></td>
 						<td>@if(project.group != null){
 							@project.group.number
 						}</td>
 						<td>@if(project.group != null){
 							@project.group.name
 						}</td>
-						<td>
-							<form action="@routes.ProjectController.delete()" method="POST" class="removeform">
-								@CSRF.formField
-								<input type="hidden" name="id" value="@project.id">
-								<button type="submit" class="btn btn-link btn-sm">
-									<i class="glyphicon glyphicon-remove"></i>
-								</button>
-							</form>
-						</td>
+						@if(utils.Auth.acl(utils.Auth.ACL_TYPE.PROJECT_EDIT_ALL)) {
+							<td>
+								<form action="@routes.ProjectController.delete()" method="POST" class="removeform">
+									@CSRF.formField
+									<input type="hidden" name="id" value="@project.id">
+									<button type="submit" class="btn btn-link btn-sm">
+										<i class="glyphicon glyphicon-remove"></i>
+									</button>
+								</form>
+							</td>
+						}
 					</tr>
 				}
 				</tbody>
 			</table>
 		</div>
 	</div>
-	<h3>Create new project</h3>
-	@if(addForm.hasGlobalErrors) {
-		<div class="alert alert-danger">@addForm.globalError.message</div>
-	}
-	@b3.form(routes.ProjectController.save()) {
-		@CSRF.formField
-		@b3.text(addForm("name"), '_label -> "Name", 'autofocus -> true)
-		@b3.select(addForm("group"), options=for (group <- Groups.find.all()) yield group.id.toString() -> group.name, '_label -> "Group")
-		@b3.submit('class -> "btn btn-success"){ Add }
+	@if(utils.Auth.acl(utils.Auth.ACL_TYPE.PROJECT_EDIT_ALL)) {
+		<h3>Create new project</h3>
+		@if(addForm.hasGlobalErrors) {
+			<div class="alert alert-danger">@addForm.globalError.message</div>
+		}
+		@b3.form(routes.ProjectController.save()) {
+			@CSRF.formField
+			@b3.text(addForm("name"), '_label -> "Name", 'autofocus -> true)
+			@b3.select(addForm("group"), options = for(group <- Groups.find.all()) yield group.id.toString() -> group.name, '_label -> "Group")
+			@b3.submit('class -> "btn btn-success") { Add }
+		}
 	}
 } {
 } {

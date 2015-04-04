@@ -1,5 +1,6 @@
 package controllers;
 
+import models.User;
 import play.filters.csrf.AddCSRFToken;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -15,6 +16,9 @@ public class AdminController extends Controller {
                 return redirect("/mobile/");
             }
             return redirect(controllers.routes.LoginController.login());
+        }
+        if(Auth.getUser().type == User.TYPES.VOTER){
+            return redirect(controllers.routes.ProjectController.list());
         }
         return ok(views.html.admin.render());
     }

@@ -1,5 +1,6 @@
 package controllers;
 
+import com.avaje.ebean.Query;
 import forms.AddProjectForm;
 import models.Project;
 import play.data.DynamicForm;
@@ -14,7 +15,7 @@ import utils.Auth;
 public class ProjectController extends Controller {
     @AddCSRFToken
     public static Result list(){
-        if(!Auth.acl(Auth.ACL_TYPE.PROJECT_LIST)){
+        if(!Auth.acl(Auth.ACL_TYPE.PROJECT_EDIT)){
             return forbidden();
         }
 
@@ -24,7 +25,7 @@ public class ProjectController extends Controller {
 
     @RequireCSRFCheck
     public static Result save(){
-        if(!Auth.acl(Auth.ACL_TYPE.PROJECT_LIST)){
+        if(!Auth.acl(Auth.ACL_TYPE.PROJECT_EDIT_ALL)){
             return forbidden();
         }
 
@@ -44,7 +45,7 @@ public class ProjectController extends Controller {
 
     @RequireCSRFCheck
     public static Result delete(){
-        if(!Auth.acl(Auth.ACL_TYPE.PROJECT_LIST)){
+        if(!Auth.acl(Auth.ACL_TYPE.PROJECT_EDIT_ALL)){
             return forbidden();
         }
 
@@ -65,10 +66,96 @@ public class ProjectController extends Controller {
         return redirect(controllers.routes.ProjectController.list());
     }
 
+    @AddCSRFToken
+    public static Result show(int id){
+        if(!Auth.acl(Auth.ACL_TYPE.PROJECT_EDIT)){
+            return forbidden();
+        }
+
+        Project project = Project.find.byId(id);
+
+        if(project == null){
+            return notFound();
+        }
+
+        Result permError = checkEditAcl(project);
+        if(permError != null){
+            return permError;
+        }
+
+        Form<Project> form = Form.form(Project.class);
+        form = form.fill(project);
+
+        return ok(views.html.project_edit.render(project, form));
+    }
+
+    @RequireCSRFCheck
+    public static Result update(int id){
+        if(!Auth.acl(Auth.ACL_TYPE.PROJECT_EDIT)){
+            return forbidden();
+        }
+
+        Project project = Project.find.byId(id);
+
+        if(project == null){
+            return notFound();
+        }
+
+        Result permError = checkEditAcl(project);
+        if(permError != null){
+            return permError;
+        }
+
+        Form<Project> form = Form.form(Project.class);
+        form = form.fill(project);
+        form = form.bindFromRequest();
+
+        if(form.data().get("group.name").trim().isEmpty()){
+            form.reject("group.name", "This field is required.");
+        }
+
+        if(form.hasErrors()){
+            return badRequest(views.html.project_edit.render(project, form));
+        }
+
+        // DO NOT SAVE THIS directly, it's a HUGE security hole
+        Project data = form.get();
+
+        // Copy each fields so we know exactly which fields are allowed
+        if(project.group != null) {
+            project.group.name = data.group.name;
+            project.group.update();
+        }
+        project.name = data.name;
+        project.description = data.description;
+        project.update();
+
+        return redirect(controllers.routes.ProjectController.show(id));
+    }
+
     private static Html renderList(Form<AddProjectForm> form){
+        Query<Project> query = Project.find.orderBy("group.number ASC, id ASC");
+
+        if(!Auth.acl(Auth.ACL_TYPE.PROJECT_EDIT_ALL)){
+            query.where()
+                    .eq("group_id", Auth.getUser().group.id);
+        }
+
         return views.html.project_list.render(
-                Project.find.orderBy("group.number ASC, id ASC").findList(),
+                query.findList(),
                 form
         );
+    }
+
+    private static Result checkEditAcl(Project project){
+        if(!Auth.acl(Auth.ACL_TYPE.PROJECT_EDIT_ALL)){
+            // if user is not organizer, they must belong to group of the project
+            if(project.group == null){
+                return forbidden();
+            }else if(Auth.getUser().group.id != project.group.id){
+                return forbidden();
+            }
+        }
+        return null;
     }
 }

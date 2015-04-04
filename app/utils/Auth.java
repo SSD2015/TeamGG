@@ -45,16 +45,14 @@ public class Auth {
         switch(aclType){
             case ADMIN:
                 return user.group != null || user.type.ordinal() >= User.TYPES.INSTRUCTOR.ordinal();
-            case GROUP_SETTINGS:
-                return user.group != null || Auth.acl(ACL_TYPE.GROUPS);
             case GROUPS: case USERS: case CONFIG:
                 return user.type == User.TYPES.ORGANIZER;
             case VOTE_RESULT:
                 return user.type == User.TYPES.ORGANIZER || user.type == User.TYPES.INSTRUCTOR;
-            case PROJECT_LIST:
-                return user.type == User.TYPES.ORGANIZER;
             case PROJECT_EDIT:
                 return user.type == User.TYPES.ORGANIZER || user.group != null;
+            case PROJECT_EDIT_ALL:
+                return user.type == User.TYPES.ORGANIZER;
             default:
                 throw new IllegalArgumentException("Unknown ACL type");
         }
@@ -62,13 +60,12 @@ public class Auth {
 
     public enum ACL_TYPE{
         ADMIN, // can access admin page
-        GROUP_SETTINGS, // can edit their own group
         GROUPS, // can edit any group
         USERS, // can add/view users
         CONFIG, // can config the application
         VOTE_RESULT, // can see voting result
-        PROJECT_LIST,
-        PROJECT_EDIT
+        PROJECT_EDIT,
+        PROJECT_EDIT_ALL
     }
 
     public static User login(String username, String password){

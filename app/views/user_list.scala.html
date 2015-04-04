@@ -14,6 +14,7 @@
 							<th>Name</th>
 							<th>Organization</th>
 							<th>Role</th>
+							<th>Group</th>
 							<th class="col-xs-2">Has PW?</th>
 							<th>Edit</th>
 						</tr>
@@ -25,6 +26,7 @@
 							<td>@user.name</td>
 							<td>@user.organization</td>
 							<td>@{user.`type`}</td>
+							<td>@if(user.group != null){@user.group.name <em>(@user.group.number)</em>}</td>
 							<td>@if(user.password == null || user.password.isEmpty){
 								<i class="glyphicon glyphicon-remove"></i>
 							}else{

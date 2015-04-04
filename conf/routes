@@ -17,6 +17,8 @@ POST           /users/edit                       controllers.UserController.edit
 GET            /projects                         controllers.ProjectController.list()
 POST           /projects                         controllers.ProjectController.save()
 POST           /projects/delete                  controllers.ProjectController.delete()
+GET            /projects/*id                     controllers.ProjectController.show(id : Int)
+POST           /projects/*id                     controllers.ProjectController.update(id : Int)
 
 # API
 POST           /api/auth/login                   controllers.ApiAuthController.login()

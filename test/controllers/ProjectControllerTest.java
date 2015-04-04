@@ -59,4 +59,11 @@ public class ProjectControllerTest extends WithBrowserDB {
         browser.findFirst(".removeform").submit();
         assertEquals("confirm remove", 2, browser.$("#datatable tbody tr").size());
     }
+
+    @Test
+    public void testResultUnauthorized() throws Exception {
+        browser.goTo("/vote_result");
+
+        assertFalse(browser.pageSource().contains("Hello world"));
+    }
 }

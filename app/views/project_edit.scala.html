@@ -1,0 +1,38 @@
+@(project: Project, editForm: Form[Project])
+@import collection.JavaConverters._
+@import helper._
+@implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-sm-2", "col-sm-10") }
+
+@main(project.name, routes.ProjectController.list().url){
+	@b3.form(routes.ProjectController.update(project.id)) {
+		@CSRF.formField
+		@if(project.group != null) {
+			@b3.text(editForm("group.name"), '_label -> "Group name")
+		}
+		@b3.text(editForm("name"), '_label -> "Project name", 'autofocus -> true)
+		@b3.textarea(editForm("description"), '_label -> "Project description", 'autofocus -> true, 'rows -> 10)
+		@if(project.group != null){
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Group Member</label>
+				<div class="col-sm-10">
+					<ul class="list-unstyled">
+					@for(member <- project.group.user){
+						<li>@member.getName</li>
+					}
+					</ul>
+					<div class="help-block">
+						@if(utils.Auth.acl(utils.Auth.ACL_TYPE.GROUPS)){
+							<a href="#" class="btn btn-default">Add/remove group member</a>
+						}else{
+							Contact the organizer for corrections.
+						}
+					</div>
+				</div>
+			</div>
+		}
+		@b3.submit('class -> "btn btn-success btn-lg"){ Save }
+	}
+} {
+} {
+
+}

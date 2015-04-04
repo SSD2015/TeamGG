@@ -24,13 +24,15 @@ public class UserControllerTest extends WithBrowserDB {
         assertEquals("name", "Dummy organizer", row.find("td", 1).getText());
         assertEquals("organization", "Testing ltd.", row.find("td", 2).getText());
         assertEquals("type", "ORGANIZER", row.find("td", 3).getText());
-        assertTrue("has password", row.find("td", 4).findFirst("i").getAttribute("class").contains("ok"));
+        assertEquals("group", "", row.find("td", 4).getText());
+        assertTrue("has password", row.find("td", 5).findFirst("i").getAttribute("class").contains("ok"));
 
         row = browser.$("#datatable tbody tr").get(3);
         assertEquals("username", "dummygroup", row.find("td", 0).getText());
         assertEquals("name", "Dummy voter with group", row.find("td", 1).getText());
         assertEquals("type", "VOTER", row.find("td", 3).getText());
-        assertTrue("has no password", row.find("td", 4).findFirst("i").getAttribute("class").contains("remove"));
+        assertEquals("group", "Dummy group (1)", row.find("td", 4).getText());
+        assertTrue("has no password", row.find("td", 5).findFirst("i").getAttribute("class").contains("remove"));
     }
 
     @Test
