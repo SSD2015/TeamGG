@@ -1,9 +1,10 @@
 package utils;
 
 import com.typesafe.config.ConfigException;
-import org.apache.commons.vfs2.*;
-import play.Configuration;
-import play.Play;
+import org.apache.commons.vfs2.FileObject;
+import org.apache.commons.vfs2.FileSystemException;
+import org.apache.commons.vfs2.FileSystemManager;
+import org.apache.commons.vfs2.VFS;
 
 import java.io.File;
 import java.util.Arrays;
@@ -21,7 +22,7 @@ public class Upload {
     private String id;
     private FileObject uploadPath;
     private String webPath;
-    private FileSystemManager manager;
+    protected FileSystemManager manager;
 
     public Upload(String kind, String id) {
         this.kind = kind;
@@ -56,7 +57,7 @@ public class Upload {
     public String moveUpload(String fileName, File file){
         file = preprocess(file);
         FileObject dest = moveFile(fileName, file);
-        return webPath + dest.getName().getBaseName();
+        return getPublicUrl(dest);
     }
 
     protected File preprocess(File file){
@@ -75,7 +76,7 @@ public class Upload {
         try {
             src.moveTo(dest);
         } catch (FileSystemException e) {
-            throw new RuntimeException("File move error");
+            throw new RuntimeException("File move error", e);
         }
         return dest;
     }
@@ -106,5 +107,13 @@ public class Upload {
         }
 
         return out;
+    }
+
+    public String getPublicUrl(FileObject file){
+        return webPath + file.getName().getBaseName();
+    }
+
+    public void setManager(FileSystemManager manager) {
+        this.manager = manager;
     }
 }

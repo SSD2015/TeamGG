@@ -7,7 +7,7 @@ lazy val root = (project in file("."))
 
 scalaVersion := "2.11.1"
 
-resolvers += "Apache Commons Snapshot" at "https://repository.apache.org/content/groups/snapshots/"
+resolvers += "VFS-S3" at "http://dl.bintray.com/content/abashev/vfs-s3"
 
 libraryDependencies ++= Seq(
   javaJdbc,
@@ -21,7 +21,8 @@ libraryDependencies ++= Seq(
   "commons-collections" % "commons-collections" % "3.2.1",
   "org.springframework.security" % "spring-security-core" % "3.2.6.RELEASE",
   "com.github.detro" % "phantomjsdriver" % "1.2.0",
-  "org.apache.commons" % "commons-vfs2" % "2.1-SNAPSHOT"
+  "org.apache.commons" % "commons-vfs2" % "2.1.1660580.1",
+  "com.intridea.io" % "vfs-s3" % "2.3.1"
 )
 
 pipelineStages in Assets := Seq(uglify, cssCompress, digest, gzip)
