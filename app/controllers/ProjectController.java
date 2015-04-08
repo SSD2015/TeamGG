@@ -8,11 +8,15 @@ import play.data.Form;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
 import play.twirl.api.Html;
 import utils.Auth;
+import utils.Upload;
 
 public class ProjectController extends Controller {
+    public static final long MAX_UPLOAD_SIZE = 2 * 1024 * 1024;
+
     @AddCSRFToken
     public static Result list(){
         if(!Auth.acl(Auth.ACL_TYPE.PROJECT_EDIT)){
@@ -110,6 +114,18 @@ public class ProjectController extends Controller {
         form = form.fill(project);
         form = form.bindFromRequest();
 
+        Http.MultipartFormData body = request().body().asMultipartFormData();
+        Http.MultipartFormData.FilePart logo = body.getFile("logo");
+
+        if(logo != null){
+            if(logo.getFile().length() > MAX_UPLOAD_SIZE){
+                form.reject("Logo is larger than the maximum allowed");
+            }
+            if(!Upload.IMG_EXT.contains(logo.getFilename().substring(logo.getFilename().lastIndexOf(".")).toLowerCase())){
+                form.reject("Logo is not in allowed format");
+            }
+        }
+
         if(form.data().get("group.name").trim().isEmpty()){
             form.reject("group.name", "This field is required.");
         }
@@ -128,6 +144,14 @@ public class ProjectController extends Controller {
         }
         project.name = data.name;
         project.description = data.description;
+
+        // save uploaded files
+        if(logo != null) {
+            Upload upload = new Upload("logo", project.id.toString());
+            upload.removeExisting();
+            project.logo = upload.moveUpload(logo.getFilename(), logo.getFile());
+        }
+
         project.update();
 
         return redirect(controllers.routes.ProjectController.show(id));

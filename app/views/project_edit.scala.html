@@ -4,12 +4,25 @@
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-sm-2", "col-sm-10") }
 
 @main(project.name, routes.ProjectController.list().url){
-	@b3.form(routes.ProjectController.update(project.id)) {
+	@b3.form(routes.ProjectController.update(project.id), 'enctype -> "multipart/form-data") {
 		@CSRF.formField
 		@if(project.group != null) {
 			@b3.text(editForm("group.name"), '_label -> "Group name")
 		}
 		@b3.text(editForm("name"), '_label -> "Project name", 'autofocus -> true)
+		<div class="form-group">
+			<label for="logo" class="col-sm-2 control-label">Project logo</label>
+			<div class="col-sm-1 col-xs-offset-5 col-sm-offset-0">
+				<img id="preview_logo" src="@if(project.logo){@project.logo}else{@routes.Assets.versioned("images/defaultlogo.png")}" class="thumbnail projectlogo">
+			</div>
+			<div class="col-sm-4">
+				<div class="invisupload">
+					<input name="logo" type="file" data-preview="logo" type="image">
+					<button class="btn btn-block btn-default">Select new logo</button>
+				</div>
+				<div class="help-block">100x100 png, displayed as 50x50</div>
+			</div>
+		</div>
 		@b3.textarea(editForm("description"), '_label -> "Project description", 'autofocus -> true, 'rows -> 10)
 		@if(project.group != null){
 			<div class="form-group">
@@ -34,5 +47,5 @@
 	}
 } {
 } {
-
+	<script src="@routes.Assets.versioned("javascripts/instantpreview.js")"></script>
 }

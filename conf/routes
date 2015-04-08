@@ -3,35 +3,36 @@
 # ~~~~
 
 # Admin
-GET            /                                 controllers.AdminController.main()
-GET            /login                            controllers.LoginController.login()
-POST           /login                            controllers.LoginController.doLogin()
-POST           /logout                           controllers.LoginController.logout()
+GET         /                                 controllers.AdminController.main()
+GET         /login                            controllers.LoginController.login()
+POST        /login                            controllers.LoginController.doLogin()
+POST        /logout                           controllers.LoginController.logout()
 
-GET            /vote_result                      controllers.VotingResultController.result()
+GET         /vote_result                      controllers.VotingResultController.result()
 
-GET            /users                            controllers.UserController.list()
-POST           /users                            controllers.UserController.save()
-POST           /users/edit                       controllers.UserController.edit()
+GET         /users                            controllers.UserController.list()
+POST        /users                            controllers.UserController.save()
+POST        /users/edit                       controllers.UserController.edit()
 
-GET            /projects                         controllers.ProjectController.list()
-POST           /projects                         controllers.ProjectController.save()
-POST           /projects/delete                  controllers.ProjectController.delete()
-GET            /projects/*id                     controllers.ProjectController.show(id : Int)
-POST           /projects/*id                     controllers.ProjectController.update(id : Int)
+GET         /projects                         controllers.ProjectController.list()
+POST        /projects                         controllers.ProjectController.save()
+POST        /projects/delete                  controllers.ProjectController.delete()
+GET         /projects/*id                     controllers.ProjectController.show(id : Int)
+POST        /projects/*id                     controllers.ProjectController.update(id : Int)
 
 # API
-POST           /api/auth/login                   controllers.ApiAuthController.login()
-GET            /api/auth/check                   controllers.ApiAuthController.check()
-POST           /api/auth/logout                  controllers.ApiAuthController.logout()
+POST        /api/auth/login                   controllers.ApiAuthController.login()
+GET         /api/auth/check                   controllers.ApiAuthController.check()
+POST        /api/auth/logout                  controllers.ApiAuthController.logout()
 
-GET            /api/project                      controllers.ApiProjectController.list()
-GET            /api/project/*id                  controllers.ApiProjectController.getInfo(id : Int)
-POST           /api/project/*id/vote/*cat        controllers.ApiVoteController.vote(id : Int, cat : Int)
+GET         /api/project                      controllers.ApiProjectController.list()
+GET         /api/project/*id                  controllers.ApiProjectController.getInfo(id : Int)
+POST        /api/project/*id/vote/*cat        controllers.ApiVoteController.vote(id : Int, cat : Int)
 
-GET            /api/categories                   controllers.ApiVoteController.list()
+GET         /api/categories                   controllers.ApiVoteController.list()
+
+OPTIONS     /api/*all                         controllers.Application.cors(all)
 
 
-GET            /assets/*file                     controllers.Assets.versioned(path="/public", file: Asset)
-
-OPTIONS        /*all                             controllers.Application.cors(all)
+GET         /assets/*file                     controllers.Assets.versioned(path="/public", file: Asset)
+GET         /uploads/*file                    controllers.StaticServeController.serve(path="uploads", file: String)
