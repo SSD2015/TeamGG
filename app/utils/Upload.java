@@ -28,11 +28,7 @@ public class Upload {
         this.kind = kind;
         this.id = id;
 
-        try {
-            manager = VFS.getManager();
-        } catch (FileSystemException e) {
-            throw new RuntimeException("VFS Initialization Error");
-        }
+        manager = createVFSManager();
 
         try {
             uploadPath = manager.resolveFile(new File("."), getConfig("upload.path"));
@@ -115,5 +111,12 @@ public class Upload {
 
     public void setManager(FileSystemManager manager) {
         this.manager = manager;
+    }
+    protected FileSystemManager createVFSManager(){
+        try {
+            return VFS.getManager();
+        } catch (FileSystemException e) {
+            throw new RuntimeException("VFS Initialization Error");
+        }
     }
 }

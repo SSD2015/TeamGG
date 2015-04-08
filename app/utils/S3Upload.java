@@ -5,10 +5,7 @@ import com.intridea.io.vfs.operations.IAclGetter;
 import com.intridea.io.vfs.operations.IAclSetter;
 import com.intridea.io.vfs.operations.IPublicUrlsGetter;
 import com.intridea.io.vfs.provider.s3.S3FileProvider;
-import org.apache.commons.vfs2.FileObject;
-import org.apache.commons.vfs2.FileSystemException;
-import org.apache.commons.vfs2.FileSystemOptions;
-import org.apache.commons.vfs2.VFS;
+import org.apache.commons.vfs2.*;
 import org.apache.commons.vfs2.auth.StaticUserAuthenticator;
 import org.apache.commons.vfs2.impl.DefaultFileSystemConfigBuilder;
 
@@ -17,16 +14,10 @@ import java.io.File;
 public class S3Upload extends Upload {
     public S3Upload(String kind, String id) {
         super(kind, id);
-
-        setupS3();
-        try {
-            setManager(VFS.getManager());
-        } catch (FileSystemException e) {
-            throw new RuntimeException("VFS Initialization Error");
-        }
     }
 
-    private void setupS3(){
+    @Override
+    protected FileSystemManager createVFSManager(){
         String id = play.Play.application().configuration().getString("upload.aws.id");
         String key = play.Play.application().configuration().getString("upload.aws.key");
         StaticUserAuthenticator auth = new StaticUserAuthenticator(null, id, key);
@@ -36,6 +27,8 @@ public class S3Upload extends Upload {
         } catch (FileSystemException e) {
             throw new RuntimeException("VFS Cannot set auth", e);
         }
+
+        return super.createVFSManager();
     }
 
     @Override
