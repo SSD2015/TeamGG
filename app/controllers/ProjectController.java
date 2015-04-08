@@ -186,8 +186,8 @@ public class ProjectController extends Controller {
 
     private static Upload getUploader(String key, String id){
         // Bad design!
-        String key = play.Play.application().configuration().getString("upload.aws.key");
-        if(key != null){
+        String awsKey = play.Play.application().configuration().getString("upload.aws.key");
+        if(awsKey != null){
             return new S3Upload(key, id);
         }
         return new Upload(key, id);
