@@ -1,4 +1,4 @@
-package utils;
+package upload;
 
 import com.typesafe.config.ConfigException;
 import org.apache.commons.vfs2.FileObject;

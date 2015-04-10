@@ -11,9 +11,10 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.twirl.api.Html;
+import upload.S3Upload;
+import upload.Upload;
+import upload.UploadFactory;
 import utils.*;
-
-import java.lang.reflect.InvocationTargetException;
 
 public class ProjectController extends Controller {
     public static final long MAX_UPLOAD_SIZE = 2 * 1024 * 1024;
@@ -148,7 +149,7 @@ public class ProjectController extends Controller {
 
         // save uploaded files
         if(logo != null) {
-            Upload upload = getUploader("logo", project.id.toString());
+            Upload upload = UploadFactory.get("logo", project.id.toString());
             upload.removeExisting();
             project.logo = upload.moveUpload(logo.getFilename(), logo.getFile());
         }
@@ -182,14 +183,5 @@ public class ProjectController extends Controller {
             }
         }
         return null;
-    }
-
-    private static Upload getUploader(String key, String id){
-        // Bad design!
-        String awsKey = play.Play.application().configuration().getString("upload.aws.key");
-        if(awsKey != null){
-            return new S3Upload(key, id);
-        }
-        return new Upload(key, id);
     }
 }

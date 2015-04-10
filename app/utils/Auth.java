@@ -2,9 +2,8 @@ package utils;
 
 import auth.Authenticator;
 import auth.KuMailAuth;
-import com.avaje.ebean.Ebean;
+import com.typesafe.config.ConfigException;
 import models.User;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import static play.mvc.Controller.session;
@@ -77,7 +76,7 @@ public class Auth {
         }
 
         if(!success && (user != null && !user.hasPassword())) {
-            Authenticator auth = new KuMailAuth();
+            Authenticator auth = getAuth();
             Authenticator.AuthenticatorUser result = auth.auth(username, password);
 
             if(result == Authenticator.INVALID){
@@ -95,7 +94,13 @@ public class Auth {
         return null;
     }
 
+    @SuppressWarnings("unchecked")
     public static PasswordEncoder getHasher(){
-        return new BCryptPasswordEncoder();
+        return GetClassByConfig.get("auth.hasher");
+    }
+
+    @SuppressWarnings("unchecked")
+    public static Authenticator getAuth(){
+        return GetClassByConfig.get("auth.strategy");
     }
 }
