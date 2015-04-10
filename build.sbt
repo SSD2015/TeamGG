@@ -22,7 +22,8 @@ libraryDependencies ++= Seq(
   "org.springframework.security" % "spring-security-core" % "3.2.6.RELEASE",
   "com.github.detro" % "phantomjsdriver" % "1.2.0",
   "org.apache.commons" % "commons-vfs2" % "2.1.1660580.1",
-  "com.intridea.io" % "vfs-s3" % "2.3.1"
+  "com.intridea.io" % "vfs-s3" % "2.3.1",
+  "org.imgscalr" % "imgscalr-lib" % "4.2"
 )
 
 pipelineStages in Assets := Seq(uglify, cssCompress, digest, gzip)

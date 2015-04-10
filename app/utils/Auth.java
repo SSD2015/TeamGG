@@ -1,8 +1,6 @@
 package utils;
 
 import auth.Authenticator;
-import auth.KuMailAuth;
-import com.typesafe.config.ConfigException;
 import models.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 

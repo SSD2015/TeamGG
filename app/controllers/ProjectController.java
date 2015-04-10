@@ -3,6 +3,7 @@ package controllers;
 import com.avaje.ebean.Query;
 import forms.AddProjectForm;
 import models.Project;
+import org.imgscalr.Scalr;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.filters.csrf.AddCSRFToken;
@@ -11,13 +12,19 @@ import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
 import play.twirl.api.Html;
-import upload.S3Upload;
 import upload.Upload;
 import upload.UploadFactory;
-import utils.*;
+import utils.Auth;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class ProjectController extends Controller {
     public static final long MAX_UPLOAD_SIZE = 2 * 1024 * 1024;
+    public static final int LOGO_SIZE = 160;
+    public static final int SCREENSHOT_SIZE = 1024;
 
     @AddCSRFToken
     public static Result list(){
@@ -149,9 +156,23 @@ public class ProjectController extends Controller {
 
         // save uploaded files
         if(logo != null) {
-            Upload upload = UploadFactory.get("logo", project.id.toString());
-            upload.removeExisting();
-            project.logo = upload.moveUpload(logo.getFilename(), logo.getFile());
+            try {
+                BufferedImage image = ImageIO.read(logo.getFile());
+
+                BufferedImage resized = Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, LOGO_SIZE);
+                image.flush();
+
+                Upload upload = UploadFactory.get("logo", project.id.toString());
+                upload.removeExisting();
+
+                File temp = File.createTempFile("exceedvote", ".png");
+                ImageIO.write(resized, "png", temp);
+                resized.flush();
+
+                project.logo = upload.moveUpload(temp.getName(), temp);
+            } catch (IOException e) {
+                return internalServerError();
+            }
         }
 
         project.update();
