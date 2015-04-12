@@ -29,8 +29,14 @@
 	padding-bottom: 10px;
 	margin-bottom: 20px;
 }
+.screenshot .thumbnail{
+	height: 210px;
+	line-height: 210px;
+	text-align: center;
+}
 .screenshot img{
 	max-height: 200px;
+	display: inline;
 }
 .screenshot .add{
 	text-align: center;
@@ -73,6 +79,13 @@
 	height: 50px;
 }
 
+.placeholder{
+	border: 1px solid #ddd;
+	border-radius: 4px;
+	height: 230px;
+	box-shadow: 0 1px 2px rgba(0,0,0,.075), 0 2px 5px rgba(0,0,0,0.3);
+}
+
 @media (max-width: 767px){
 	.mainheader .text-right{
 		text-align: left;
@@ -80,6 +93,9 @@
 	.screenshot{
 		height: 250px;
 		overflow-y: auto;
+	}
+	.screenshot .thumbnail{
+		height: auto;
 	}
 	.screenshot .add{
 		height: 100px;

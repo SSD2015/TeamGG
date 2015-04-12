@@ -1,13 +1,16 @@
 package controllers;
 
+import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Query;
 import forms.AddProjectForm;
 import models.Project;
+import models.Screenshot;
 import org.imgscalr.Scalr;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
+import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Http;
 import play.mvc.Result;
@@ -24,7 +27,9 @@ import java.io.IOException;
 public class ProjectController extends Controller {
     public static final long MAX_UPLOAD_SIZE = 2 * 1024 * 1024;
     public static final int LOGO_SIZE = 160;
-    public static final int SCREENSHOT_SIZE = 1024;
+    public static final int SCREENSHOT_SIZE_W = 1440;
+    public static final int SCREENSHOT_SIZE_H = 900;
+    public static final int MAX_SCREENSHOT = 8;
 
     @AddCSRFToken
     public static Result list(){
@@ -122,6 +127,7 @@ public class ProjectController extends Controller {
         Form<Project> form = Form.form(Project.class);
         form = form.fill(project);
         form = form.bindFromRequest();
+        DynamicForm dynamicForm = Form.form().bindFromRequest();
 
         Http.MultipartFormData body = request().body().asMultipartFormData();
         Http.MultipartFormData.FilePart logo = body.getFile("logo");
@@ -154,12 +160,27 @@ public class ProjectController extends Controller {
         project.name = data.name;
         project.description = data.description;
 
+        if(dynamicForm.get("ssOrder") != null){
+            String[] order = dynamicForm.get("ssOrder").split(",");
+            int length = Math.min(order.length, MAX_SCREENSHOT);
+            for(int i = 0; i < length; i++){
+                int orderId = Integer.parseInt(order[i]);
+                for(Screenshot item : project.screenshots){
+                    if(item.id == orderId){
+                        item.position = i;
+                        item.update();
+                        break;
+                    }
+                }
+            }
+        }
+
         // save uploaded files
         if(logo != null) {
             try {
                 BufferedImage image = ImageIO.read(logo.getFile());
 
-                BufferedImage resized = Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, LOGO_SIZE);
+                BufferedImage resized = Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, LOGO_SIZE, LOGO_SIZE);
                 image.flush();
 
                 Upload upload = UploadFactory.get("logo", project.id.toString());
@@ -178,6 +199,74 @@ public class ProjectController extends Controller {
         project.update();
 
         return redirect(controllers.routes.ProjectController.show(id));
+    }
+
+    @RequireCSRFCheck // not really checked since request use XHR
+    public static Result uploadScreenshot(int id){
+        if(!Auth.acl(Auth.ACL_TYPE.PROJECT_EDIT)){
+            return forbidden();
+        }
+
+        Project project = Project.find.byId(id);
+
+        if(project == null){
+            return notFound();
+        }
+
+        if(project.screenshots.size() >= MAX_SCREENSHOT){
+            return badRequest("Project has full screenshot quota");
+        }
+
+        Result permError = checkEditAcl(project);
+        if(permError != null){
+            return permError;
+        }
+
+        Http.MultipartFormData body = request().body().asMultipartFormData();
+        Http.MultipartFormData.FilePart file = body.getFile("file");
+
+        if(file == null){
+            return badRequest();
+        }
+
+        if(file.getFile().length() > MAX_UPLOAD_SIZE){
+            return badRequest("Screenshot is larger than the maximum allowed");
+        }
+        if(!Upload.IMG_EXT.contains(file.getFilename().substring(file.getFilename().lastIndexOf(".")).toLowerCase())){
+            return badRequest("Screenshot is not in allowed format");
+        }
+
+        Screenshot ss;
+
+        Ebean.beginTransaction();
+        try {
+            BufferedImage image = ImageIO.read(file.getFile());
+
+            BufferedImage resized = Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, SCREENSHOT_SIZE_W, SCREENSHOT_SIZE_H);
+            image.flush();
+
+            ss = new Screenshot();
+            ss.project = project;
+            ss.save();
+
+            Upload upload = UploadFactory.get("screenshot", project.id.toString(), String.valueOf(ss.id));
+            upload.removeExisting();
+
+            File temp = File.createTempFile("exceedvote", ".png");
+            ImageIO.write(resized, "png", temp);
+            resized.flush();
+
+            ss.file = upload.moveUpload(temp.getName(), temp);
+            ss.update();
+            Ebean.commitTransaction();
+        } catch (IOException e) {
+            Ebean.endTransaction();
+            return internalServerError("Upload process fail");
+        } finally {
+            Ebean.endTransaction();
+        }
+
+        return ok(Json.toJson(ss));
     }
 
     private static Html renderList(Form<AddProjectForm> form){

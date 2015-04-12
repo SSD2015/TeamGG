@@ -14,4 +14,8 @@ public class UploadFactory {
             throw new RuntimeException("Cannot instantiate uploader", e);
         }
     }
+
+    public static Upload get(String key, String id, String objectId){
+        return get(key, id + "_" + objectId);
+    }
 }

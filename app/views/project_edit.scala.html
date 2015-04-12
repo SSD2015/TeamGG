@@ -4,7 +4,7 @@
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-sm-2", "col-sm-10") }
 
 @main(project.name, routes.ProjectController.list().url){
-	@b3.form(routes.ProjectController.update(project.id), 'enctype -> "multipart/form-data") {
+	@b3.form(routes.ProjectController.update(project.id), 'enctype -> "multipart/form-data", 'id -> "projectForm") {
 		@CSRF.formField
 		@if(project.group != null) {
 			@b3.text(editForm("group.name"), '_label -> "Group name")
@@ -13,17 +13,43 @@
 		<div class="form-group">
 			<label for="logo" class="col-sm-2 control-label">Project logo</label>
 			<div class="col-sm-1 col-xs-offset-5 col-sm-offset-0">
-				<img id="preview_logo" src="@if(project.logo){@project.logo}else{@routes.Assets.versioned("images/defaultlogo.png")}" class="thumbnail projectlogo">
+				<img id="preview_logo" src="@if(project.logo){@project.getLogo()}else{@routes.Assets.versioned("images/defaultlogo.png")}" class="thumbnail projectlogo">
 			</div>
 			<div class="col-sm-4">
 				<div class="invisupload">
-					<input name="logo" type="file" data-preview="logo" type="image">
-					<button class="btn btn-block btn-default">Select new logo</button>
+					<input name="logo" type="file" data-preview="logo" accept="image/*">
+					<button class="btn btn-block btn-default" type="button">Select new logo</button>
 				</div>
-				<div class="help-block">160x160 png, displayed as 80x80</div>
+				<div class="help-block">
+					@{controllers.ProjectController.LOGO_SIZE}x@{controllers.ProjectController.LOGO_SIZE} png,
+					displayed as 80x80
+				</div>
 			</div>
 		</div>
 		@b3.textarea(editForm("description"), '_label -> "Project description", 'autofocus -> true, 'rows -> 10)
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Screenshots</label>
+			<div class="col-sm-offset-2 screenshot">
+				<div class="scroll">
+					@for(img <- project.getScreenshots()){
+						<div class="col-sm-4 item" data-id="@img.id">
+							<div class="thumbnail"><img src="@img.getFile()"></div>
+						</div>
+					}
+					<div class="col-sm-4">
+						<div class="invisupload">
+							<input type="file" accept="image/*" id="ssupload">
+							<button type="button" class="btn btn-default btn-block add"><i class="glyphicon glyphicon-plus"></i></button>
+						</div>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				<div class="help-block">
+					Up to @controllers.ProjectController.MAX_SCREENSHOT images,
+					resized to be under @{controllers.ProjectController.SCREENSHOT_SIZE_W}x@{controllers.ProjectController.SCREENSHOT_SIZE_H}
+				</div>
+			</div>
+		</div>
 		@if(project.group != null){
 			<div class="form-group">
 				<label class="col-sm-2 control-label">Group Member</label>
@@ -47,5 +73,8 @@
 	}
 } {
 } {
+	<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 	<script src="@routes.Assets.versioned("javascripts/instantpreview.js")"></script>
+	<script>window.ssUploadTarget = "@routes.ProjectController.uploadScreenshot(project.id)";</script>
+	<script src="@routes.Assets.versioned("javascripts/screenshotupload.js")"></script>
 }
