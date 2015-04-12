@@ -6,10 +6,7 @@ import play.data.validation.Constraints;
 import play.db.ebean.Model;
 
 import javax.persistence.*;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static play.mvc.Http.Context.Implicit.request;
 
@@ -43,7 +40,7 @@ public class Project extends Model {
     );
 
     public List<Screenshot> getScreenshots(){
-        screenshots.sort(new Comparator<Screenshot>() {
+        Collections.sort(screenshots, new Comparator<Screenshot>() {
             @Override
             public int compare(Screenshot o1, Screenshot o2) {
                 return o1.position - o2.position;
