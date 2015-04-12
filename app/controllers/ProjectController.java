@@ -252,8 +252,8 @@ public class ProjectController extends Controller {
             Upload upload = UploadFactory.get("screenshot", project.id.toString(), String.valueOf(ss.id));
             upload.removeExisting();
 
-            File temp = File.createTempFile("exceedvote", ".png");
-            ImageIO.write(resized, "png", temp);
+            File temp = File.createTempFile("exceedvote", ".jpg");
+            ImageIO.write(resized, "jpg", temp);
             resized.flush();
 
             ss.file = upload.moveUpload(temp.getName(), temp);
