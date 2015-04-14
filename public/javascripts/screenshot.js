@@ -17,7 +17,7 @@
         // XXX: jQuery won't work.
         var xhr = new XMLHttpRequest();
         xhr.open('POST', window.ssUploadTarget, true);
-        var node = $('<div class="col-sm-4 item"><div class="thumbnail"><img src="/assets/images/ring.svg" class="loading"></div></div>');
+        var node = $('<div class="col-sm-4 item"><a class="del text-danger" href="#"><i class="glyphicon glyphicon-remove"></i></a><div class="thumbnail"><img src="/assets/images/ring.svg" class="loading"></div></div>');
         $(node).insertBefore(container);
         container.hide();
 
