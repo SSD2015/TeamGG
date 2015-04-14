@@ -1,18 +1,26 @@
 package controllers;
 
+import com.avaje.ebean.Ebean;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import forms.AddUserForm;
+import models.Screenshot;
 import models.User;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
 import play.libs.Json;
 import play.mvc.Controller;
+import play.mvc.Http;
 import play.mvc.Result;
 import play.twirl.api.Html;
 import utils.Auth;
+import utils.CsvUserLoader;
 import utils.Pagination;
 
+import javax.persistence.PersistenceException;
+import java.io.IOException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +66,7 @@ public class UserController extends Controller {
         user.fromForm(data);
         user.save();
 
-        return ok(list(addForm));
+        return redirect(controllers.routes.UserController.list());
     }
 
     @RequireCSRFCheck
@@ -135,7 +143,68 @@ public class UserController extends Controller {
         return ok(user.toAdminJson());
     }
 
+    @RequireCSRFCheck
+    public static Result upload(){
+        if(!Auth.acl(Auth.ACL_TYPE.USERS)){
+            return forbidden();
+        }
+
+        DynamicForm form = Form.form().bindFromRequest();
+        Form<AddUserForm> addForm = Form.form(AddUserForm.class);
+
+        boolean skipExisting = form.get("skipexisting") != null;
+
+        List<User> users = null;
+
+        try{
+            Http.MultipartFormData body = request().body().asMultipartFormData();
+            Http.MultipartFormData.FilePart file = body.getFile("file");
+            CsvUserLoader loader = new CsvUserLoader(file.getFile());
+            users = loader.read();
+        }catch(IOException e){
+            return internalServerError("Cannot read input file");
+        }catch(CsvUserLoader.LoaderException e){
+            form.reject(e.getMessage());
+        }
+
+        if(form.hasErrors()){
+            return badRequest(list(addForm, form));
+        }
+
+        Ebean.beginTransaction();
+        try {
+            for (User user : users) {
+                try {
+                    user.save();
+                } catch (PersistenceException e) {
+                    if(e.getCause() instanceof SQLIntegrityConstraintViolationException && !skipExisting){
+                        throw e;
+                    }
+                }
+            }
+            Ebean.commitTransaction();
+        } catch(PersistenceException e){
+            if(e.getCause() instanceof SQLIntegrityConstraintViolationException){
+                form.reject(e.getCause().getMessage());
+            }else {
+                form.reject(e.getMessage());
+            }
+        } finally {
+            Ebean.endTransaction();
+        }
+
+        if(form.hasErrors()){
+            return badRequest(list(addForm, form));
+        }
+
+        return redirect(controllers.routes.UserController.list());
+    }
+
     private static Html list(Form<AddUserForm> addForm){
+        return list(addForm, Form.form());
+    }
+
+    private static Html list(Form<AddUserForm> addForm, DynamicForm uploadForm){
         int start = 0;
         try {
             start = Integer.parseInt(request().getQueryString("start"));
@@ -149,7 +218,7 @@ public class UserController extends Controller {
                 .setMaxRows(ROW_PER_PAGE)
                 .findList();
 
-        return views.html.user_list.render(users, pager, addForm);
+        return views.html.user_list.render(users, pager, addForm, uploadForm);
     }
 
     private static ObjectNode errorJson(String text){

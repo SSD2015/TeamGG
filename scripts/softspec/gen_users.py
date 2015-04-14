@@ -1,7 +1,7 @@
 import requests, re
 from bs4 import BeautifulSoup
 
-print 'username,name,organization,role'
+print 'username,name,organization,type'
 
 for group in file("groups.txt"):
 	group = group.strip()

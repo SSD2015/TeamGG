@@ -1,4 +1,5 @@
-@(users: java.util.List[User], pager: utils.Pagination, addForm: Form[forms.AddUserForm])
+@(users: java.util.List[User], pager: utils.Pagination, addForm: Form[forms.AddUserForm], uploadForm: DynamicForm)
+@import play.data.DynamicForm
 @import collection.JavaConverters._
 @import helper._
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-sm-2", "col-sm-10") }
@@ -119,6 +120,37 @@
 		@b3.text(addForm("name"), '_label -> "Real name")
 		@b3.text(addForm("organization"), '_label -> "Organization")
 		@b3.select(addForm("type"), options=for (c <- User.TYPES.values()) yield c.name() -> c.name(), '_label -> "Role")
+		@b3.submit('class -> "btn btn-success"){ Add }
+	}
+	<h3>Upload list of users</h3>
+	@if(uploadForm.hasGlobalErrors) {
+		<div class="alert alert-danger">@uploadForm.globalError.message</div>
+	}
+	@b3.form(routes.UserController.upload(), 'enctype -> "multipart/form-data") {
+		<p>Import list of users in bulk by uploading a CSV file. File should have this structure:</p>
+
+		<ul>
+			<li>
+				First row is data header. It contains one or more column of following strings in arbitrary order (case sensitive):
+				<ul>
+					<li><code>username</code> (<strong>required</strong>)</li>
+					<li><code>password</code> (in plain text)</li>
+					<li><code>name</code> (for real name field)</li>
+					<li><code>organization</code></li>
+					<li><code>type</code> (one of <code>VOTER</code>, <code>INSTRUCTOR</code> or <code>ORGANIZER</code>)</li>
+				</ul>
+			</li>
+			<li>A list of users, one per row is followed. Each row must be in the same order as specified in data header.</li>
+		</ul>
+
+		<p>Example CSV:</p>
+
+		<pre>username,password,name,organization,type
+example,password,Example user,Example organization,VOTER</pre>
+
+		@CSRF.formField
+		@b3.file(uploadForm("file"), '_label -> "File", 'accept -> "text/csv")
+		@b3.checkbox(uploadForm("skipexisting"), '_text -> "Skip existing users")
 		@b3.submit('class -> "btn btn-success"){ Add }
 	}
 } {

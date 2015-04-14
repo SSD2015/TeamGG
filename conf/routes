@@ -13,6 +13,7 @@ GET            /vote_result                                      controllers.Vot
 GET            /users                                            controllers.UserController.list()
 POST           /users                                            controllers.UserController.save()
 POST           /users/edit                                       controllers.UserController.edit()
+POST           /users/upload                                     controllers.UserController.upload()
 
 GET            /projects                                         controllers.ProjectController.list()
 POST           /projects                                         controllers.ProjectController.save()
