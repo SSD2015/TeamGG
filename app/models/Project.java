@@ -90,7 +90,7 @@ public class Project extends Model {
     public void setLogo(File file) throws IOException {
         BufferedImage image = ImageIO.read(file);
 
-        BufferedImage resized = Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, LOGO_SIZE, LOGO_SIZE);
+        BufferedImage resized = Scalr.resize(image, LOGO_SIZE, LOGO_SIZE);
         image.flush();
 
         Upload upload = UploadFactory.get("logo", id.toString());

@@ -52,13 +52,14 @@ public class S3Upload extends Upload {
         return out;
     }
 
-    @Override
-    public String getPublicUrl(FileObject file){
-        try {
-            IPublicUrlsGetter getter = (IPublicUrlsGetter) file.getFileOperations().getOperation(IPublicUrlsGetter.class);
-            return getter.getHttpUrl();
-        } catch (FileSystemException e) {
-            throw new RuntimeException("Cannot get file public URL", e);
-        }
-    }
+    // XXX: This will return non-https URL
+//    @Override
+//    public String getPublicUrl(FileObject file){
+//        try {
+//            IPublicUrlsGetter getter = (IPublicUrlsGetter) file.getFileOperations().getOperation(IPublicUrlsGetter.class);
+//            return getter.getHttpUrl();
+//        } catch (FileSystemException e) {
+//            throw new RuntimeException("Cannot get file public URL", e);
+//        }
+//    }
 }

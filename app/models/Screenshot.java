@@ -52,7 +52,7 @@ public class Screenshot extends Model {
     public static File resize(File file) throws IOException {
         BufferedImage image = ImageIO.read(file);
 
-        BufferedImage resized = Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, SCREENSHOT_SIZE_W, SCREENSHOT_SIZE_H);
+        BufferedImage resized = Scalr.resize(image, SCREENSHOT_SIZE_W, SCREENSHOT_SIZE_H);
         image.flush();
 
         // Java encode PNG -> JPEG as JPEG with transparent, which does not exists
