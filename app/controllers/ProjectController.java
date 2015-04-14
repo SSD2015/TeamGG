@@ -155,27 +155,35 @@ public class ProjectController extends Controller {
         project.description = data.description;
 
         if(dynamicForm.get("ssOrder") != null){
-            String[] order = dynamicForm.get("ssOrder").split(",");
-            int length = Math.min(order.length, MAX_SCREENSHOT);
-            Set<Integer> foundId = new HashSet<Integer>();
+            String orders = dynamicForm.get("ssOrder");
 
-            // sort and discovery sent item
-            for(int i = 0; i < length; i++){
-                int orderId = Integer.parseInt(order[i]);
+            if(orders.isEmpty()){
                 for(Screenshot item : project.screenshots){
-                    if(item.id == orderId){
-                        item.position = i;
-                        item.update();
-                        foundId.add(orderId);
-                        break;
+                    item.delete();
+                }
+            }else{
+                String[] order = orders.split(",");
+                int length = Math.min(order.length, MAX_SCREENSHOT);
+                Set<Integer> foundId = new HashSet<Integer>();
+
+                // sort and discovery sent item
+                for(int i = 0; i < length; i++){
+                    int orderId = Integer.parseInt(order[i]);
+                    for(Screenshot item : project.screenshots){
+                        if(item.id == orderId){
+                            item.position = i;
+                            item.update();
+                            foundId.add(orderId);
+                            break;
+                        }
                     }
                 }
-            }
 
-            // remove items not sent
-            for(Screenshot item : project.screenshots){
-                if(!foundId.contains(item.id)){
-                    item.delete();
+                // remove items not sent
+                for(Screenshot item : project.screenshots){
+                    if(!foundId.contains(item.id)){
+                        item.delete();
+                    }
                 }
             }
         }
