@@ -99,6 +99,8 @@ public class Project extends Model {
         File temp = File.createTempFile("exceedvote", ".png");
         ImageIO.write(resized, "png", temp);
         resized.flush();
+
+        logo = upload.moveUpload(temp.getName(), temp);
     }
 
 }
