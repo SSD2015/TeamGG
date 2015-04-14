@@ -33,9 +33,9 @@ public class ApiProjectControllerTest extends WithApplicationDB {
         assertTrue("body must be array", body instanceof ArrayNode);
 
         ArrayNode arr = (ArrayNode) body;
-        assertEquals("has three content", 3, arr.size());
+        assertEquals("has three contents", 3, arr.size());
 
-        JsonNode project = arr.get(0);
+        JsonNode project = arr.get(2);
         validateProject(project);
         assertFalse(project.findPath("vote").isObject());
     }
@@ -50,9 +50,9 @@ public class ApiProjectControllerTest extends WithApplicationDB {
         assertTrue("body must be array", body instanceof ArrayNode);
 
         ArrayNode arr = (ArrayNode) body;
-        assertEquals("has three content", 3, arr.size());
+        assertEquals("has three contents", 3, arr.size());
 
-        JsonNode project = arr.get(0);
+        JsonNode project = arr.get(2);
         validateProject(project);
         validateVote(project);
     }
