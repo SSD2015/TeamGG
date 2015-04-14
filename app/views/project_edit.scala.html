@@ -21,7 +21,7 @@
 					<button class="btn btn-block btn-default" type="button">Select new logo</button>
 				</div>
 				<div class="help-block">
-					@{controllers.ProjectController.LOGO_SIZE}x@{controllers.ProjectController.LOGO_SIZE} png,
+					@{models.Project.LOGO_SIZE}x@{models.Project.LOGO_SIZE} png,
 					displayed as 80x80
 				</div>
 			</div>
@@ -33,6 +33,7 @@
 				<div class="scroll">
 					@for(img <- project.getScreenshots()){
 						<div class="col-sm-4 item" data-id="@img.id">
+							<a class="del text-danger" href="#"><i class="glyphicon glyphicon-remove"></i></a>
 							<div class="thumbnail"><img src="@img.getFile()"></div>
 						</div>
 					}
@@ -50,6 +51,7 @@
 				</div>
 			</div>
 		</div>
+		<input type="hidden" name="ssOrder" value="@project.getScreenshots().asScala.map(x=>x.id).mkString(",")">
 		@if(project.group != null){
 			<div class="form-group">
 				<label class="col-sm-2 control-label">Group Member</label>
@@ -76,5 +78,5 @@
 	<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
 	<script src="@routes.Assets.versioned("javascripts/instantpreview.js")"></script>
 	<script>window.ssUploadTarget = "@routes.ProjectController.uploadScreenshot(project.id)";</script>
-	<script src="@routes.Assets.versioned("javascripts/screenshotupload.js")"></script>
+	<script src="@routes.Assets.versioned("javascripts/screenshot.js")"></script>
 }

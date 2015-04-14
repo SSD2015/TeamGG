@@ -5,7 +5,6 @@ import com.avaje.ebean.Query;
 import forms.AddProjectForm;
 import models.Project;
 import models.Screenshot;
-import org.imgscalr.Scalr;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.filters.csrf.AddCSRFToken;
@@ -16,17 +15,14 @@ import play.mvc.Http;
 import play.mvc.Result;
 import play.twirl.api.Html;
 import upload.Upload;
-import upload.UploadFactory;
 import utils.Auth;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class ProjectController extends Controller {
     public static final long MAX_UPLOAD_SIZE = 2 * 1024 * 1024;
-    public static final int LOGO_SIZE = 160;
     public static final int MAX_SCREENSHOT = 8;
 
     @AddCSRFToken
@@ -161,14 +157,25 @@ public class ProjectController extends Controller {
         if(dynamicForm.get("ssOrder") != null){
             String[] order = dynamicForm.get("ssOrder").split(",");
             int length = Math.min(order.length, MAX_SCREENSHOT);
+            Set<Integer> foundId = new HashSet<Integer>();
+
+            // sort and discovery sent item
             for(int i = 0; i < length; i++){
                 int orderId = Integer.parseInt(order[i]);
                 for(Screenshot item : project.screenshots){
                     if(item.id == orderId){
                         item.position = i;
                         item.update();
+                        foundId.add(orderId);
                         break;
                     }
+                }
+            }
+
+            // remove items not sent
+            for(Screenshot item : project.screenshots){
+                if(!foundId.contains(item.id)){
+                    item.delete();
                 }
             }
         }
@@ -176,19 +183,7 @@ public class ProjectController extends Controller {
         // save uploaded files
         if(logo != null) {
             try {
-                BufferedImage image = ImageIO.read(logo.getFile());
-
-                BufferedImage resized = Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, LOGO_SIZE, LOGO_SIZE);
-                image.flush();
-
-                Upload upload = UploadFactory.get("logo", project.id.toString());
-                upload.removeExisting();
-
-                File temp = File.createTempFile("exceedvote", ".png");
-                ImageIO.write(resized, "png", temp);
-                resized.flush();
-
-                project.logo = upload.moveUpload(temp.getName(), temp);
+                project.setLogo(logo.getFile());
             } catch (IOException e) {
                 return internalServerError();
             }
@@ -250,12 +245,7 @@ public class ProjectController extends Controller {
             ss.position = weight + 1;
             ss.save();
 
-            File resized = Screenshot.resize(file.getFile());
-
-            Upload upload = UploadFactory.get("screenshot", project.id.toString(), String.valueOf(ss.id));
-            upload.removeExisting();
-
-            ss.file = upload.moveUpload(resized.getName(), resized);
+            ss.setFile(file.getFile());
             ss.update();
             Ebean.commitTransaction();
         } catch (IOException e) {

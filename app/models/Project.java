@@ -1,11 +1,18 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import org.imgscalr.Scalr;
 import play.api.mvc.Call;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
+import upload.Upload;
+import upload.UploadFactory;
 
+import javax.imageio.ImageIO;
 import javax.persistence.*;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 import static play.mvc.Http.Context.Implicit.request;
@@ -13,6 +20,7 @@ import static play.mvc.Http.Context.Implicit.request;
 @Entity
 @JsonIgnoreProperties({"votes"})
 public class Project extends Model {
+    public static final int LOGO_SIZE = 160;
 
     @Id
     public Integer id;
@@ -40,6 +48,7 @@ public class Project extends Model {
     );
 
     public List<Screenshot> getScreenshots(){
+        // Ebean doesn't really understand @OrderBy, so we implement local sort
         Collections.sort(screenshots, new Comparator<Screenshot>() {
             @Override
             public int compare(Screenshot o1, Screenshot o2) {
@@ -76,6 +85,20 @@ public class Project extends Model {
 
 
         return out;
+    }
+
+    public void setLogo(File file) throws IOException {
+        BufferedImage image = ImageIO.read(file);
+
+        BufferedImage resized = Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, LOGO_SIZE, LOGO_SIZE);
+        image.flush();
+
+        Upload upload = UploadFactory.get("logo", id.toString());
+        upload.removeExisting();
+
+        File temp = File.createTempFile("exceedvote", ".png");
+        ImageIO.write(resized, "png", temp);
+        resized.flush();
     }
 
 }

@@ -42,7 +42,6 @@
     });
 
     $('#projectForm').submit(function(){
-        var input = $('<input type="hidden" name="ssOrder">').appendTo('#projectForm');
         var order = [];
         $('.screenshot .item').each(function(){
             var id = $(this).data('id');
@@ -50,12 +49,21 @@
                 order.push(id);
             }
         });
-        input.val(order.join(','));
+        $('input[name=ssOrder]').val(order.join(','));
     });
 
     $('.screenshot').sortable({
         items: '.item',
         placeholder: 'col-sm-4 placeholder item'
     }).disableSelection();
+
+    $('.screenshot').on('click', '.del', function(){
+        if(!confirm('Delete this image?')){
+            return false;
+        }
+
+        $(this).closest('.item').remove();
+        return false;
+    })
 
 })();

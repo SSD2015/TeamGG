@@ -5,6 +5,8 @@ import org.imgscalr.Scalr;
 import play.api.mvc.Call;
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
+import upload.Upload;
+import upload.UploadFactory;
 
 import javax.imageio.ImageIO;
 import javax.persistence.Entity;
@@ -66,5 +68,22 @@ public class Screenshot extends Model {
         converted.flush();
 
         return temp;
+    }
+
+    public void setFile(File file) throws IOException {
+        File resized = Screenshot.resize(file);
+
+        Upload upload = UploadFactory.get("screenshot", project.id.toString(), String.valueOf(id));
+        upload.removeExisting();
+
+        this.file = upload.moveUpload(resized.getName(), resized);
+    }
+
+    @Override
+    public void delete() {
+        Upload upload = UploadFactory.get("screenshot", project.id.toString(), String.valueOf(id));
+        upload.removeExisting();
+
+        super.delete();
     }
 }
