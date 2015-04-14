@@ -27,8 +27,6 @@ import java.io.IOException;
 public class ProjectController extends Controller {
     public static final long MAX_UPLOAD_SIZE = 2 * 1024 * 1024;
     public static final int LOGO_SIZE = 160;
-    public static final int SCREENSHOT_SIZE_W = 1440;
-    public static final int SCREENSHOT_SIZE_H = 900;
     public static final int MAX_SCREENSHOT = 8;
 
     @AddCSRFToken
@@ -240,23 +238,17 @@ public class ProjectController extends Controller {
 
         Ebean.beginTransaction();
         try {
-            BufferedImage image = ImageIO.read(file.getFile());
-
-            BufferedImage resized = Scalr.resize(image, Scalr.Method.ULTRA_QUALITY, SCREENSHOT_SIZE_W, SCREENSHOT_SIZE_H);
-            image.flush();
 
             ss = new Screenshot();
             ss.project = project;
             ss.save();
 
+            File resized = Screenshot.resize(file.getFile());
+
             Upload upload = UploadFactory.get("screenshot", project.id.toString(), String.valueOf(ss.id));
             upload.removeExisting();
 
-            File temp = File.createTempFile("exceedvote", ".jpg");
-            ImageIO.write(resized, "jpg", temp);
-            resized.flush();
-
-            ss.file = upload.moveUpload(temp.getName(), temp);
+            ss.file = upload.moveUpload(resized.getName(), resized);
             ss.update();
             Ebean.commitTransaction();
         } catch (IOException e) {
