@@ -39,5 +39,5 @@ excludeFilter in cssCompress := new SimpleFileFilter({
 excludeFilter in uglify := new SimpleFileFilter({
   f =>
     def fileStartsWith(dir: File): Boolean = f.getPath.startsWith(dir.getPath)
-    fileStartsWith((WebKeys.webModuleDirectory in Assets).value)
+    fileStartsWith((WebKeys.webModuleDirectory in Assets).value) || f.getName.endsWith(".min.js")
 })
