@@ -239,8 +239,15 @@ public class ProjectController extends Controller {
         Ebean.beginTransaction();
         try {
 
+            int weight = 0;
+
+            for(Screenshot item : project.screenshots){
+                weight = Math.max(weight, item.position);
+            }
+
             ss = new Screenshot();
             ss.project = project;
+            ss.position = weight + 1;
             ss.save();
 
             File resized = Screenshot.resize(file.getFile());

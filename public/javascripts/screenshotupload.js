@@ -17,14 +17,14 @@
         // XXX: jQuery won't work.
         var xhr = new XMLHttpRequest();
         xhr.open('POST', window.ssUploadTarget, true);
-        var node = $('<div class="col-sm-4 item"><div class="thumbnail"><img src="about:blank"></div></div>');
+        var node = $('<div class="col-sm-4 item"><div class="thumbnail"><img src="/assets/images/ring.svg" class="loading"></div></div>');
         $(node).insertBefore(container);
         container.hide();
 
         xhr.onload = function(e){
             if(xhr.status == 200){
                 var data = JSON.parse(xhr.responseText);
-                node.find('img').attr('src', data.file);
+                node.find('img').attr('src', data.file).removeClass('loading');
                 node.data('id', data.id);
             }else{
                 alert(xhr.responseText);
