@@ -19,7 +19,8 @@ import static play.mvc.Results.ok;
 public class ApiProjectController {
 
     public static Result list() {
-        List<Project> projects = Project.find.all();
+        List<Project> projects = Project.find.orderBy("group.number ASC")
+                .findList();
 
         List<JsonNode> out = new ArrayList<JsonNode>(projects.size());
         User user = Auth.getUser();
