@@ -50,7 +50,7 @@ public class Project extends Model {
     }
 
     public String getLogo(){
-        if(logo == null){
+        if(logo == null || logo.isEmpty()){
             return null;
         }
         if(logo.startsWith("http")){

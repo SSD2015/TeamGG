@@ -38,7 +38,7 @@ public class Screenshot extends Model {
     public int position = 0;
 
     public String getFile(){
-        if(file == null){
+        if(file == null || file.isEmpty()){
             return null;
         }
         if(file.startsWith("http")){
