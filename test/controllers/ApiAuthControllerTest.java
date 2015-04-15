@@ -37,7 +37,7 @@ public class ApiAuthControllerTest extends WithApplicationDB {
         FakeRequest request = fakeRequest(POST, LOGIN)
                 .withJsonBody(Json.parse("{\"username\": \"invalid-test\", \"password\": \"invalid-test\"}"));
         Result result = routeAndCall(request, 5);
-        assertEquals(403, status(result));
+        assertEquals(401, status(result));
         assertEquals("application/json", contentType(result));
 
         JsonNode body = Json.parse(contentAsString(result));
