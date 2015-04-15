@@ -14,7 +14,7 @@ import static play.mvc.Results.badRequest;
 import static play.mvc.Results.ok;
 import static play.mvc.Results.redirect;
 
-public class LoginController extends Controller {
+public class LoginController extends BaseController {
     @AddCSRFToken
     public static Result login(){
         Form<LoginForm> loginForm = Form.form(LoginForm.class);

@@ -1,0 +1,11 @@
+@(reason: String)
+@main("") {
+  <div id="errorpage">
+    <img src="@routes.Assets.versioned("images/notfound.jpg")" class="icon">
+    <div class="reason">@reason</div>
+
+    <a href="@routes.AdminController.main()" class="btn btn-lg btn-default">Home</a>
+  </div>
+} {
+} {
+}

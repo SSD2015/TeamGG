@@ -6,7 +6,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import utils.Auth;
 
-public class AdminController extends Controller {
+public class AdminController extends BaseController {
     @AddCSRFToken
     public static Result main(){
         if(!Auth.acl(Auth.ACL_TYPE.ADMIN)){

@@ -103,6 +103,19 @@
 	box-shadow: 0 1px 2px rgba(0,0,0,.075), 0 2px 5px rgba(0,0,0,0.3);
 }
 
+#errorpage{
+	text-align: center;
+}
+#errorpage .icon{
+	display: block;
+	margin: 40px auto;
+	height: 200px;
+}
+#errorpage .reason{
+	margin: 40px 0;
+	font-size: 14pt;
+}
+
 @media (max-width: 767px){
 	.mainheader .text-right{
 		text-align: left;
@@ -118,5 +131,14 @@
 		height: 100px;
 		line-height: 90px;
 		font-size: 20pt;
+	}
+
+	#errorpage .reason{
+		margin: 20px 0;
+		font-size: 11pt;
+	}
+	#errorpage .icon{
+		height: auto;
+		height: 100px;
 	}
 }

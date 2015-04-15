@@ -20,7 +20,7 @@ public class ApiAuthController extends Controller {
         User user = Auth.login(username, password);
 
         if(user == null) {
-            return forbidden(buildUser(user));
+            return unauthorized(buildUser(user));
         }
 
         return ok(buildUser(user));

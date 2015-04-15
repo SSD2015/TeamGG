@@ -5,6 +5,7 @@ import com.avaje.ebean.Query;
 import forms.AddProjectForm;
 import models.Project;
 import models.Screenshot;
+import play.Logger;
 import play.data.DynamicForm;
 import play.data.Form;
 import play.filters.csrf.AddCSRFToken;
@@ -21,7 +22,7 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-public class ProjectController extends Controller {
+public class ProjectController extends BaseController {
     public static final long MAX_UPLOAD_SIZE = 2 * 1024 * 1024;
     public static final int MAX_SCREENSHOT = 8;
 
@@ -71,7 +72,7 @@ public class ProjectController extends Controller {
 
         Project project = Project.find.byId(id);
         if(project == null){
-            return notFound();
+            return notFound("Project not found");
         }
 
         project.delete();
@@ -87,7 +88,7 @@ public class ProjectController extends Controller {
         Project project = Project.find.byId(id);
 
         if(project == null){
-            return notFound();
+            return notFound("Project not found");
         }
 
         Result permError = checkEditAcl(project);
@@ -110,7 +111,7 @@ public class ProjectController extends Controller {
         Project project = Project.find.byId(id);
 
         if(project == null){
-            return notFound();
+            return notFound("Project not found");
         }
 
         Result permError = checkEditAcl(project);
@@ -193,6 +194,7 @@ public class ProjectController extends Controller {
             try {
                 project.setLogo(logo.getFile());
             } catch (IOException e) {
+                Logger.error("cannot save logo", e);
                 return internalServerError();
             }
         }
@@ -211,7 +213,7 @@ public class ProjectController extends Controller {
         Project project = Project.find.byId(id);
 
         if(project == null){
-            return notFound();
+            return notFound("Project not found");
         }
 
         if(project.screenshots.size() >= MAX_SCREENSHOT){
@@ -227,7 +229,7 @@ public class ProjectController extends Controller {
         Http.MultipartFormData.FilePart file = body.getFile("file");
 
         if(file == null){
-            return badRequest();
+            return badRequest("No file");
         }
 
         if(file.getFile().length() > MAX_UPLOAD_SIZE){
@@ -258,7 +260,8 @@ public class ProjectController extends Controller {
             Ebean.commitTransaction();
         } catch (IOException e) {
             Ebean.endTransaction();
-            return internalServerError("Upload process fail");
+            Logger.error("cannot save logo", e);
+            return internalServerError();
         } finally {
             Ebean.endTransaction();
         }

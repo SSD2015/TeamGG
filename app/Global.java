@@ -1,4 +1,5 @@
 import play.GlobalSettings;
+import play.api.mvc.Codec;
 import play.api.mvc.Results;
 import play.libs.F;
 import play.libs.Scala;
@@ -14,6 +15,8 @@ import java.util.List;
 import static play.core.j.JavaResults.*;
 
 public class Global extends GlobalSettings {
+    private static final Codec utf8 = Codec.javaSupported("utf-8");
+
     private class ActionWrapper extends Action.Simple {
         public ActionWrapper(Action<?> action) {
             this.delegate = action;
@@ -40,9 +43,21 @@ public class Global extends GlobalSettings {
     }
 
     private static class CORSResult implements Result {
-        final private play.api.mvc.Result wrappedResult;
+        private final play.api.mvc.Result wrappedResult;
+        private final Results.Status status;
+        private final Http.RequestHeader header;
 
         public CORSResult(Http.RequestHeader header, Results.Status status) {
+            this.header = header;
+            this.status = status;
+            wrappedResult = getResult().withHeaders(getHeader());
+        }
+
+        protected play.api.mvc.Result getResult(){
+            return new play.mvc.Results.Status(status, "", utf8).toScala();
+        }
+
+        protected Seq<Tuple2<String, String>> getHeader(){
             List<Tuple2<String, String>> list = new ArrayList<Tuple2<String, String>>();
 
             String origin = header.getHeader("Origin");
@@ -54,8 +69,7 @@ public class Global extends GlobalSettings {
             list.add(t);
             t = new Tuple2<String, String>("Access-Control-Allow-Credentials", "true");
             list.add(t);
-            Seq<Tuple2<String, String>> seq = Scala.toSeq(list);
-            wrappedResult = status.withHeaders(seq);
+            return Scala.toSeq(list);
         }
 
         public play.api.mvc.Result toScala() {
@@ -76,14 +90,29 @@ public class Global extends GlobalSettings {
     */
     @Override
     public F.Promise<Result> onError(Http.RequestHeader request, Throwable t) {
-        return F.Promise.<Result>pure(new CORSResult(request, InternalServerError()));
+        if(isApiRequest(request)){
+            return F.Promise.<Result>pure(new CORSResult(request, InternalServerError()));
+        }else{
+            return F.Promise.<Result>pure(new play.mvc.Results.Status(
+                    InternalServerError(), views.html.errors.error500.render(), utf8
+            ));
+        }
     }
 
-    /*
-    * Adds the required CORS header "Access-Control-Allow-Origin" when a route was not found
-    */
     @Override
     public F.Promise<Result> onHandlerNotFound(Http.RequestHeader request) {
-        return F.Promise.<Result>pure(new CORSResult(request, NotFound()));
+        if(isApiRequest(request)){
+            return F.Promise.<Result>pure(new CORSResult(request, NotFound()));
+        }else{
+            return F.Promise.<Result>pure(new play.mvc.Results.Status(
+                    NotFound(), views.html.errors.error404.render(
+                    "We can't find the URL you're looking for"
+            ), utf8
+            ));
+        }
+    }
+
+    private boolean isApiRequest(Http.RequestHeader request){
+        return request.path().startsWith("/api/");
     }
 }

@@ -7,7 +7,7 @@ import play.mvc.Controller;
 import play.mvc.Result;
 import utils.Auth;
 
-public class VotingResultController extends Controller {
+public class VotingResultController extends BaseController {
     public static Result result(){
         if(!Auth.acl(Auth.ACL_TYPE.VOTE_RESULT)){
             return forbidden();

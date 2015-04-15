@@ -24,7 +24,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.List;
 import java.util.Map;
 
-public class UserController extends Controller {
+public class UserController extends BaseController {
     private static final int ROW_PER_PAGE = 30;
 
     @AddCSRFToken
