@@ -12,7 +12,7 @@ public class Pagination {
     public Pagination(int itemPerPage, int itemCount, int currentPage) {
         this.itemPerPage = itemPerPage;
         this.itemCount = itemCount;
-        this.currentPage = Math.min(currentPage, getLastPage());
+        this.currentPage = Math.max(1, Math.min(currentPage, getLastPage()));
     }
 
     public int getCurrentPage() {
@@ -28,7 +28,7 @@ public class Pagination {
     }
 
     public boolean hasPreviousPage(){
-        return currentPage > 0;
+        return currentPage > 1;
     }
 
     public int getPreviousPage(){
@@ -45,14 +45,18 @@ public class Pagination {
     }
 
     public boolean hasNextPage(){
-        return (currentPage+1) * itemPerPage < itemCount;
+        return currentPage * itemPerPage < itemCount;
     }
 
     public int getLastPage(){
-        return Math.max(0, getPageCount() - 1);
+        return Math.max(1, getPageCount());
     }
 
     public int getPageCount(){
         return (int) Math.ceil((double) itemCount/(double) itemPerPage);
+    }
+
+    public int getStartRow() {
+        return (currentPage-1) * itemPerPage;
     }
 }

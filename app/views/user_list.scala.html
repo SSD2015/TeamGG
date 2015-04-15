@@ -96,7 +96,7 @@
 				<li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
 			}
 			@for(i <- 1 to pager.getPageCount){
-				<li><a href="@routes.UserController.list()?page=@{i-1}">@{i}</a></li>
+				<li@if(pager.getCurrentPage==i){ class="active"}><a href="@routes.UserController.list()?page=@{i}">@{i}</a></li>
 			}
 			@if(pager.hasNextPage) {
 				<li>

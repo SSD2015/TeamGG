@@ -205,16 +205,16 @@ public class UserController extends Controller {
     }
 
     private static Html list(Form<AddUserForm> addForm, DynamicForm uploadForm){
-        int start = 0;
+        int page = 1;
         try {
-            start = Integer.parseInt(request().getQueryString("start"));
+            page = Integer.parseInt(request().getQueryString("page"));
         }catch(NumberFormatException e){
         }
 
-        Pagination pager = new Pagination(ROW_PER_PAGE, User.find.findRowCount(), start);
+        Pagination pager = new Pagination(ROW_PER_PAGE, User.find.findRowCount(), page);
 
         List<User> users = User.find.where()
-                .setFirstRow(start * ROW_PER_PAGE)
+                .setFirstRow(pager.getStartRow())
                 .setMaxRows(ROW_PER_PAGE)
                 .findList();
 
