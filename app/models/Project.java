@@ -1,6 +1,8 @@
 package models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import controllers.Assets;
+import controllers.routes;
 import org.imgscalr.Scalr;
 import play.api.mvc.Call;
 import play.data.validation.Constraints;
@@ -60,7 +62,7 @@ public class Project extends Model {
 
     public String getLogo(){
         if(logo == null || logo.isEmpty()){
-            return null;
+            return routes.Assets.versioned(new Assets.Asset("images/defaultlogo.png")).absoluteURL(request());
         }
         if(logo.startsWith("http")){
             return logo;
