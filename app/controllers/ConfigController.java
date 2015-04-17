@@ -4,6 +4,8 @@ import forms.ConfigForm;
 import models.Config;
 import models.VoteCategory;
 import play.data.Form;
+import play.filters.csrf.AddCSRFToken;
+import play.filters.csrf.RequireCSRFCheck;
 import play.mvc.Result;
 import play.twirl.api.Html;
 
@@ -12,10 +14,12 @@ import java.util.Map;
 
 public class ConfigController extends BaseController {
 
+    @AddCSRFToken
     public static Result show() {
         return ok(list());
     }
 
+    @RequireCSRFCheck
     public static Result saveCategory() {
         Form<VoteCategory> form = Form.form(VoteCategory.class);
         form = form.bindFromRequest();
@@ -30,6 +34,7 @@ public class ConfigController extends BaseController {
         return redirect(controllers.routes.ConfigController.show());
     }
 
+    @RequireCSRFCheck
     public static Result saveConfig(){
         Form<ConfigForm> form = getConfigForm();
         form = form.bindFromRequest();

@@ -2,10 +2,7 @@ package controllers;
 
 import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.databind.JsonNode;
-import models.Project;
-import models.User;
-import models.Vote;
-import models.VoteCategory;
+import models.*;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -13,6 +10,7 @@ import utils.Auth;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static play.mvc.Results.*;
 
@@ -26,6 +24,11 @@ public class ApiVoteController extends Controller {
     public static Result vote(int projectId, int categoryId){
         if(!Auth.isLoggedIn()){
             return unauthorized("You're not logged in");
+        }
+
+        Map<String, String> config = Config.getConfig();
+        if(!config.containsKey("voteOpen") || config.get("voteOpen").equals("0")){
+            return forbidden("Voting is closed");
         }
 
         // check whether the project and category exists

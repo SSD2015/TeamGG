@@ -1,8 +1,11 @@
 package utils;
 
 import auth.Authenticator;
+import models.Config;
 import models.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import java.util.Map;
 
 import static play.mvc.Controller.session;
 
@@ -41,12 +44,18 @@ public class Auth {
     public static boolean acl(User user, ACL_TYPE aclType){
         switch(aclType){
             case ADMIN:
-                return user.group != null || user.type.ordinal() >= User.TYPES.INSTRUCTOR.ordinal();
+                return user.type.ordinal() >= User.TYPES.INSTRUCTOR.ordinal();
             case GROUPS: case USERS: case CONFIG:
                 return user.type == User.TYPES.ORGANIZER;
             case VOTE_RESULT:
                 return user.type == User.TYPES.ORGANIZER || user.type == User.TYPES.INSTRUCTOR;
             case PROJECT_EDIT:
+                if(user.type != User.TYPES.ORGANIZER){
+                    Map<String, String> config = Config.getConfig();
+                    if(!config.containsKey("allowMemberEdit") || config.get("allowMemberEdit").equals("0")){
+                        return false;
+                    }
+                }
                 return user.type == User.TYPES.ORGANIZER || user.group != null;
             case PROJECT_EDIT_ALL:
                 return user.type == User.TYPES.ORGANIZER;
