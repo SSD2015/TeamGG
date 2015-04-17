@@ -1,41 +1,20 @@
-@(categories: java.util.List[VoteCategory], addForm: Form[VoteCategory] )
-@import collection.JavaConverters._
+@(categories: java.util.List[VoteCategory], addForm: Form[VoteCategory], configForm: Form[forms.ConfigForm] )
 @import helper._
 @implicitFieldConstructor = @{ b3.horizontal.fieldConstructor("col-sm-2", "col-sm-10") }
 
 @main("Configuration", routes.AdminController.main().url){
+    @b3.form(routes.ConfigController.saveConfig()) {
+        @CSRF.formField
+        @b3.text(configForm("announcement"), '_label -> "Announcement")
+	    @b3.checkbox(configForm("voteOpen"), '_text -> "Allow voting")
+        @b3.checkbox(configForm("allowMemberEdit"), '_text -> "Allow editing of group details by group members")
+        @b3.submit('class -> "btn btn-success") { Save }
+    }
 
-    <!--<div class="form-horizontal">
-            <div class="form-group">
-                <label for="announcement" class="col-sm-2 control-label">Announcement</label>
-                <div class="col-sm-10">
-                    <input type="text" class="form-control" id="announcement" name="announcement">
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-offse    t-2 col-sm-10">
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" name="allow_vote" checked="">
-                            Allow voting
-                        </label>
-                    </div>
-                </div>
-            </div>
-            <div class="form-group">
-                <div class="col-sm-offset-2 col-sm-10">
-                    <div class="checkbox">
-                        <label>
-                            <input type="checkbox" name="allow_edit" checked="">
-                            Allow editing of group details by group members
-                        </label>
-                    </div>
-                </div>
-            </div>-->
-    <div class="form-group">
-        <label class="col-sm-2 control-label">Voting categories</label>
+    <div class="form-group" style="margin-top: 50px;">
+        <label class="col-sm-2 control-label" style="text-align: right;">Voting categories</label>
         <div class="col-sm-10">
-            <div class="table-responsive">
+            <div class="table-responsive row">
                 <table class="table table-bordered">
                     <thead>
                         <tr>
@@ -58,17 +37,10 @@
         </div>
         @b3.form(routes.ConfigController.saveCategory()) {
             @CSRF.formField
-            @b3.text(addForm("name"), '_label -> "Name", 'autofocus -> true)
+            @b3.text(addForm("name"), '_label -> "Name")
             @b3.select(addForm("type"), options=for (c <- VoteCategory.VOTE_TYPE.values()) yield c.name() -> c.name(), '_label -> "Type")
             @b3.submit('class -> "btn btn-success") { Add }
         }
-    </div>
-    <!--<div class="form-group">
-        <div class="col-sm-offset-2 col-sm-10">
-            <button class="btn btn-lg btn-success">Save</button>
-            <a href="." class="btn btn-link btn-lg">Back</a>
-        </div>
-    </div>-->
     </div>
 }{
 }{

@@ -16,21 +16,30 @@ public class Config extends Model {
     @Lob
     public String value;
 
-
-    private Map<String, String> _cache;
-
-    public Map<String, String> getConfig(){
-        if(_cache != null){
-            return _cache;
-        }
+    public static Map<String, String> getConfig(){
         Map<String, String> out = new HashMap<String, String>();
 
         for (Config config : find.all()) {
             out.put(config.k, config.value);
         }
 
-        _cache = out;
         return out;
+    }
+
+    public static void saveConfig(Map<String, String> data){
+        for(String key : data.keySet()){
+            Config cfg = Config.find.byId(key);
+            if(cfg == null){
+                cfg = new Config();
+                cfg.k = key;
+                cfg.value = data.get(key);
+                cfg.save();
+            }else{
+                cfg.k = key;
+                cfg.value = data.get(key);
+                cfg.update();
+            }
+        }
     }
 
     public static Model.Finder<String, Config> find = new Model.Finder<String, Config>(
