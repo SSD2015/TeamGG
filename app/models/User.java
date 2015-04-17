@@ -40,7 +40,7 @@ public class User extends Model {
     public List<Vote> votes;
 
     public String getName(){
-        if(!name.isEmpty()){
+        if(name != null && !name.isEmpty()){
             return name;
         }else{
             return username;

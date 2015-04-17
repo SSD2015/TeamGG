@@ -11,7 +11,7 @@
 }
 @main("Backoffice") {
 
-	@item("Configuration", "Close voting, set announcement, edit voting categories.", "#", "settings.svg")
+	@item("Configuration", "Close voting, set announcement, edit voting categories.", routes.ConfigController.show().url , "settings.svg")
 	@item("Groups", "Create groups, assign users to group.", "#", "group.svg")
 	@item("Projects", "Manage list of projects and their descriptions.", routes.ProjectController.list().url, "projects.svg")
 	@item("Users", "Manage list of users and their permission.", routes.UserController.list().url, "users.svg")

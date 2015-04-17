@@ -22,6 +22,9 @@ GET            /projects/$id<[0-9]+>                             controllers.Pro
 POST           /projects/$id<[0-9]+>                             controllers.ProjectController.update(id : Int)
 POST           /projects/$id<[0-9]+>/screenshot                  controllers.ProjectController.uploadScreenshot(id : Int)
 
+GET            /conf                                             controllers.ConfigController.show()
+POST           /conf/cat                                         controllers.ConfigController.saveCategory()
+
 # API
 POST           /api/auth/login                                   controllers.ApiAuthController.login()
 GET            /api/auth/check                                   controllers.ApiAuthController.check()
