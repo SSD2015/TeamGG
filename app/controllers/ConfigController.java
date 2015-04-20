@@ -48,7 +48,7 @@ public class ConfigController extends BaseController {
         if(!Auth.acl(Auth.ACL_TYPE.CONFIG)){
             return forbidden();
         }
-        
+
         Form<ConfigForm> form = getConfigForm();
         form = form.bindFromRequest();
 

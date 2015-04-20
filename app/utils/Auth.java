@@ -2,6 +2,7 @@ package utils;
 
 import auth.Authenticator;
 import models.Config;
+import models.Log;
 import models.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -97,7 +98,16 @@ public class Auth {
         }
 
         if(success){
+            Log log = new Log();
+            log.type = Log.TYPE.LOGIN;
+            log.ref = user.id;
+            if(getUser() != null){
+                log.ref2 = getUser().id;
+            }
+            log.save();
+
             session("user", String.valueOf(user.id));
+
             return user;
         }
         return null;

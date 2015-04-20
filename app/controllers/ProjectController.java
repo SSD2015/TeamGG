@@ -3,6 +3,7 @@ package controllers;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.Query;
 import forms.AddProjectForm;
+import models.Log;
 import models.Project;
 import models.Screenshot;
 import play.Logger;
@@ -200,6 +201,12 @@ public class ProjectController extends BaseController {
         }
 
         project.update();
+
+        Log log = new Log();
+        log.type = Log.TYPE.PROJECT_EDIT;
+        log.ref = Auth.getUser().id;
+        log.ref2 = id;
+        log.save();
 
         return redirect(controllers.routes.ProjectController.show(id));
     }
