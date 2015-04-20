@@ -8,6 +8,7 @@ import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
 import play.mvc.Result;
 import play.twirl.api.Html;
+import utils.Auth;
 
 import java.util.List;
 import java.util.Map;
@@ -16,11 +17,19 @@ public class ConfigController extends BaseController {
 
     @AddCSRFToken
     public static Result show() {
+        if(!Auth.acl(Auth.ACL_TYPE.CONFIG)){
+            return forbidden();
+        }
+
         return ok(list());
     }
 
     @RequireCSRFCheck
     public static Result saveCategory() {
+        if(!Auth.acl(Auth.ACL_TYPE.CONFIG)){
+            return forbidden();
+        }
+
         Form<VoteCategory> form = Form.form(VoteCategory.class);
         form = form.bindFromRequest();
 
@@ -36,6 +45,10 @@ public class ConfigController extends BaseController {
 
     @RequireCSRFCheck
     public static Result saveConfig(){
+        if(!Auth.acl(Auth.ACL_TYPE.CONFIG)){
+            return forbidden();
+        }
+        
         Form<ConfigForm> form = getConfigForm();
         form = form.bindFromRequest();
 
