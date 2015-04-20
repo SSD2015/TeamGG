@@ -70,7 +70,6 @@ public class AuthTest extends WithApplicationDB {
                     );
                 }else if(i == 4){
                     allowed = Collections.list(
-                            Auth.ACL_TYPE.ADMIN,
                             Auth.ACL_TYPE.PROJECT_EDIT
                     );
                 }

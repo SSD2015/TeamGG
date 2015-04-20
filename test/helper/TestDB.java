@@ -13,6 +13,8 @@ import play.Logger;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class TestDB {
     private EbeanServer server;
@@ -70,6 +72,11 @@ public class TestDB {
     protected void installFixation(){
         // these data are hard coded in many tests
         // don't specify the id otherwise h2 id generation will break
+        Map<String, String> config = new HashMap<String, String>();
+        config.put("voteOpen", "1");
+        config.put("allowMemberEdit", "1");
+        Config.saveConfig(config);
+
         User voter = new User();
         voter.username = "dummy";
         voter.setPassword("dummy");

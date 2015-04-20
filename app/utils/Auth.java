@@ -56,7 +56,9 @@ public class Auth {
                         return false;
                     }
                 }
-                return user.type == User.TYPES.ORGANIZER || user.group != null;
+                return user.type == User.TYPES.ORGANIZER || (
+                        user.group != null && user.group.projects.size() > 0
+                );
             case PROJECT_EDIT_ALL:
                 return user.type == User.TYPES.ORGANIZER;
             default:
