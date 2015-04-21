@@ -107,12 +107,8 @@ public class ApiVoteController extends Controller {
     }
 
     public static Result result(){
-        if(!Auth.acl(Auth.ACL_TYPE.VOTE_RESULT)){
-            return forbidden();
-        }
-
         String showResult = Config.getConfig().get("showResult");
-        if(showResult == null || !showResult.equals("1")){
+        if(!Auth.acl(Auth.ACL_TYPE.VOTE_RESULT) && (showResult == null || !showResult.equals("1"))){
             return forbidden();
         }
 
