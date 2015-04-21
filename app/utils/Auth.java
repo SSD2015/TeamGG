@@ -62,6 +62,8 @@ public class Auth {
                 );
             case PROJECT_EDIT_ALL:
                 return user.type == User.TYPES.ORGANIZER;
+            case LOG:
+                return user.type == User.TYPES.ORGANIZER || user.type == User.TYPES.INSTRUCTOR;
             default:
                 throw new IllegalArgumentException("Unknown ACL type");
         }
@@ -74,7 +76,8 @@ public class Auth {
         CONFIG, // can config the application
         VOTE_RESULT, // can see voting result
         PROJECT_EDIT,
-        PROJECT_EDIT_ALL
+        PROJECT_EDIT_ALL,
+        LOG // can view log
     }
 
     public static User login(String username, String password){

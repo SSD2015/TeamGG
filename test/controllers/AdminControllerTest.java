@@ -11,6 +11,10 @@ public class AdminControllerTest extends WithBrowserDB {
         login();
 
         browser.goTo("/");
+        browser.$(".adminrow").get(0).click();
+        assertEquals("first link must be config list", browser.url(), "/conf");
+
+        browser.goTo("/");
         browser.$(".adminrow").get(2).click();
         assertEquals("third link must be project list", browser.url(), "/projects");
 
@@ -21,5 +25,9 @@ public class AdminControllerTest extends WithBrowserDB {
         browser.goTo("/");
         browser.$(".adminrow").get(4).click();
         assertEquals("fifth link must be voting result", browser.url(), "/vote_result");
+
+        browser.goTo("/");
+        browser.$(".adminrow").get(5).click();
+        assertEquals("sixth link must be log", browser.url(), "/log");
     }
 }

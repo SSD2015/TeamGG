@@ -1,5 +1,6 @@
 package controllers;
 
+import models.Log;
 import models.User;
 import play.filters.csrf.AddCSRFToken;
 import play.mvc.Controller;
@@ -20,5 +21,12 @@ public class AdminController extends BaseController {
         }else{
             return redirect(controllers.routes.LoginController.login());
         }
+    }
+
+    public static Result log(){
+        if(!Auth.acl(Auth.ACL_TYPE.LOG)){
+            return forbidden();
+        }
+        return ok(views.html.log.render(Log.find.all()));
     }
 }

@@ -14,6 +14,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Date;
 
 import static play.mvc.Http.Context.Implicit.request;
 
@@ -29,6 +30,8 @@ public class Log extends Model {
         LOGIN,
         PROJECT_EDIT
     }
+
+    public Date time = new Date();
 
     public int ref = -1;
     public int ref2 = -1;
@@ -54,4 +57,8 @@ public class Log extends Model {
         }
         return "Unsupported log entry";
     }
+
+    public static Model.Finder<Integer, Log> find = new Model.Finder<Integer, Log>(
+            Integer.class, Log.class
+    );
 }

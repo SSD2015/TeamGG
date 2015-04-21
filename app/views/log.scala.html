@@ -1,0 +1,27 @@
+@(log: List[Log])
+@main("Log", routes.AdminController.main().url){
+
+	<div class="table-responsive">
+		<table class="table table-bordered table-striped">
+			<thead>
+				<tr>
+					<th>No.</th>
+					<th>Time</th>
+					<th class="col-xs-8">Message</th>
+				</tr>
+			</thead>
+			<tbody>
+			@for(item <- log){
+				<tr>
+					<td>@item.id</td>
+					<td>@item.time</td>
+					<td>@item</td>
+				</tr>
+			}
+			</tbody>
+		</table>
+	</div>
+
+} {
+} {
+}

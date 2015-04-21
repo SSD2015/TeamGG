@@ -27,6 +27,8 @@ POST           /conf/cat                                         controllers.Con
 POST           /conf                                             controllers.ConfigController.saveConfig()
 POST           /config/delete                                    controllers.ConfigController.delete()
 
+GET            /log                                              controllers.AdminController.log()
+
 # API
 POST           /api/auth/login                                   controllers.ApiAuthController.login()
 GET            /api/auth/check                                   controllers.ApiAuthController.check()
