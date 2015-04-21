@@ -32,6 +32,8 @@ POST           /api/auth/login                                   controllers.Api
 GET            /api/auth/check                                   controllers.ApiAuthController.check()
 POST           /api/auth/logout                                  controllers.ApiAuthController.logout()
 
+GET            /api/config                                       controllers.ApiConfigController.getConfig()
+
 GET            /api/project                                      controllers.ApiProjectController.list()
 GET            /api/project/$id<[0-9]+>                          controllers.ApiProjectController.getInfo(id : Int)
 POST           /api/project/$id<[0-9]+>/vote/$cat<[0-9]+>        controllers.ApiVoteController.vote(id : Int, cat : Int)
