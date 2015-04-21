@@ -21,7 +21,7 @@
         $(node).insertBefore(container);
         container.hide();
 
-        xhr.onload = function(e){
+        xhr.onload = function(){
             if(xhr.status == 200){
                 var data = JSON.parse(xhr.responseText);
                 node.find('img').attr('src', data.file).removeClass('loading');

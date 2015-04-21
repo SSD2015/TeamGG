@@ -41,6 +41,7 @@ GET            /api/project/$id<[0-9]+>                          controllers.Api
 POST           /api/project/$id<[0-9]+>/vote/$cat<[0-9]+>        controllers.ApiVoteController.vote(id : Int, cat : Int)
 
 GET            /api/categories                                   controllers.ApiVoteController.list()
+GET            /api/vote_result                                   controllers.ApiVoteController.result()
 
 OPTIONS        /api/*all                                         controllers.Application.cors(all)
 

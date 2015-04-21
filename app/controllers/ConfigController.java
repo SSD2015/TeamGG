@@ -63,6 +63,7 @@ public class ConfigController extends BaseController {
         config.put("announcement", data.announcement);
         config.put("allowMemberEdit", data.allowMemberEdit ? "1" : "0");
         config.put("voteOpen", data.voteOpen ? "1" : "0");
+        config.put("showResult", data.showResult ? "1" : "0");
 
         Config.saveConfig(config);
 

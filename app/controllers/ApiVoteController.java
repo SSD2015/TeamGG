@@ -2,7 +2,9 @@ package controllers;
 
 import com.avaje.ebean.ExpressionList;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import models.*;
+import org.apache.commons.collections.map.MultiKeyMap;
 import play.libs.Json;
 import play.mvc.Controller;
 import play.mvc.Result;
@@ -102,5 +104,34 @@ public class ApiVoteController extends Controller {
         }
         // return the result
         return ok(Json.toJson(vote));
+    }
+
+    public static Result result(){
+        if(!Auth.acl(Auth.ACL_TYPE.VOTE_RESULT)){
+            return forbidden();
+        }
+
+        String showResult = Config.getConfig().get("showResult");
+        if(showResult == null || !showResult.equals("1")){
+            return forbidden();
+        }
+
+        MultiKeyMap summary = Vote.summarize();
+        ObjectNode out = Json.newObject();
+        List<VoteCategory> categories = VoteCategory.find.all();
+        for(Project project : Project.find.all()){
+            ObjectNode projectData = Json.newObject();
+            for(VoteCategory cat : categories){
+                Vote.VoteAggregate score = (Vote.VoteAggregate) summary.get(project.id, cat.id);
+                if(score == null){
+                    continue;
+                }
+                ObjectNode node = score.asJson();
+                node.remove("project");
+                projectData.put(String.valueOf(cat.id), node);
+            }
+            out.put(String.valueOf(project.id), projectData);
+        }
+        return ok(out);
     }
 }
