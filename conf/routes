@@ -25,6 +25,7 @@ POST           /projects/$id<[0-9]+>/screenshot                  controllers.Pro
 GET            /conf                                             controllers.ConfigController.show()
 POST           /conf/cat                                         controllers.ConfigController.saveCategory()
 POST           /conf                                             controllers.ConfigController.saveConfig()
+POST           /config/delete                                    controllers.ConfigController.delete()
 
 # API
 POST           /api/auth/login                                   controllers.ApiAuthController.login()

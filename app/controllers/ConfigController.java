@@ -3,6 +3,7 @@ package controllers;
 import forms.ConfigForm;
 import models.Config;
 import models.VoteCategory;
+import play.data.DynamicForm;
 import play.data.Form;
 import play.filters.csrf.AddCSRFToken;
 import play.filters.csrf.RequireCSRFCheck;
@@ -65,6 +66,29 @@ public class ConfigController extends BaseController {
 
         Config.saveConfig(config);
 
+        return redirect(controllers.routes.ConfigController.show());
+    }
+
+    @RequireCSRFCheck
+    public static Result delete(){
+        if(!Auth.acl(Auth.ACL_TYPE.CONFIG)){
+            return forbidden();
+        }
+
+        DynamicForm form = Form.form().bindFromRequest();
+        int id;
+        try {
+            id = Integer.valueOf(form.get("id"));
+        }catch(NumberFormatException e){
+            return badRequest();
+        }
+
+        VoteCategory cat = VoteCategory.find.byId(id);
+        if(cat == null){
+            return notFound("VoteCategory not found");
+        }
+
+        cat.delete();
         return redirect(controllers.routes.ConfigController.show());
     }
 

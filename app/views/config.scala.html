@@ -28,7 +28,17 @@
                         <tr>
                             <td>@category.name</td>
                             <td>@{category.`type`}</td>
-                            <td class="text-right"><button class="btn btn-link"><i class="glyphicon glyphicon-remove"></i></button></td>
+                            @if(utils.Auth.acl(utils.Auth.ACL_TYPE.CONFIG)) {
+                                <td>
+                                    <form action="@routes.ConfigController.delete()" method="POST" class="removeform">
+                                        @CSRF.formField
+                                        <input type="hidden" name="id" value="@category.id">
+                                        <button type="submit" class="btn btn-link btn-sm">
+                                            <i class="glyphicon glyphicon-remove"></i>
+                                        </button>
+                                    </form>
+                                </td>
+                            }
                         </tr>
                     }
                     </tbody>
@@ -44,4 +54,10 @@
     </div>
 }{
 }{
+    <script>
+    $("table").on("submit", ".removeform", function(e){
+    var name = $(e.target).closest("tr" ).find("td:first").text();
+    return confirm("Removing " + name + " cannot be undone.\nAll votes in this category will be lost forever.\n\nContinue with removal?");
+    });
+    </script>
 }
