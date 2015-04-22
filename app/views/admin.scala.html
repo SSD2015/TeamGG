@@ -1,4 +1,5 @@
-@item(name: String, description: String, link: String, icon: String = "settings.svg") = {
+@item(name: String, description: String, link: String, icon: String = "settings.svg", permission: utils.Auth.ACL_TYPE = null) = {
+	@if(permission == null || utils.Auth.acl(permission)){
 	<a href="@link">
 		<div class="row adminrow">
 			<img src="@routes.Assets.versioned("images/"+icon)" class="img-responsive col-xs-1 icon">
@@ -8,15 +9,52 @@
 			</div>
 		</div>
 	</a>
+	}
 }
 @main("Backoffice") {
 
-	@item("Configuration", "Close voting, set announcement, edit voting categories.", routes.ConfigController.show().url , "settings.svg")
-	@item("Groups", "Create groups, assign users to group.", "#", "group.svg")
-	@item("Projects", "Manage list of projects and their descriptions.", routes.ProjectController.list().url, "projects.svg")
-	@item("Users", "Manage list of users and their permission.", routes.UserController.list().url, "users.svg")
-	@item("Voting result", "View real time voting result", routes.VotingResultController.result().url, "poll.svg")
-	@item("Log", "View login and project editing log", routes.AdminController.log().url, "poll.svg")
+	@item(
+		name="Configuration",
+		description="Close voting, set announcement, edit voting categories.",
+		link=routes.ConfigController.show().url ,
+		icon="settings.svg",
+		permission=utils.Auth.ACL_TYPE.CONFIG
+	)
+	@item(
+		name="Groups",
+		description="Create groups, assign users to group.",
+		link="#",
+		icon="group.svg",
+		permission=utils.Auth.ACL_TYPE.GROUPS
+	)
+	@item(
+		name="Projects",
+		description="Manage list of projects and their descriptions.",
+		link=routes.ProjectController.list().url,
+		icon="projects.svg",
+		permission=utils.Auth.ACL_TYPE.PROJECT_EDIT
+	)
+	@item(
+		name="Users",
+		description="Manage list of users and their permission.",
+		link=routes.UserController.list().url,
+		icon="users.svg",
+		permission=utils.Auth.ACL_TYPE.USERS
+	)
+	@item(
+		name="Voting result",
+		description="View real time voting result",
+		link=routes.VotingResultController.result().url,
+		icon="poll.svg",
+		permission=utils.Auth.ACL_TYPE.VOTE_RESULT
+	)
+	@item(
+		name="Log",
+		description="View login and project editing log",
+		link=routes.AdminController.log().url,
+		icon="log.svg",
+		permission=utils.Auth.ACL_TYPE.LOG
+	)
 
 } {
 } {
