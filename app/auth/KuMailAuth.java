@@ -13,9 +13,6 @@ public class KuMailAuth implements Authenticator {
     private Session session;
 
     public KuMailAuth(){
-        System.setProperty("javax.net.ssl.trustStore", "root.jks");
-        System.setProperty("javax.net.ssl.trustStorePassword", "changeme");
-
         session = Session.getDefaultInstance(new Properties());
     }
 
