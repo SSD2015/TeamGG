@@ -1,4 +1,7 @@
+import play.Application;
+import play.Configuration;
 import play.GlobalSettings;
+import play.Logger;
 import play.api.mvc.Codec;
 import play.api.mvc.Results;
 import play.libs.F;
@@ -12,11 +15,60 @@ import scala.collection.Seq;
 import java.util.ArrayList;
 import java.util.List;
 
+import models.User;
 import static play.core.j.JavaResults.*;
 
 public class Global extends GlobalSettings {
     private static final Codec utf8 = Codec.javaSupported("utf-8");
+    
+    /** The _key name_ in application.conf for an admin user to create in new installs. */
+    private static final String USERNAME_KEY = "exceed.admin.username";
+    /** The _key name_ in application.conf for admin password to create in a fresh install. */
+    private static final String USERPASS_KEY = "exceed.admin.password";
+    /** Cludgy limit on username and password length. */
+    private static final int MAX_USER_CREDENTIAL = 40;
 
+
+    /**
+     * This method is invoked when application is started.
+     * Since Play initially has an empty user's database, 
+     * use this method to add a single admin user at start.
+     * A user is only added if the user's table is empty;
+     * if the table is populated then nothing is done.
+     * The admin username and admin password are read from application.conf.
+     * After the admin user is created you can (and should)
+     * remove it from application.conf.
+     * @param app reference to this Application
+     */
+    @Override
+    public void onStart(Application app) {
+      Logger.info("Application started");
+      int userCount = User.find.findRowCount();
+      if (userCount > 0) return;
+      // do we have default username/password for admin user in application.conf?
+      Configuration config = play.Play.application().configuration();
+      String username = config.getString(USERNAME_KEY);
+      String password = config.getString(USERPASS_KEY);
+      if (username == null || username.isEmpty() || password == null || password.isEmpty()) return;
+      // Make sure its a reasonable username (This check should really be in User.)
+      if (username.length() > MAX_USER_CREDENTIAL || ! username.matches("\\w*")) {
+    	  Logger.error("Invalid username in application.conf. Must be alphanumeric <= 40 chars: "+username);
+    	  return;
+      }
+      if (password.length() > MAX_USER_CREDENTIAL) {
+    	  Logger.error("Invalid password in application.conf. Must be at most "+MAX_USER_CREDENTIAL+
+    			  " characters."); // don't log the password, even though its not valid
+    	  return;
+      }
+      // The User class will do the work of encrypting the password
+      User admin = new User();
+      admin.username = username;
+      admin.setPassword(password);  // invoke setter so encryption is done
+      admin.name = "Admin";
+      admin.type = User.TYPES.ORGANIZER;
+      admin.save();
+    }
+    
     private class ActionWrapper extends Action.Simple {
         public ActionWrapper(Action<?> action) {
             this.delegate = action;

@@ -116,10 +116,11 @@ public class Auth {
         return null;
     }
 
-    @SuppressWarnings("unchecked")
-    public static PasswordEncoder getHasher(){
-        return GetClassByConfig.get("auth.hasher");
-    }
+//Jim: this method is invoked only from the User class, so I moved its logic to User.
+//    @SuppressWarnings("unchecked")
+//    public static PasswordEncoder getHasher(){
+//        return GetClassByConfig.get("auth.hasher");
+//    }
 
     @SuppressWarnings("unchecked")
     public static Authenticator getAuth(){

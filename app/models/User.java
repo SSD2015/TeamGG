@@ -3,15 +3,20 @@ package models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import forms.AddUserForm;
+
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
 import play.data.validation.Constraints;
 import play.db.ebean.Model;
 import play.libs.Json;
 import utils.Auth;
+import utils.GetClassByConfig;
 
 import javax.persistence.*;
+
 import java.util.List;
 
 @Entity
@@ -59,12 +64,14 @@ public class User extends Model {
         if(password.isEmpty()){
             this.password = "";
         }else {
-            this.password = Auth.getHasher().encode(password);
+        	PasswordEncoder encoder = GetClassByConfig.get("auth.hasher");
+            this.password = encoder.encode(password);
         }
     }
 
     public boolean checkPassword(String password){
-        return Auth.getHasher().matches(password, this.password);
+    	PasswordEncoder encoder = GetClassByConfig.get("auth.hasher");
+        return encoder.matches(password, this.password);
     }
 
     public void fromForm(AddUserForm data) {
