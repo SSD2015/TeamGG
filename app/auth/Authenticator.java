@@ -13,7 +13,7 @@ public interface Authenticator {
      */
     public AuthenticatorUser auth(String username, String password);
 
-    interface AuthenticatorUser{
+    interface AuthenticatorUser {
         public String getUsername();
         public String getName();
     }

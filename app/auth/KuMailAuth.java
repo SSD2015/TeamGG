@@ -8,6 +8,16 @@ import java.io.FileInputStream;
 import java.security.KeyStore;
 import java.util.Properties;
 
+/**
+ * Authenticate user against Kasetsart University's mail
+ * auth system (IMAP), which checks credentials against
+ * the user's KU account.
+ * Values used by this authenticator are read from configuration
+ * file conf/application.conf.
+ * The relevant keys are kuauth.host, kuath.protocol, and kuath.port (default 993).
+ *
+ * @author Manatsawin
+ */
 public class KuMailAuth implements Authenticator {
 
     private Session session;
